@@ -1,6 +1,6 @@
 [package]
 name = "dictx"
-version = "0.3.0"
+version = "0.3.1"
 description = "Dictx — Local voice-to-text with Obsidian integration"
 authors = ["0xNyk"]
 edition = "2021"
