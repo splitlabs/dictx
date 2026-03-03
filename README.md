@@ -2,173 +2,182 @@
   <img src="assets/banner.png" alt="Dictx — Privacy-First Desktop Speech-to-Text" />
 </p>
 
-**A free, open source, and extensible speech-to-text application that works completely offline — with Obsidian integration.**
+<p align="center">
+  <strong>Privacy-first desktop speech-to-text that runs entirely on your machine.</strong>
+</p>
 
-Dictx is a cross-platform desktop application that provides simple, privacy-focused speech transcription. Press a shortcut, speak, and have your words appear in any text field. This happens on your own computer without sending any information to the cloud.
+<p align="center">
+  <a href="#installation">Installation</a> &middot;
+  <a href="#how-it-works">How It Works</a> &middot;
+  <a href="#obsidian-integration">Obsidian Integration</a> &middot;
+  <a href="#cli">CLI</a> &middot;
+  <a href="BUILD.md">Build from Source</a> &middot;
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
 
-Forked from [Handy](https://github.com/cjpais/Handy) by cjpais.
+---
 
-## What's Different from Handy?
+Dictx is a cross-platform desktop application for speech transcription. Press a shortcut, speak, and your words appear in any text field — no cloud, no API keys, no data leaving your computer.
 
-- **Obsidian Integration** — Automatically export transcriptions as markdown notes to your Obsidian vault with YAML frontmatter, daily note appending, and configurable subfolder structure
-- **Rebranded** — New identity, icons, and configuration under `com.0xnyk.dictx`
+Built with [Tauri](https://tauri.app) (Rust + React/TypeScript). Forked from [Handy](https://github.com/cjpais/Handy) by cjpais.
+
+## Features
+
+- **100% Local** — All processing happens on-device. Zero network requests for transcription.
+- **Multiple Models** — Choose from Whisper (Small/Medium/Turbo/Large) with GPU acceleration or Parakeet V3 for CPU-optimized inference.
+- **Voice Activity Detection** — Automatic silence filtering with Silero VAD.
+- **Obsidian Integration** — Export transcriptions as markdown notes with YAML frontmatter, daily note appending, and configurable folder structure.
+- **Post-Processing** — Optional LLM-based cleanup, summarization, or reformatting of transcriptions.
+- **Cross-Platform** — macOS (Intel + Apple Silicon), Windows (x64), Linux (x64).
+- **CLI Control** — Toggle recording, cancel operations, and configure startup behavior from the command line.
+- **i18n** — Localized in 17 languages.
+
+## Installation
+
+Download the latest release for your platform from the [Releases page](https://github.com/0xNyk/dictx/releases).
+
+| Platform | Format |
+|----------|--------|
+| macOS | `.dmg` |
+| Windows | `.msi` |
+| Linux | `.AppImage` / `.deb` |
+
+After installation:
+1. Launch Dictx and grant the required permissions (microphone, accessibility on macOS)
+2. Select and download a transcription model
+3. Configure your keyboard shortcut in Settings
+4. Start transcribing
+
+> To build from source, see [BUILD.md](BUILD.md).
 
 ## How It Works
 
-1. **Press** a configurable keyboard shortcut to start/stop recording (or use push-to-talk mode)
-2. **Speak** your words while the shortcut is active
-3. **Release** and Dictx processes your speech using Whisper
-4. **Get** your transcribed text pasted directly into whatever app you're using
+1. **Press** a configurable keyboard shortcut (toggle or push-to-talk)
+2. **Speak** — Dictx records and filters silence in real-time
+3. **Release** — audio is processed locally through your chosen model
+4. **Done** — transcribed text is pasted into the active text field
 
-The process is entirely local:
+### Models
 
-- Silence is filtered using VAD (Voice Activity Detection) with Silero
-- Transcription uses your choice of models:
-  - **Whisper models** (Small/Medium/Turbo/Large) with GPU acceleration when available
-  - **Parakeet V3** - CPU-optimized model with excellent performance and automatic language detection
-- Works on Windows, macOS, and Linux
+| Model | Type | Speed | Accuracy | Requirements |
+|-------|------|-------|----------|--------------|
+| Whisper Small | GPU | Fast | Good | GPU recommended |
+| Whisper Medium | GPU | Moderate | Better | GPU recommended |
+| Whisper Turbo | GPU | Fast | Very Good | GPU recommended |
+| Whisper Large | GPU | Slower | Best | GPU required |
+| Parakeet V3 | CPU | Fast | Very Good | CPU only, auto language detection |
 
-## Quick Start
+## Obsidian Integration
 
-### Installation
+Dictx can automatically export every transcription to your Obsidian vault. Configure in **Settings > Advanced > Obsidian Integration**:
 
-1. Download the latest release from the [releases page](https://github.com/0xNyk/dictx/releases)
-2. Install the application
-3. Launch Dictx and grant necessary system permissions (microphone, accessibility)
-4. Configure your preferred keyboard shortcuts in Settings
-5. Start transcribing!
+- **Vault Path** — Select your Obsidian vault root folder
+- **Subfolder** — Target folder within your vault (default: `voice-notes`)
+- **Append to Daily Note** — Add a timestamped reference to today's daily note
 
-### Development Setup
+Exported notes include YAML frontmatter (timestamp, duration, word count, source) and optionally embed the raw transcription in a collapsible callout when post-processing is enabled.
 
-For detailed build instructions including platform-specific requirements, see [BUILD.md](BUILD.md).
+## CLI
 
-## Architecture
+Dictx supports command-line flags for remote control and startup configuration.
 
-Dictx is built as a Tauri application combining:
-
-- **Frontend**: React + TypeScript with Tailwind CSS for the settings UI
-- **Backend**: Rust for system integration, audio processing, and ML inference
-- **Core Libraries**:
-  - `whisper-rs`: Local speech recognition with Whisper models
-  - `transcription-rs`: CPU-optimized speech recognition with Parakeet models
-  - `cpal`: Cross-platform audio I/O
-  - `vad-rs`: Voice Activity Detection
-  - `rdev`: Global keyboard shortcuts and system events
-  - `rubato`: Audio resampling
-
-### Debug Mode
-
-Dictx includes an advanced debug mode for development and troubleshooting. Access it by pressing:
-
-- **macOS**: `Cmd+Shift+D`
-- **Windows/Linux**: `Ctrl+Shift+D`
-
-### CLI Parameters
-
-Dictx supports command-line flags for controlling a running instance and customizing startup behavior. These work on all platforms (macOS, Windows, Linux).
-
-**Remote control flags** (sent to an already-running instance via the single-instance plugin):
+**Control a running instance:**
 
 ```bash
-dictx --toggle-transcription    # Toggle recording on/off
-dictx --toggle-post-process     # Toggle recording with post-processing on/off
-dictx --cancel                  # Cancel the current operation
+dictx --toggle-transcription    # Start/stop recording
+dictx --toggle-post-process     # Start/stop with post-processing
+dictx --cancel                  # Cancel current operation
 ```
 
-**Startup flags:**
+**Startup options:**
 
 ```bash
-dictx --start-hidden            # Start without showing the main window
-dictx --no-tray                 # Start without the system tray icon
-dictx --debug                   # Enable debug mode with verbose logging
-dictx --help                    # Show all available flags
+dictx --start-hidden            # Launch without showing the window
+dictx --no-tray                 # Launch without system tray icon
+dictx --debug                   # Enable verbose logging
 ```
 
-Flags can be combined for autostart scenarios:
+Combine flags for autostart scenarios: `dictx --start-hidden --no-tray`
 
-```bash
-dictx --start-hidden --no-tray
-```
-
-> **macOS tip:** When Dictx is installed as an app bundle, invoke the binary directly:
->
+> **macOS:** When installed as an app bundle, invoke the binary directly:
 > ```bash
 > /Applications/Dictx.app/Contents/MacOS/Dictx --toggle-transcription
 > ```
 
-## Obsidian Integration
+## Architecture
 
-Dictx can automatically export transcriptions to your Obsidian vault. Configure in **Settings > Advanced > Obsidian Integration**:
+```
+src-tauri/src/          Rust backend
+├── lib.rs              App entry point, Tauri setup
+├── managers/           Core logic (audio, model, transcription, history)
+├── audio_toolkit/      Audio recording, resampling, VAD
+├── commands/           Tauri command handlers
+├── shortcut.rs         Global keyboard shortcuts
+├── settings.rs         Settings management
+├── tray.rs             System tray
+└── obsidian_export.rs  Obsidian vault integration
 
-- **Export to Obsidian** — Toggle automatic export on/off
-- **Vault Path** — Select your Obsidian vault root folder
-- **Subfolder** — Choose the folder within your vault (default: `voice-notes`)
-- **Append to Daily Note** — Add a reference to each transcription in today's daily note
+src/                    React/TypeScript frontend
+├── App.tsx             Main component
+├── components/         UI (settings, onboarding, sidebar)
+├── stores/             Zustand state management
+├── hooks/              React hooks
+└── i18n/               17 language translations
+```
 
-Exported notes include YAML frontmatter with metadata (timestamp, duration, word count, source) and optionally include the raw transcription in a collapsible callout when post-processing is used.
+**Key dependencies:** `whisper-rs`, `transcribe-rs` (Parakeet), `cpal`, `vad-rs`, `rdev`, `rubato`
 
-## Known Issues & Current Limitations
+## Platform Notes
 
-This project inherits known issues from upstream Handy. See the [upstream issues](https://github.com/cjpais/Handy/issues) for details.
+### macOS
+- Metal acceleration for Whisper models
+- Requires Accessibility and Microphone permissions
+- Debug mode: `Cmd+Shift+D`
 
-### Linux Notes
+### Windows
+- Vulkan acceleration for Whisper models
+- Debug mode: `Ctrl+Shift+D`
 
-**Text Input Tools:**
+### Linux
 
-For reliable text input on Linux, install the appropriate tool for your display server:
+Requires a text input tool for reliable typing:
 
-| Display Server | Recommended Tool | Install Command                                    |
-| -------------- | ---------------- | -------------------------------------------------- |
-| X11            | `xdotool`        | `sudo apt install xdotool`                         |
-| Wayland        | `wtype`          | `sudo apt install wtype`                           |
-| Both           | `dotool`         | `sudo apt install dotool` (requires `input` group) |
+| Display Server | Tool | Install |
+|---|---|---|
+| X11 | `xdotool` | `sudo apt install xdotool` |
+| Wayland | `wtype` | `sudo apt install wtype` |
+| Both | `dotool` | `sudo apt install dotool` |
 
-Without these tools, Dictx falls back to enigo which may have limited compatibility, especially on Wayland.
-
-- The recording overlay is disabled by default on Linux (`Overlay Position: None`) because certain compositors treat it as the active window.
-- If you are having trouble with the app, running with the environment variable `WEBKIT_DISABLE_DMABUF_RENDERER=1` may help
-- **Global keyboard shortcuts (Wayland):** On Wayland, system-level shortcuts must be configured through your desktop environment. Use the [CLI flags](#cli-parameters) as the command for your custom shortcut.
-
-### Platform Support
-
-- **macOS (both Intel and Apple Silicon)**
-- **x64 Windows**
-- **x64 Linux**
-
-### System Requirements/Recommendations
-
-**For Whisper Models:**
-
-- **macOS**: M series Mac, Intel Mac
-- **Windows**: Intel, AMD, or NVIDIA GPU
-- **Linux**: Intel, AMD, or NVIDIA GPU
-
-**For Parakeet V3 Model:**
-
-- **CPU-only operation** - runs on a wide variety of hardware
-- **Minimum**: Intel Skylake (6th gen) or equivalent AMD processors
-- **Automatic language detection** - no manual language selection required
+- Recording overlay disabled by default (compositors may treat it as active window)
+- If issues occur, try: `WEBKIT_DISABLE_DMABUF_RENDERER=1 dictx`
+- Wayland shortcuts must be configured through your DE using [CLI flags](#cli)
 
 ## Troubleshooting
 
-### Manual Model Installation (For Proxy Users or Network Restrictions)
+### Manual Model Installation
 
-If you're behind a proxy or firewall, you can manually download and install models. See [upstream documentation](https://github.com/cjpais/Handy#manual-model-installation-for-proxy-users-or-network-restrictions) for model URLs and installation instructions.
+If you're behind a proxy or firewall, models can be installed manually. Download the model files and place them in the app data directory:
 
-The app data directory for Dictx is:
+| Platform | Path |
+|----------|------|
+| macOS | `~/Library/Application Support/com.0xnyk.dictx/` |
+| Windows | `C:\Users\{username}\AppData\Roaming\com.0xnyk.dictx\` |
+| Linux | `~/.config/com.0xnyk.dictx/` |
 
-- **macOS**: `~/Library/Application Support/com.0xnyk.dictx/`
-- **Windows**: `C:\Users\{username}\AppData\Roaming\com.0xnyk.dictx\`
-- **Linux**: `~/.config/com.0xnyk.dictx/`
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License. See [LICENSE](LICENSE) for details.
+
+Originally created by [cjpais](https://github.com/cjpais) as [Handy](https://github.com/cjpais/Handy). Forked and extended by [0xNyk](https://github.com/0xNyk).
 
 ## Acknowledgments
 
-- **[Handy](https://github.com/cjpais/Handy)** by cjpais — the upstream project this is forked from
-- **Whisper** by OpenAI for the speech recognition model
-- **whisper.cpp and ggml** for cross-platform whisper inference/acceleration
-- **Silero** for lightweight VAD
-- **Tauri** team for the Rust-based app framework
+- [Handy](https://github.com/cjpais/Handy) by cjpais — the upstream project
+- [Whisper](https://github.com/openai/whisper) by OpenAI — speech recognition models
+- [whisper.cpp](https://github.com/ggerganov/whisper.cpp) / [ggml](https://github.com/ggerganov/ggml) — cross-platform inference
+- [Silero VAD](https://github.com/snakers4/silero-vad) — voice activity detection
+- [Tauri](https://tauri.app) — desktop application framework

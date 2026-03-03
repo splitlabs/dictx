@@ -88,8 +88,8 @@ For more details, see the Architecture section in [README.md](README.md) or [AGE
 
 ### Before Submitting a Bug Report
 
-1. **Search existing issues** at [github.com/cjpais/Handy/issues](https://github.com/cjpais/Handy/issues)
-2. **Check discussions** at [github.com/cjpais/Handy/discussions](https://github.com/cjpais/Handy/discussions)
+1. **Search existing issues** at [github.com/cjpais/Handy/issues](https://github.com/0xNyk/dictx/issues)
+2. **Check discussions** at [github.com/cjpais/Handy/discussions](https://github.com/0xNyk/dictx/discussions)
 3. **Try the latest release** to see if the issue has been fixed
 4. **Enable debug mode** (`Cmd/Ctrl+Shift+D`) to gather diagnostic information
 
@@ -121,14 +121,14 @@ We use GitHub Discussions for feature requests rather than issues. This keeps is
 
 ### Before Suggesting a Feature
 
-1. **Search existing discussions** at [github.com/cjpais/Handy/discussions](https://github.com/cjpais/Handy/discussions)
+1. **Search existing discussions** at [github.com/cjpais/Handy/discussions](https://github.com/0xNyk/dictx/discussions)
 2. **Check common feature requests**:
-   - [Post-processing / Editing Transcripts](https://github.com/cjpais/Handy/discussions/168)
-   - [Keyboard Shortcuts / Hotkeys](https://github.com/cjpais/Handy/discussions/211)
+   - [Post-processing / Editing Transcripts](https://github.com/0xNyk/dictx/discussions/168)
+   - [Keyboard Shortcuts / Hotkeys](https://github.com/0xNyk/dictx/discussions/211)
 
 ### Submitting a Feature Request
 
-1. Go to [Discussions](https://github.com/cjpais/Handy/discussions)
+1. Go to [Discussions](https://github.com/0xNyk/dictx/discussions)
 2. Click "New discussion"
 3. Choose the appropriate category (Ideas, Feature Requests, etc.)
 4. Describe your feature idea including:
@@ -144,14 +144,14 @@ We use GitHub Discussions for feature requests rather than issues. This keeps is
 **This is critical:** Before writing any code, please do the following:
 
 1. **Search existing issues and PRs** - Check both open AND closed issues and pull requests. Someone may have already addressed this, or there may be a reason it was closed.
-   - [Open issues](https://github.com/cjpais/Handy/issues)
-   - [Closed issues](https://github.com/cjpais/Handy/issues?q=is%3Aissue+is%3Aclosed)
-   - [Open PRs](https://github.com/cjpais/Handy/pulls)
-   - [Closed PRs](https://github.com/cjpais/Handy/pulls?q=is%3Apr+is%3Aclosed)
+   - [Open issues](https://github.com/0xNyk/dictx/issues)
+   - [Closed issues](https://github.com/0xNyk/dictx/issues?q=is%3Aissue+is%3Aclosed)
+   - [Open PRs](https://github.com/0xNyk/dictx/pulls)
+   - [Closed PRs](https://github.com/0xNyk/dictx/pulls?q=is%3Apr+is%3Aclosed)
 
 2. **If something was previously closed** - If you want to revisit a closed issue or PR, you need to:
    - Provide a strong argument for why it should be reconsidered
-   - Gather community feedback first via [Discussions](https://github.com/cjpais/Handy/discussions)
+   - Gather community feedback first via [Discussions](https://github.com/0xNyk/dictx/discussions)
    - Link to that discussion in your PR
 
 3. **Get community feedback for features** - PRs with demonstrated community interest are **much more likely to be merged**. Start a discussion, get feedback, and link to it in your PR. This helps ensure Dictx stays focused and useful without becoming bloated.
@@ -303,8 +303,7 @@ Look for issues labeled `good first issue` or `help wanted` if you're new to the
 
 ## 📞 Getting Help
 
-- **Discord**: Join our [Discord community](https://discord.com/invite/WVBeWsNXK4)
-- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/cjpais/Handy/discussions)
+- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/0xNyk/dictx/discussions)
 ## 📜 License
 
 By contributing to Dictx, you agree that your contributions will be licensed under the MIT License. See [LICENSE](LICENSE) for details.
