@@ -15,7 +15,8 @@
     "postProcessing": "後処理",
     "history": "履歴",
     "debug": "デバッグ",
-    "about": "概要"
+    "about": "概要",
+    "getPro": "Dictx Proを入手"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしモデルを選択してください",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "高速でそこそこ正確。"
+        "description": "高速でそこそこ正確。",
+        "useCase": "メモやカジュアルな音声入力に"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "良好な精度、中程度の速度"
+        "description": "良好な精度、中程度の速度",
+        "useCase": "会議や長時間の録音に"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "精度と速度のバランスが良い。"
+        "description": "精度と速度のバランスが良い。",
+        "useCase": "ほとんどのユーザーに最適な万能モデル"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "良好な精度、ただし低速。"
+        "description": "良好な精度、ただし低速。",
+        "useCase": "速度より精度を重視する場合に"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "英語のみ。英語話者に最適なモデル。"
+        "description": "英語のみ。英語話者に最適なモデル。",
+        "useCase": "プロフェッショナルな英語音声入力"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "高速で正確"
+        "description": "高速で正確",
+        "useCase": "高速・高品質な英語文字起こし"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "非常に高速、英語のみ。アクセントにも対応。"
+        "description": "非常に高速、英語のみ。アクセントにも対応。",
+        "useCase": "アクセントに対応したリアルタイム音声入力"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "超高速、英語のみ"
+        "description": "超高速、英語のみ",
+        "useCase": "低スペックデバイスでの即時音声入力"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "高速、英語のみ。速度と精度のバランスが良い。"
+        "description": "高速、英語のみ。速度と精度のバランスが良い。",
+        "useCase": "日常的な英語音声入力"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "英語のみ。高品質。"
+        "description": "英語のみ。高品質。",
+        "useCase": "高品質な英語と高速レスポンス"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "台湾華語に最適化。コードスイッチングに対応。"
+        "description": "台湾華語に最適化。コードスイッチングに対応。",
+        "useCase": "英語混じりの中国語に"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "非常に高速。中国語、英語、日本語、韓国語、広東語。"
+        "description": "非常に高速。中国語、英語、日本語、韓国語、広東語。",
+        "useCase": "多言語アジア文字起こし"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "ロシア語音声認識。高速かつ高精度。"
+        "description": "ロシア語音声認識。高速かつ高精度。",
+        "useCase": "ロシア語の音声入力"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "権限の確認に失敗しました。もう一度お試しください。",
         "requestFailed": "権限のリクエストに失敗しました。もう一度お試しください。"
-      }
-    }
+      },
+      "retry": "再試行",
+      "restartHint": "動かない場合は、システム設定で権限をオフ・オンし、再試行をクリックしてください。",
+      "skipForNow": "権限なしで続行 — 後で設定します"
+    },
+    "supportCta": "Dictx Proを入手 — 自動更新付き署名済みバイナリ（$29）",
+    "downloadEta": "残り約{{time}}",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "カスタム",
@@ -395,7 +415,14 @@
       "save": "文字起こしを保存",
       "unsave": "保存から削除",
       "delete": "エントリーを削除",
-      "deleteError": "エントリーの削除に失敗しました。もう一度お試しください。"
+      "deleteError": "エントリーの削除に失敗しました。もう一度お試しください。",
+      "deleteConfirm": "この文字起こしを削除しますか？この操作は取り消せません。",
+      "deleteTitle": "文字起こしを削除",
+      "search": "文字起こしを検索...",
+      "filterSaved": "保存済み",
+      "noResults": "検索に一致する文字起こしがありません。",
+      "copyAll": "すべてコピー",
+      "copiedAll": "すべての文字起こしをクリップボードにコピーしました"
     },
     "debug": {
       "title": "デバッグ",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "文字起こし中...",
     "processing": "処理中..."
+  },
+  "shortcuts": {
+    "title": "キーボードショートカット",
+    "description": "Dictxで使用できるキーボードショートカット",
+    "transcribe": "文字起こしの開始/停止",
+    "cancel": "録音のキャンセル",
+    "postProcess": "後処理付き文字起こし",
+    "debugToggle": "デバッグモードの切り替え",
+    "shortcutsHelp": "このダイアログを表示"
   }
 }

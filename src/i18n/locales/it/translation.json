@@ -15,7 +15,8 @@
     "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
     "debug": "Debug",
-    "about": "Informazioni"
+    "about": "Informazioni",
+    "getPro": "Ottieni Dictx Pro"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "Veloce e abbastanza accurato."
+        "description": "Veloce e abbastanza accurato.",
+        "useCase": "Appunti veloci e dettatura occasionale"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "Buona accuratezza, velocità nella media"
+        "description": "Buona accuratezza, velocità nella media",
+        "useCase": "Riunioni e registrazioni lunghe"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "Bilanciato fra accuratezza e velocità."
+        "description": "Bilanciato fra accuratezza e velocità.",
+        "useCase": "Il migliore tuttofare per la maggior parte degli utenti"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "Buona accuratezza, ma lento."
+        "description": "Buona accuratezza, ma lento.",
+        "useCase": "Quando la precisione conta più della velocità"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "Solo inglese. Il miglior modello per chi parla inglese."
+        "description": "Solo inglese. Il miglior modello per chi parla inglese.",
+        "useCase": "Dettatura professionale in inglese"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Veloce e accurato"
+        "description": "Veloce e accurato",
+        "useCase": "Trascrizione inglese veloce e di alta qualità"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "Molto veloce, solo inglese. Gestisce bene gli accenti."
+        "description": "Molto veloce, solo inglese. Gestisce bene gli accenti.",
+        "useCase": "Dettatura in tempo reale con accenti"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "Ultra-veloce, solo inglese"
+        "description": "Ultra-veloce, solo inglese",
+        "useCase": "Dettatura istantanea su dispositivi a basse prestazioni"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "Veloce, solo inglese. Buon equilibrio tra velocità e precisione."
+        "description": "Veloce, solo inglese. Buon equilibrio tra velocità e precisione.",
+        "useCase": "Dettatura quotidiana in inglese"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "Solo inglese. Alta qualità."
+        "description": "Solo inglese. Alta qualità.",
+        "useCase": "Inglese di alta qualità con risposta rapida"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "Ottimizzato per il mandarino taiwanese. Supporto per il code-switching."
+        "description": "Ottimizzato per il mandarino taiwanese. Supporto per il code-switching.",
+        "useCase": "Mandarino con termini inglesi misti"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "Molto veloce. Cinese, inglese, giapponese, coreano, cantonese."
+        "description": "Molto veloce. Cinese, inglese, giapponese, coreano, cantonese.",
+        "useCase": "Trascrizione asiatica multilingue"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "Riconoscimento vocale in russo. Veloce e preciso."
+        "description": "Riconoscimento vocale in russo. Veloce e preciso.",
+        "useCase": "Dettatura in russo"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "Impossibile verificare i permessi. Riprova.",
         "requestFailed": "Impossibile richiedere il permesso. Riprova."
-      }
-    }
+      },
+      "retry": "Riprova",
+      "restartHint": "Se bloccato, prova a disattivare e riattivare il permesso nelle Impostazioni di Sistema, poi clicca Riprova.",
+      "skipForNow": "Continua senza permessi — lo sistemerò dopo"
+    },
+    "supportCta": "Ottieni Dictx Pro — binario firmato con aggiornamenti automatici ($29)",
+    "downloadEta": "~{{time}} rimanente",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "Personalizzato",
@@ -395,7 +415,14 @@
       "save": "Salva la trascrizione",
       "unsave": "Rimuovi dai salvataggi",
       "delete": "Elimina elemento",
-      "deleteError": "Errore nell'eliminazione dell'elemento. Per favore, prova di nuovo."
+      "deleteError": "Errore nell'eliminazione dell'elemento. Per favore, prova di nuovo.",
+      "deleteConfirm": "Sei sicuro di voler eliminare questa trascrizione? L'azione non può essere annullata.",
+      "deleteTitle": "Elimina trascrizione",
+      "search": "Cerca trascrizioni...",
+      "filterSaved": "Salvate",
+      "noResults": "Nessuna trascrizione corrisponde alla tua ricerca.",
+      "copyAll": "Copia tutto",
+      "copiedAll": "Tutte le trascrizioni copiate negli appunti"
     },
     "debug": {
       "title": "Debug",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "Trascrizione...",
     "processing": "Elaborazione..."
+  },
+  "shortcuts": {
+    "title": "Scorciatoie da tastiera",
+    "description": "Scorciatoie da tastiera disponibili in Dictx",
+    "transcribe": "Avvia/ferma trascrizione",
+    "cancel": "Annulla registrazione",
+    "postProcess": "Trascrivi con post-elaborazione",
+    "debugToggle": "Attiva/disattiva modalità debug",
+    "shortcutsHelp": "Mostra questa finestra"
   }
 }

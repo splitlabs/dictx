@@ -15,7 +15,8 @@
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "debug": "Gỡ lỗi",
-    "about": "Giới thiệu"
+    "about": "Giới thiệu",
+    "getPro": "Mua Dictx Pro"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "Nhanh và khá chính xác."
+        "description": "Nhanh và khá chính xác.",
+        "useCase": "Ghi chú nhanh và đọc chính tả thông thường"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "Độ chính xác tốt, tốc độ trung bình"
+        "description": "Độ chính xác tốt, tốc độ trung bình",
+        "useCase": "Cuộc họp và bản ghi dài"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "Cân bằng giữa độ chính xác và tốc độ."
+        "description": "Cân bằng giữa độ chính xác và tốc độ.",
+        "useCase": "Lựa chọn tốt nhất cho đa số người dùng"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "Độ chính xác tốt, nhưng chậm."
+        "description": "Độ chính xác tốt, nhưng chậm.",
+        "useCase": "Khi độ chính xác quan trọng hơn tốc độ"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "Chỉ tiếng Anh. Mô hình tốt nhất cho người nói tiếng Anh."
+        "description": "Chỉ tiếng Anh. Mô hình tốt nhất cho người nói tiếng Anh.",
+        "useCase": "Đọc chính tả tiếng Anh chuyên nghiệp"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Nhanh và chính xác"
+        "description": "Nhanh và chính xác",
+        "useCase": "Phiên âm tiếng Anh nhanh và chất lượng cao"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "Rất nhanh, chỉ tiếng Anh. Xử lý tốt các giọng nói."
+        "description": "Rất nhanh, chỉ tiếng Anh. Xử lý tốt các giọng nói.",
+        "useCase": "Đọc chính tả thời gian thực với giọng địa phương"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "Cực nhanh, chỉ tiếng Anh"
+        "description": "Cực nhanh, chỉ tiếng Anh",
+        "useCase": "Đọc chính tả tức thì trên thiết bị yếu"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "Nhanh, chỉ tiếng Anh. Cân bằng tốt giữa tốc độ và độ chính xác."
+        "description": "Nhanh, chỉ tiếng Anh. Cân bằng tốt giữa tốc độ và độ chính xác.",
+        "useCase": "Đọc chính tả tiếng Anh hàng ngày"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "Chỉ tiếng Anh. Chất lượng cao."
+        "description": "Chỉ tiếng Anh. Chất lượng cao.",
+        "useCase": "Tiếng Anh chất lượng cao với phản hồi nhanh"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "Tối ưu hóa cho tiếng Quan Thoại Đài Loan. Hỗ trợ chuyển đổi ngôn ngữ."
+        "description": "Tối ưu hóa cho tiếng Quan Thoại Đài Loan. Hỗ trợ chuyển đổi ngôn ngữ.",
+        "useCase": "Tiếng Quan Thoại với thuật ngữ tiếng Anh"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "Rất nhanh. Tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Hàn, tiếng Quảng Đông."
+        "description": "Rất nhanh. Tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Hàn, tiếng Quảng Đông.",
+        "useCase": "Phiên âm đa ngôn ngữ châu Á"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "Nhận dạng giọng nói tiếng Nga. Nhanh và chính xác."
+        "description": "Nhận dạng giọng nói tiếng Nga. Nhanh và chính xác.",
+        "useCase": "Đọc chính tả tiếng Nga"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "Không thể kiểm tra quyền. Vui lòng thử lại.",
         "requestFailed": "Không thể yêu cầu quyền. Vui lòng thử lại."
-      }
-    }
+      },
+      "retry": "Thử lại",
+      "restartHint": "Nếu bị treo, hãy thử tắt/bật quyền trong Cài đặt Hệ thống, rồi nhấn Thử lại.",
+      "skipForNow": "Tiếp tục không cần quyền — tôi sẽ sửa sau"
+    },
+    "supportCta": "Mua Dictx Pro — bản nhị phân đã ký với cập nhật tự động ($29)",
+    "downloadEta": "Còn ~{{time}}",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "Tùy chỉnh",
@@ -395,7 +415,14 @@
       "save": "Lưu bản ghi",
       "unsave": "Xóa khỏi đã lưu",
       "delete": "Xóa mục",
-      "deleteError": "Không thể xóa mục. Vui lòng thử lại."
+      "deleteError": "Không thể xóa mục. Vui lòng thử lại.",
+      "deleteConfirm": "Bạn có chắc muốn xóa bản phiên âm này? Hành động này không thể hoàn tác.",
+      "deleteTitle": "Xóa phiên âm",
+      "search": "Tìm kiếm phiên âm...",
+      "filterSaved": "Đã lưu",
+      "noResults": "Không có phiên âm nào khớp với tìm kiếm.",
+      "copyAll": "Sao chép tất cả",
+      "copiedAll": "Đã sao chép tất cả phiên âm vào bộ nhớ tạm"
     },
     "debug": {
       "title": "Gỡ lỗi",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "Đang chuyển đổi...",
     "processing": "Đang xử lý..."
+  },
+  "shortcuts": {
+    "title": "Phím tắt",
+    "description": "Các phím tắt có sẵn trong Dictx",
+    "transcribe": "Bắt đầu/Dừng phiên âm",
+    "cancel": "Hủy ghi âm",
+    "postProcess": "Phiên âm với xử lý sau",
+    "debugToggle": "Bật/tắt chế độ gỡ lỗi",
+    "shortcutsHelp": "Hiển thị hộp thoại này"
   }
 }

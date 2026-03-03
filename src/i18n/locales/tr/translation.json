@@ -15,7 +15,8 @@
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
     "debug": "Hata Ayıklama",
-    "about": "Hakkında"
+    "about": "Hakkında",
+    "getPro": "Dictx Pro'yu Edinin"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "Hızlı ve oldukça doğru."
+        "description": "Hızlı ve oldukça doğru.",
+        "useCase": "Hızlı notlar ve günlük dikte"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "İyi doğruluk, orta hız."
+        "description": "İyi doğruluk, orta hız.",
+        "useCase": "Toplantılar ve uzun kayıtlar"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "Dengeli doğruluk ve hız."
+        "description": "Dengeli doğruluk ve hız.",
+        "useCase": "Çoğu kullanıcı için en iyi seçenek"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "İyi doğruluk, ancak yavaş."
+        "description": "İyi doğruluk, ancak yavaş.",
+        "useCase": "Doğruluk hızdan önemli olduğunda"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "Yalnızca İngilizce. İngilizce konuşanlar için en iyi model."
+        "description": "Yalnızca İngilizce. İngilizce konuşanlar için en iyi model.",
+        "useCase": "Profesyonel İngilizce dikte"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Hızlı ve doğru."
+        "description": "Hızlı ve doğru.",
+        "useCase": "Hızlı ve kaliteli İngilizce transkripsiyon"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "Çok hızlı, yalnızca İngilizce. Aksanları iyi işler."
+        "description": "Çok hızlı, yalnızca İngilizce. Aksanları iyi işler.",
+        "useCase": "Aksanlarla gerçek zamanlı dikte"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "Ultra hızlı, yalnızca İngilizce"
+        "description": "Ultra hızlı, yalnızca İngilizce",
+        "useCase": "Düşük güçlü cihazlarda anlık dikte"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "Hızlı, yalnızca İngilizce. Hız ve doğruluk arasında iyi denge."
+        "description": "Hızlı, yalnızca İngilizce. Hız ve doğruluk arasında iyi denge.",
+        "useCase": "Günlük İngilizce dikte"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "Yalnızca İngilizce. Yüksek kalite."
+        "description": "Yalnızca İngilizce. Yüksek kalite.",
+        "useCase": "Hızlı yanıtlı yüksek kaliteli İngilizce"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "Tayvan Mandarin Çincesi için optimize edilmiş. Dil değiştirme desteği."
+        "description": "Tayvan Mandarin Çincesi için optimize edilmiş. Dil değiştirme desteği.",
+        "useCase": "İngilizce terimlerle karışık Mandarin"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "Çok hızlı. Çince, İngilizce, Japonca, Korece, Kantonca."
+        "description": "Çok hızlı. Çince, İngilizce, Japonca, Korece, Kantonca.",
+        "useCase": "Çok dilli Asya transkripsiyonu"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "Rusça konuşma tanıma. Hızlı ve doğru."
+        "description": "Rusça konuşma tanıma. Hızlı ve doğru.",
+        "useCase": "Rusça dikte"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "İzinler kontrol edilemedi. Lütfen tekrar deneyin.",
         "requestFailed": "İzin isteği başarısız oldu. Lütfen tekrar deneyin."
-      }
-    }
+      },
+      "retry": "Tekrar Dene",
+      "restartHint": "Takılırsa, Sistem Ayarlarında izni kapatıp açmayı deneyin, sonra Tekrar Dene'ye tıklayın.",
+      "skipForNow": "İzinsiz devam et — daha sonra düzeltirim"
+    },
+    "supportCta": "Dictx Pro'yu Edinin — otomatik güncellemeli imzalı dosya ($29)",
+    "downloadEta": "~{{time}} kaldı",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "Özel",
@@ -395,7 +415,14 @@
       "save": "Transkripsiyonu kaydet",
       "unsave": "Kaydedilenlerden kaldır",
       "delete": "Kaydı sil",
-      "deleteError": "Kayıt silinemedi. Lütfen tekrar deneyin."
+      "deleteError": "Kayıt silinemedi. Lütfen tekrar deneyin.",
+      "deleteConfirm": "Bu transkripsiyonu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "deleteTitle": "Transkripsiyonu Sil",
+      "search": "Transkripsiyon ara...",
+      "filterSaved": "Kaydedilenler",
+      "noResults": "Aramanızla eşleşen transkripsiyon bulunamadı.",
+      "copyAll": "Tümünü Kopyala",
+      "copiedAll": "Tüm transkripsiyonlar panoya kopyalandı"
     },
     "debug": {
       "title": "Hata Ayıklama",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "Transkribe ediliyor...",
     "processing": "İşleniyor..."
+  },
+  "shortcuts": {
+    "title": "Klavye Kısayolları",
+    "description": "Dictx'te kullanılabilir klavye kısayolları",
+    "transcribe": "Transkripsiyonu Başlat/Durdur",
+    "cancel": "Kaydı İptal Et",
+    "postProcess": "İşleme ile Transkribe Et",
+    "debugToggle": "Hata Ayıklama Modunu Değiştir",
+    "shortcutsHelp": "Bu Diyaloğu Göster"
   }
 }

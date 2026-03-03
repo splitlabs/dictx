@@ -15,7 +15,8 @@
     "history": "السجل",
     "debug": "تصحيح الأخطاء",
     "about": "حول",
-    "models": "النماذج"
+    "models": "النماذج",
+    "getPro": "احصل على Dictx Pro"
   },
   "onboarding": {
     "subtitle": "للبدء، اختر نموذج التفريغ الصوتي",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": ".سريع ودقيق إلى حد ما"
+        "description": ".سريع ودقيق إلى حد ما",
+        "useCase": "ملاحظات سريعة وإملاء عادي"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": ".دقة جيدة، سرعة متوسطة"
+        "description": ".دقة جيدة، سرعة متوسطة",
+        "useCase": "اجتماعات وتسجيلات طويلة"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": ".توازن بين الدقة والسرعة"
+        "description": ".توازن بين الدقة والسرعة",
+        "useCase": "الأفضل للاستخدام العام"
       },
       "large": {
         "name": "Whisper Large",
-        "description": ".دقة جيدة، لكنه بطيء"
+        "description": ".دقة جيدة، لكنه بطيء",
+        "useCase": "عندما تكون الدقة أهم من السرعة"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": ".الإنجليزية فقط. أفضل نموذج للمتحدثين بالإنجليزية"
+        "description": ".الإنجليزية فقط. أفضل نموذج للمتحدثين بالإنجليزية",
+        "useCase": "إملاء احترافي بالإنجليزية"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": ".سريع ودقيق"
+        "description": ".سريع ودقيق",
+        "useCase": "نسخ إنجليزي سريع وعالي الجودة"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": ".سريع جداً، الإنجليزية فقط. يتعامل جيداً مع اللهجات"
+        "description": ".سريع جداً، الإنجليزية فقط. يتعامل جيداً مع اللهجات",
+        "useCase": "إملاء فوري مع اللهجات"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "سريع للغاية، الإنجليزية فقط"
+        "description": "سريع للغاية، الإنجليزية فقط",
+        "useCase": "إملاء فوري على الأجهزة الضعيفة"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "سريع، الإنجليزية فقط. توازن جيد بين السرعة والدقة."
+        "description": "سريع، الإنجليزية فقط. توازن جيد بين السرعة والدقة.",
+        "useCase": "إملاء إنجليزي يومي"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "الإنجليزية فقط. جودة عالية."
+        "description": "الإنجليزية فقط. جودة عالية.",
+        "useCase": "إنجليزي عالي الجودة مع استجابة سريعة"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "محسّن للماندرين التايوانية. دعم التبديل بين اللغات."
+        "description": "محسّن للماندرين التايوانية. دعم التبديل بين اللغات.",
+        "useCase": "ماندارين مع مصطلحات إنجليزية مختلطة"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "سريع جداً. الصينية، الإنجليزية، اليابانية، الكورية، الكانتونية."
+        "description": "سريع جداً. الصينية، الإنجليزية، اليابانية، الكورية، الكانتونية.",
+        "useCase": "نسخ آسيوي متعدد اللغات"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "التعرف على الكلام الروسي. سريع ودقيق."
+        "description": "التعرف على الكلام الروسي. سريع ودقيق.",
+        "useCase": "إملاء باللغة الروسية"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "فشل التحقق من الأذونات. يرجير المحاولة مرة أخرى.",
         "requestFailed": "فشل طلب الإذن. يرجى المحاولة مرة أخرى."
-      }
-    }
+      },
+      "retry": "إعادة المحاولة",
+      "restartHint": "إذا علقت، جرب تبديل الإذن في إعدادات النظام، ثم انقر إعادة المحاولة.",
+      "skipForNow": "المتابعة بدون أذونات — سأصلح هذا لاحقًا"
+    },
+    "supportCta": "احصل على Dictx Pro — نسخة موقعة مع تحديثات تلقائية ($29)",
+    "downloadEta": "~{{time}} متبقي",
+    "downloadSize": "{{downloaded}} / {{total}} ميغابايت"
   },
   "modelSelector": {
     "custom": "مخصص",
@@ -373,7 +393,14 @@
       "save": "حفظ التفريغ",
       "unsave": "إزالة من المحفوظات",
       "delete": "حذف الإدخال",
-      "deleteError": ".فشل حذف الإدخال. يرجى المحاولة مرة أخرى"
+      "deleteError": ".فشل حذف الإدخال. يرجى المحاولة مرة أخرى",
+      "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا النسخ؟ لا يمكن التراجع عن هذا.",
+      "deleteTitle": "حذف النسخ",
+      "search": "البحث في النسخ...",
+      "filterSaved": "المحفوظة",
+      "noResults": "لا توجد نسخ تطابق بحثك.",
+      "copyAll": "نسخ الكل",
+      "copiedAll": "تم نسخ جميع النسخ إلى الحافظة"
     },
     "debug": {
       "title": "تصحيح الأخطاء",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "...جاري التفريغ",
     "processing": "...جاري المعالجة"
+  },
+  "shortcuts": {
+    "title": "اختصارات لوحة المفاتيح",
+    "description": "اختصارات لوحة المفاتيح المتاحة في Dictx",
+    "transcribe": "بدء/إيقاف النسخ",
+    "cancel": "إلغاء التسجيل",
+    "postProcess": "النسخ مع المعالجة اللاحقة",
+    "debugToggle": "تبديل وضع التصحيح",
+    "shortcutsHelp": "عرض هذا الحوار"
   }
 }

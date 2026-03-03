@@ -15,7 +15,8 @@
     "postProcessing": "Následné zpracování",
     "history": "Historie",
     "debug": "Ladění",
-    "about": "O aplikaci"
+    "about": "O aplikaci",
+    "getPro": "Získat Dictx Pro"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "Rychlý a poměrně přesný."
+        "description": "Rychlý a poměrně přesný.",
+        "useCase": "Rychlé poznámky a běžný diktát"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "Dobrá přesnost, střední rychlost"
+        "description": "Dobrá přesnost, střední rychlost",
+        "useCase": "Schůzky a delší nahrávky"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "Vyvážená přesnost a rychlost."
+        "description": "Vyvážená přesnost a rychlost.",
+        "useCase": "Nejlepší volba pro většinu uživatelů"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "Dobrá přesnost, ale pomalý."
+        "description": "Dobrá přesnost, ale pomalý.",
+        "useCase": "Když záleží více na přesnosti než rychlosti"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "Pouze angličtina. Nejlepší model pro anglicky mluvící."
+        "description": "Pouze angličtina. Nejlepší model pro anglicky mluvící.",
+        "useCase": "Profesionální anglický diktát"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Rychlý a přesný"
+        "description": "Rychlý a přesný",
+        "useCase": "Rychlý a kvalitní anglický přepis"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "Velmi rychlý, pouze angličtina. Dobře zvládá přízvuky."
+        "description": "Velmi rychlý, pouze angličtina. Dobře zvládá přízvuky.",
+        "useCase": "Diktát v reálném čase s přízvuky"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "Ultrarychlý, pouze angličtina"
+        "description": "Ultrarychlý, pouze angličtina",
+        "useCase": "Okamžitý diktát na slabších zařízeních"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "Rychlý, pouze angličtina. Dobrý poměr rychlosti a přesnosti."
+        "description": "Rychlý, pouze angličtina. Dobrý poměr rychlosti a přesnosti.",
+        "useCase": "Každodenní anglický diktát"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "Pouze angličtina. Vysoká kvalita."
+        "description": "Pouze angličtina. Vysoká kvalita.",
+        "useCase": "Kvalitní angličtina s rychlou odezvou"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "Optimalizováno pro tchajwanskou mandarínštinu. Podpora přepínání jazyků."
+        "description": "Optimalizováno pro tchajwanskou mandarínštinu. Podpora přepínání jazyků.",
+        "useCase": "Mandarínština s anglickými výrazy"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "Velmi rychlý. Čínština, angličtina, japonština, korejština, kantonština."
+        "description": "Velmi rychlý. Čínština, angličtina, japonština, korejština, kantonština.",
+        "useCase": "Vícejazyčný asijský přepis"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "Rozpoznávání ruské řeči. Rychlé a přesné."
+        "description": "Rozpoznávání ruské řeči. Rychlé a přesné.",
+        "useCase": "Diktát v ruštině"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "Nepodařilo se zkontrolovat oprávnění. Zkuste to prosím znovu.",
         "requestFailed": "Nepodařilo se požádat o oprávnění. Zkuste to prosím znovu."
-      }
-    }
+      },
+      "retry": "Zkusit znovu",
+      "restartHint": "Pokud jste zaseknutí, zkuste přepnout oprávnění v Nastavení systému a klikněte Zkusit znovu.",
+      "skipForNow": "Pokračovat bez oprávnění — opravím to později"
+    },
+    "supportCta": "Získejte Dictx Pro — podepsaný binární soubor s automatickými aktualizacemi ($29)",
+    "downloadEta": "~{{time}} zbývá",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "Vlastní",
@@ -395,7 +415,14 @@
       "save": "Uložit přepis",
       "unsave": "Odebrat z uložených",
       "delete": "Smazat záznam",
-      "deleteError": "Nepodařilo se smazat záznam. Zkuste to prosím znovu."
+      "deleteError": "Nepodařilo se smazat záznam. Zkuste to prosím znovu.",
+      "deleteConfirm": "Opravdu chcete smazat tento přepis? Tuto akci nelze vrátit.",
+      "deleteTitle": "Smazat přepis",
+      "search": "Hledat přepisy...",
+      "filterSaved": "Uložené",
+      "noResults": "Žádné přepisy neodpovídají vašemu hledání.",
+      "copyAll": "Kopírovat vše",
+      "copiedAll": "Všechny přepisy zkopírovány do schránky"
     },
     "debug": {
       "title": "Ladění",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "Přepisuji...",
     "processing": "Zpracovávám..."
+  },
+  "shortcuts": {
+    "title": "Klávesové zkratky",
+    "description": "Dostupné klávesové zkratky v Dictx",
+    "transcribe": "Spustit/zastavit přepis",
+    "cancel": "Zrušit nahrávání",
+    "postProcess": "Přepis se zpracováním",
+    "debugToggle": "Přepnout režim ladění",
+    "shortcutsHelp": "Zobrazit tento dialog"
   }
 }

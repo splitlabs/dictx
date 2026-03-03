@@ -15,7 +15,8 @@
     "postProcessing": "後處理",
     "history": "歷史紀錄",
     "debug": "偵錯",
-    "about": "關於"
+    "about": "關於",
+    "getPro": "取得 Dictx Pro"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "快速且相當準確"
+        "description": "快速且相當準確",
+        "useCase": "快速筆記和日常聽寫"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "準確度高，速度適中"
+        "description": "準確度高，速度適中",
+        "useCase": "會議和較長錄音"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "準確度和速度均衡"
+        "description": "準確度和速度均衡",
+        "useCase": "大多數使用者的最佳全能選擇"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "準確度高，但速度較慢"
+        "description": "準確度高，但速度較慢",
+        "useCase": "當準確性比速度更重要時"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "僅支援英語，英語使用者的最佳模型"
+        "description": "僅支援英語，英語使用者的最佳模型",
+        "useCase": "專業英語聽寫"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "快速且準確"
+        "description": "快速且準確",
+        "useCase": "快速高品質英語轉錄"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "速度極快，僅支援英語，擅長處理各種口音"
+        "description": "速度極快，僅支援英語，擅長處理各種口音",
+        "useCase": "支援口音的即時聽寫"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "超快速，僅支援英語"
+        "description": "超快速，僅支援英語",
+        "useCase": "低功耗裝置上的即時聽寫"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "快速，僅支援英語。速度與準確度的良好平衡。"
+        "description": "快速，僅支援英語。速度與準確度的良好平衡。",
+        "useCase": "日常英語聽寫"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "僅支援英語。高品質。"
+        "description": "僅支援英語。高品質。",
+        "useCase": "高品質英語，快速回應"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "針對臺灣華語最佳化。支援語碼轉換。"
+        "description": "針對臺灣華語最佳化。支援語碼轉換。",
+        "useCase": "中英混合術語的國語"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "速度極快。支援中文、英語、日語、韓語、粵語。"
+        "description": "速度極快。支援中文、英語、日語、韓語、粵語。",
+        "useCase": "多語種亞洲轉錄"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "俄語語音辨識。快速且準確。"
+        "description": "俄語語音辨識。快速且準確。",
+        "useCase": "俄語聽寫"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "檢查權限失敗，請重試",
         "requestFailed": "請求權限失敗，請重試"
-      }
-    }
+      },
+      "retry": "重試",
+      "restartHint": "如果卡住，請在系統設定中關閉再開啟權限，然後點擊重試。",
+      "skipForNow": "跳過權限繼續 — 稍後再設定"
+    },
+    "supportCta": "取得 Dictx Pro — 附自動更新的簽署二進位檔（$29）",
+    "downloadEta": "剩餘約 {{time}}",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "自訂",
@@ -395,7 +415,14 @@
       "save": "儲存轉錄",
       "unsave": "從已儲存中移除",
       "delete": "刪除條目",
-      "deleteError": "刪除條目失敗，請重試"
+      "deleteError": "刪除條目失敗，請重試",
+      "deleteConfirm": "確定要刪除此轉錄嗎？此操作無法復原。",
+      "deleteTitle": "刪除轉錄",
+      "search": "搜尋轉錄...",
+      "filterSaved": "已儲存",
+      "noResults": "沒有符合搜尋的轉錄。",
+      "copyAll": "全部複製",
+      "copiedAll": "已將所有轉錄複製到剪貼簿"
     },
     "debug": {
       "title": "偵錯",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "正在轉錄...",
     "processing": "處理中..."
+  },
+  "shortcuts": {
+    "title": "鍵盤快捷鍵",
+    "description": "Dictx 中可用的鍵盤快捷鍵",
+    "transcribe": "開始/停止轉錄",
+    "cancel": "取消錄音",
+    "postProcess": "帶後處理轉錄",
+    "debugToggle": "切換偵錯模式",
+    "shortcutsHelp": "顯示此對話框"
   }
 }

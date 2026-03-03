@@ -15,7 +15,8 @@
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
     "debug": "Depuração",
-    "about": "Sobre"
+    "about": "Sobre",
+    "getPro": "Obter Dictx Pro"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "Rápido e razoavelmente preciso."
+        "description": "Rápido e razoavelmente preciso.",
+        "useCase": "Notas rápidas e ditado casual"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "Boa precisão, velocidade média"
+        "description": "Boa precisão, velocidade média",
+        "useCase": "Reuniões e gravações longas"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "Precisão e velocidade balanceadas."
+        "description": "Precisão e velocidade balanceadas.",
+        "useCase": "Melhor opção versátil para a maioria"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "Boa precisão, mas lento."
+        "description": "Boa precisão, mas lento.",
+        "useCase": "Quando a precisão importa mais que a velocidade"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "Apenas inglês. O melhor modelo para falantes de inglês."
+        "description": "Apenas inglês. O melhor modelo para falantes de inglês.",
+        "useCase": "Ditado profissional em inglês"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Rápido e preciso"
+        "description": "Rápido e preciso",
+        "useCase": "Transcrição rápida e de alta qualidade em inglês"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "Muito rápido, apenas inglês. Lida bem com sotaques."
+        "description": "Muito rápido, apenas inglês. Lida bem com sotaques.",
+        "useCase": "Ditado em tempo real com sotaques"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "Ultrarrápido, apenas inglês"
+        "description": "Ultrarrápido, apenas inglês",
+        "useCase": "Ditado instantâneo em dispositivos de baixo consumo"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "Rápido, apenas inglês. Bom equilíbrio entre velocidade e precisão."
+        "description": "Rápido, apenas inglês. Bom equilíbrio entre velocidade e precisão.",
+        "useCase": "Ditado diário em inglês"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "Apenas inglês. Alta qualidade."
+        "description": "Apenas inglês. Alta qualidade.",
+        "useCase": "Inglês de alta qualidade com resposta rápida"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "Otimizado para mandarim taiwanês. Suporte para alternância de código."
+        "description": "Otimizado para mandarim taiwanês. Suporte para alternância de código.",
+        "useCase": "Mandarim com termos em inglês misturados"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "Muito rápido. Chinês, inglês, japonês, coreano, cantonês."
+        "description": "Muito rápido. Chinês, inglês, japonês, coreano, cantonês.",
+        "useCase": "Transcrição asiática multilíngue"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "Reconhecimento de voz em russo. Rápido e preciso."
+        "description": "Reconhecimento de voz em russo. Rápido e preciso.",
+        "useCase": "Ditado em russo"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "Erro ao verificar permissões. Por favor, tente novamente.",
         "requestFailed": "Erro ao solicitar permissão. Por favor, tente novamente."
-      }
-    }
+      },
+      "retry": "Tentar novamente",
+      "restartHint": "Se travou, tente alternar a permissão nas Configurações do Sistema e clique Tentar novamente.",
+      "skipForNow": "Continuar sem permissões — vou corrigir depois"
+    },
+    "supportCta": "Obter Dictx Pro — binário assinado com atualizações automáticas ($29)",
+    "downloadEta": "~{{time}} restante",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "Personalizado",
@@ -395,7 +415,14 @@
       "save": "Salvar transcrição",
       "unsave": "Remover dos salvos",
       "delete": "Excluir entrada",
-      "deleteError": "Falha ao excluir entrada. Por favor, tente novamente."
+      "deleteError": "Falha ao excluir entrada. Por favor, tente novamente.",
+      "deleteConfirm": "Tem certeza que deseja excluir esta transcrição? Esta ação não pode ser desfeita.",
+      "deleteTitle": "Excluir transcrição",
+      "search": "Pesquisar transcrições...",
+      "filterSaved": "Salvas",
+      "noResults": "Nenhuma transcrição corresponde à sua pesquisa.",
+      "copyAll": "Copiar tudo",
+      "copiedAll": "Todas as transcrições copiadas para a área de transferência"
     },
     "debug": {
       "title": "Depuração",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "Transcrevendo...",
     "processing": "Processando..."
+  },
+  "shortcuts": {
+    "title": "Atalhos de teclado",
+    "description": "Atalhos de teclado disponíveis no Dictx",
+    "transcribe": "Iniciar/parar transcrição",
+    "cancel": "Cancelar gravação",
+    "postProcess": "Transcrever com pós-processamento",
+    "debugToggle": "Alternar modo de depuração",
+    "shortcutsHelp": "Mostrar este diálogo"
   }
 }

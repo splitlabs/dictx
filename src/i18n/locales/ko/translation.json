@@ -15,7 +15,8 @@
     "postProcessing": "후처리",
     "history": "히스토리",
     "debug": "디버그",
-    "about": "정보"
+    "about": "정보",
+    "getPro": "Dictx Pro 구매"
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -31,55 +32,68 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "빠르고 상당히 정확합니다."
+        "description": "빠르고 상당히 정확합니다.",
+        "useCase": "빠른 메모 및 일상 받아쓰기"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "좋은 정확도, 중간 속도"
+        "description": "좋은 정확도, 중간 속도",
+        "useCase": "회의 및 긴 녹음"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "정확도와 속도의 균형."
+        "description": "정확도와 속도의 균형.",
+        "useCase": "대부분의 사용자에게 최적의 만능 모델"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "좋은 정확도지만 느립니다."
+        "description": "좋은 정확도지만 느립니다.",
+        "useCase": "속도보다 정확도가 중요할 때"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "영어 전용. 영어 사용자를 위한 최고의 모델."
+        "description": "영어 전용. 영어 사용자를 위한 최고의 모델.",
+        "useCase": "전문적인 영어 받아쓰기"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "빠르고 정확함"
+        "description": "빠르고 정확함",
+        "useCase": "빠르고 고품질의 영어 전사"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "매우 빠름, 영어 전용. 억양을 잘 처리합니다."
+        "description": "매우 빠름, 영어 전용. 억양을 잘 처리합니다.",
+        "useCase": "억양을 처리하는 실시간 받아쓰기"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "초고속, 영어 전용"
+        "description": "초고속, 영어 전용",
+        "useCase": "저사양 기기에서의 즉시 받아쓰기"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "빠름, 영어 전용. 속도와 정확도의 균형이 좋음."
+        "description": "빠름, 영어 전용. 속도와 정확도의 균형이 좋음.",
+        "useCase": "일상적인 영어 받아쓰기"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "영어 전용. 높은 품질."
+        "description": "영어 전용. 높은 품질.",
+        "useCase": "빠른 응답의 고품질 영어"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "대만 만다린에 최적화. 코드 스위칭 지원."
+        "description": "대만 만다린에 최적화. 코드 스위칭 지원.",
+        "useCase": "영어가 섞인 중국어"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "매우 빠름. 중국어, 영어, 일본어, 한국어, 광둥어."
+        "description": "매우 빠름. 중국어, 영어, 일본어, 한국어, 광둥어.",
+        "useCase": "다국어 아시아 전사"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "러시아어 음성 인식. 빠르고 정확함."
+        "description": "러시아어 음성 인식. 빠르고 정확함.",
+        "useCase": "러시아어 받아쓰기"
       }
     },
     "errors": {
@@ -104,8 +118,14 @@
       "errors": {
         "checkFailed": "권한 확인에 실패했습니다. 다시 시도해주세요.",
         "requestFailed": "권한 요청에 실패했습니다. 다시 시도해주세요."
-      }
-    }
+      },
+      "retry": "다시 시도",
+      "restartHint": "멈춘 경우 시스템 설정에서 권한을 껐다 켠 후 다시 시도를 클릭하세요.",
+      "skipForNow": "권한 없이 계속 — 나중에 설정하겠습니다"
+    },
+    "supportCta": "Dictx Pro 구매 — 자동 업데이트가 포함된 서명된 바이너리 ($29)",
+    "downloadEta": "약 {{time}} 남음",
+    "downloadSize": "{{downloaded}} / {{total}} MB"
   },
   "modelSelector": {
     "custom": "사용자 정의",
@@ -395,7 +415,14 @@
       "save": "변환된 텍스트 저장",
       "unsave": "저장에서 제거",
       "delete": "항목 삭제",
-      "deleteError": "항목 삭제에 실패했습니다. 다시 시도해주세요."
+      "deleteError": "항목 삭제에 실패했습니다. 다시 시도해주세요.",
+      "deleteConfirm": "이 전사를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "deleteTitle": "전사 삭제",
+      "search": "전사 검색...",
+      "filterSaved": "저장됨",
+      "noResults": "검색과 일치하는 전사가 없습니다.",
+      "copyAll": "모두 복사",
+      "copiedAll": "모든 전사를 클립보드에 복사했습니다"
     },
     "debug": {
       "title": "디버그",
@@ -572,5 +599,14 @@
   "overlay": {
     "transcribing": "텍스트로 변환 중...",
     "processing": "처리 중..."
+  },
+  "shortcuts": {
+    "title": "키보드 단축키",
+    "description": "Dictx에서 사용 가능한 키보드 단축키",
+    "transcribe": "전사 시작/중지",
+    "cancel": "녹음 취소",
+    "postProcess": "후처리와 함께 전사",
+    "debugToggle": "디버그 모드 전환",
+    "shortcutsHelp": "이 대화 상자 표시"
   }
 }
