@@ -1,10 +1,10 @@
 [package]
 name = "dictx"
-version = "0.1.0"
+version = "0.2.0"
 description = "Dictx — Local voice-to-text with Obsidian integration"
 authors = ["0xNyk"]
 edition = "2021"
-license = "MIT"
+license = "GPL-3.0-or-later"
 default-run = "dictx"
 
 [profile.dev]
