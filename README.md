@@ -47,7 +47,7 @@ Built with [Tauri](https://tauri.app) (Rust + React/TypeScript). Forked from [Ha
 
 ## Installation
 
-Download the latest release for your platform from the [Releases page](https://github.com/0xNyk/dictx/releases).
+Download the latest release for your platform from the [Releases page](https://github.com/splitlabs/dictx/releases).
 
 | Platform | Format               |
 | -------- | -------------------- |
