@@ -82,6 +82,7 @@
         "description": "Russian speech recognition. Fast and accurate."
       }
     },
+    "supportCta": "Get Dictx Pro — signed binary with auto-updates ($29)",
     "errors": {
       "loadModels": "Failed to load available models",
       "downloadModel": "Failed to download model: {{error}}"
@@ -506,9 +507,9 @@
         "button": "View on GitHub"
       },
       "supportDevelopment": {
-        "title": "Support Development",
-        "description": "Help us continue building Dictx",
-        "button": "Donate"
+        "title": "Get Dictx Pro",
+        "description": "Signed binary with auto-updates. $29 one-time — supports development.",
+        "button": "Get Dictx Pro"
       },
       "acknowledgments": {
         "title": "Acknowledgments",

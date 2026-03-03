@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import type { ModelInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
 import ModelCard from "./ModelCard";
@@ -126,6 +127,14 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
               />
             ))}
         </div>
+
+        <button
+          type="button"
+          className="text-text/40 text-xs mt-2 underline hover:text-text/60 transition-colors bg-transparent border-none cursor-pointer"
+          onClick={() => openUrl("https://0xnyk.gumroad.com/l/dictx")}
+        >
+          {t("onboarding.supportCta")}
+        </button>
       </div>
     </div>
   );

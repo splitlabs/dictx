@@ -27,11 +27,11 @@ export const AboutSettings: React.FC = () => {
     fetchVersion();
   }, []);
 
-  const handleDonateClick = async () => {
+  const handleGetProClick = async () => {
     try {
-      await openUrl("https://github.com/0xNyk/dictx");
+      await openUrl("https://0xnyk.gumroad.com/l/dictx");
     } catch (error) {
-      console.error("Failed to open donate link:", error);
+      console.error("Failed to open purchase link:", error);
     }
   };
 
@@ -53,7 +53,7 @@ export const AboutSettings: React.FC = () => {
           description={t("settings.about.supportDevelopment.description")}
           grouped={true}
         >
-          <Button variant="primary" size="md" onClick={handleDonateClick}>
+          <Button variant="primary" size="md" onClick={handleGetProClick}>
             {t("settings.about.supportDevelopment.button")}
           </Button>
         </SettingContainer>
