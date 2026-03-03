@@ -52,7 +52,7 @@ This guide covers how to set up the development environment and build Dictx from
 ### 1. Clone the Repository
 
 ```bash
-git clone git@github.com:0xNyk/dictx.git
+git clone git@github.com:splitlabs/dictx.git
 cd dictx
 ```
 
