@@ -96,7 +96,7 @@
         "useCase": "Russian language dictation"
       }
     },
-    "supportCta": "Get Dictx Pro — signed binary with auto-updates ($29)",
+    "supportCta": "Upgrade to Dictx Pro — signed builds + auto-updates ($29 one-time)",
     "downloadEta": "~{{time}} remaining",
     "downloadSize": "{{downloaded}} / {{total}} MB",
     "errors": {

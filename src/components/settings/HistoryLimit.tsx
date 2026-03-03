@@ -16,7 +16,7 @@ export const HistoryLimit: React.FC<HistoryLimitProps> = ({
   const { t } = useTranslation();
   const { getSetting, updateSetting, isUpdating } = useSettings();
 
-  const historyLimit = getSetting("history_limit") ?? 5;
+  const historyLimit = getSetting("history_limit") ?? 100;
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);

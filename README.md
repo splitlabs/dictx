@@ -7,14 +7,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/0xNyk/dictx/releases"><img src="https://img.shields.io/github/v/release/0xNyk/dictx?label=Download&style=for-the-badge&color=4f46e5" alt="Download" /></a>
+  <a href="https://github.com/splitlabs/dictx/releases"><img src="https://img.shields.io/github/v/release/splitlabs/dictx?label=Download&style=for-the-badge&color=4f46e5" alt="Download" /></a>
   &nbsp;
   <a href="https://dictx.splitlabs.io/buy"><img src="https://img.shields.io/badge/Get_Dictx_Pro-$29-10b981?style=for-the-badge" alt="Get Dictx Pro" /></a>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue.svg" alt="GPL-3.0" /></a>
-  <a href="https://github.com/0xNyk/dictx/stargazers"><img src="https://img.shields.io/github/stars/0xNyk/dictx?style=social" alt="Stars" /></a>
+  <a href="https://github.com/splitlabs/dictx/stargazers"><img src="https://img.shields.io/github/stars/splitlabs/dictx?style=social" alt="Stars" /></a>
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
 
 ---
 
-> **Free and open source.** Dictx is GPL-3.0 licensed — you can build it from source with full functionality. [Buy Dictx Pro](https://dictx.splitlabs.io/buy) ($29 one-time) for a signed binary, auto-updates, and to support development.
+> **Free and open source.** Dictx is GPL-3.0 licensed — you can build it from source with full functionality. [Buy Dictx Pro](https://dictx.splitlabs.io/buy) ($29 one-time) for signed builds, in-app auto-updates, and priority support.
 
 Dictx is a cross-platform desktop application for speech transcription. Press a shortcut, speak, and your words appear in any text field — no cloud, no API keys, no data leaving your computer.
 
