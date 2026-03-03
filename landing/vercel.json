@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/buy",
-      "destination": "https://buy.splitlabs.io",
+      "destination": "https://buy.polar.sh/polar_cl_lchYpu4Y5BWTc1AbO05evqEZu3dXBAgvdenEy1PECGt",
       "statusCode": 307
     }
   ],
