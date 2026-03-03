@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import type { ModelInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
 import ModelCard from "./ModelCard";
 import DictxTextLogo from "../icons/DictxTextLogo";
 import { useModelStore } from "../../stores/modelStore";
+import { openProPurchasePage } from "@/utils/commerce";
 
 interface OnboardingProps {
   onModelSelected: () => void;
@@ -143,7 +143,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
         <button
           type="button"
           className="text-text/40 text-xs mt-2 underline hover:text-text/60 transition-colors bg-transparent border-none cursor-pointer"
-          onClick={() => openUrl("https://0xnyk.gumroad.com/l/dictx")}
+          onClick={() => void openProPurchasePage()}
         >
           {t("onboarding.supportCta")}
         </button>

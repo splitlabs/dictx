@@ -5,6 +5,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
+import { openProPurchasePage } from "@/utils/commerce";
 import { AppDataDirectory } from "../AppDataDirectory";
 import { AppLanguageSelector } from "../AppLanguageSelector";
 import { LogDirectory } from "../debug";
@@ -27,14 +28,6 @@ export const AboutSettings: React.FC = () => {
     fetchVersion();
   }, []);
 
-  const handleGetProClick = async () => {
-    try {
-      await openUrl("https://0xnyk.gumroad.com/l/dictx");
-    } catch (error) {
-      console.error("Failed to open purchase link:", error);
-    }
-  };
-
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <SettingsGroup title={t("settings.about.title")}>
@@ -53,7 +46,11 @@ export const AboutSettings: React.FC = () => {
           description={t("settings.about.supportDevelopment.description")}
           grouped={true}
         >
-          <Button variant="primary" size="md" onClick={handleGetProClick}>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => void openProPurchasePage()}
+          >
             {t("settings.about.supportDevelopment.button")}
           </Button>
         </SettingContainer>

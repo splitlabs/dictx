@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Cog, FlaskConical, History, Info, Sparkles, Cpu } from "lucide-react";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import DictxTextLogo from "./icons/DictxTextLogo";
 import DictxIcon from "./icons/DictxIcon";
 import { useSettings } from "../hooks/useSettings";
+import { openProPurchasePage } from "@/utils/commerce";
 import {
   GeneralSettings,
   AdvancedSettings,
@@ -131,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
         <div className="mt-auto pb-3 w-full px-1">
           <button
-            onClick={() => openUrl("https://0xnyk.gumroad.com/l/dictx")}
+            onClick={() => void openProPurchasePage()}
             className="text-xs text-text/40 hover:text-logo-primary transition-colors cursor-pointer w-full text-center"
           >
             {t("sidebar.getPro")}
