@@ -266,11 +266,48 @@ h1 {
   letter-spacing: -0.02em;
 }
 
+.pricing-lead {
+  margin: 8px 0 0;
+  color: color-mix(in srgb, var(--color-text) 72%, transparent);
+}
+
 .price-grid {
   margin-top: 14px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.matrix-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--color-mid-gray) 24%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-background) 90%, #14141d 10%);
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.matrix th,
+.matrix td {
+  text-align: left;
+  padding: 11px 12px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-mid-gray) 20%, transparent);
+  font-size: 14px;
+}
+
+.matrix th {
+  color: color-mix(in srgb, var(--color-text) 64%, transparent);
+  font-weight: 600;
+}
+
+.matrix tr:last-child td {
+  border-bottom: none;
 }
 
 .plan {
@@ -387,5 +424,9 @@ details p {
   .grid3,
   .price-grid {
     grid-template-columns: 1fr;
+  }
+
+  .matrix {
+    min-width: 0;
   }
 }

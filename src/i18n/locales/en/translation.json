@@ -16,7 +16,7 @@
     "history": "History",
     "debug": "Debug",
     "about": "About",
-    "getPro": "Get Dictx Pro"
+    "getPro": "Upgrade to Dictx Pro"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -533,9 +533,9 @@
         "button": "View on GitHub"
       },
       "supportDevelopment": {
-        "title": "Get Dictx Pro",
-        "description": "Signed binary with auto-updates. $29 one-time — supports development.",
-        "button": "Get Dictx Pro"
+        "title": "Upgrade to Dictx Pro",
+        "description": "One-time purchase for signed builds, in-app auto-updates, and priority support.",
+        "button": "Upgrade Now"
       },
       "acknowledgments": {
         "title": "Acknowledgments",
