@@ -11,7 +11,14 @@ This runbook moves Dictx Pro sales to `https://dictx.splitlabs.io/buy` while kee
 ## 1) Domain + Checkout
 
 1. Create `dictx.splitlabs.io` as your Vercel custom domain and serve the landing site there.
-2. Configure branded checkout:
+2. Deploy the dedicated Vercel landing project from `landing/`:
+
+- Root Directory: `landing`
+- Framework Preset: `Other`
+- Build Command: empty
+- Output Directory: empty
+
+3. Configure branded checkout:
 
 - Product name: `Dictx Pro`
 - Offer copy: `Signed binaries, auto-updates, and direct support`
@@ -63,7 +70,7 @@ Completed in this repo:
 2. Publish FAQ with key points:
 
 - Existing licenses remain honored
-- New purchases go through `https://dictx.splitlabs.io/buy`
+- New purchases go through `https://dictx.splitlabs.io/buy` (redirect target managed in `landing/vercel.json`)
 - Support contact stays unchanged
 
 3. Use template:

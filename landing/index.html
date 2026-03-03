@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dictx | Privacy-first desktop speech-to-text</title>
+    <meta
+      name="description"
+      content="Dictx is local-first desktop speech-to-text. Dictx Pro gives you signed binaries and in-app auto-updates."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="nav shell">
+      <a class="wordmark" href="#top" aria-label="Dictx home">Dictx</a>
+      <nav class="menu" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a
+          href="https://github.com/0xNyk/dictx"
+          target="_blank"
+          rel="noreferrer"
+          >GitHub</a
+        >
+        <a class="mini-cta" href="/buy">Get Pro</a>
+      </nav>
+    </header>
+
+    <main id="top" class="shell">
+      <section class="hero panel">
+        <p class="kicker">Split Labs • Dictx</p>
+        <h1>Voice capture for serious writing workflows.</h1>
+        <p class="lede">
+          Transcribe locally, keep control of your data, and ship faster with a
+          desktop app designed for daily use.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="/buy">Buy Dictx Pro</a>
+          <a
+            class="btn soft"
+            href="https://github.com/0xNyk/dictx/releases"
+            target="_blank"
+            rel="noreferrer"
+            >Download releases</a
+          >
+        </div>
+        <p class="meta">
+          $29 one-time • signed binaries • auto-updates • macOS / Windows /
+          Linux
+        </p>
+      </section>
+
+      <section id="features" class="grid3">
+        <article class="card">
+          <h2>100% local transcription</h2>
+          <p>
+            No cloud dependency for core speech-to-text. Your audio stays
+            on-device.
+          </p>
+        </article>
+        <article class="card">
+          <h2>Built for daily flow</h2>
+          <p>
+            Hotkeys, quick model switching, and output controls that fit real
+            writing sessions.
+          </p>
+        </article>
+        <article class="card">
+          <h2>Obsidian-ready output</h2>
+          <p>
+            Export notes with metadata and keep your knowledge workflow tidy.
+          </p>
+        </article>
+      </section>
+
+      <section id="pricing" class="panel pricing">
+        <h2>Free or Pro</h2>
+        <div class="price-grid">
+          <article class="plan">
+            <p class="plan-name">Free</p>
+            <p class="plan-price">$0</p>
+            <ul>
+              <li>GPL source code</li>
+              <li>Build from source</li>
+              <li>All core functionality</li>
+              <li>Community support</li>
+            </ul>
+            <a
+              class="btn ghost"
+              href="https://github.com/0xNyk/dictx"
+              target="_blank"
+              rel="noreferrer"
+              >View source</a
+            >
+          </article>
+          <article class="plan pro">
+            <p class="plan-name">Pro</p>
+            <p class="plan-price">$29 <span>one-time</span></p>
+            <ul>
+              <li>Signed desktop binaries</li>
+              <li>In-app auto-updater</li>
+              <li>Professional checkout</li>
+              <li>Directly supports development</li>
+            </ul>
+            <a class="btn primary" href="/buy">Get Dictx Pro</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel faq">
+        <h2>FAQ</h2>
+        <details open>
+          <summary>Is Dictx still open source?</summary>
+          <p>Yes. Dictx remains GPL-licensed and free to build from source.</p>
+        </details>
+        <details>
+          <summary>What does Pro actually add?</summary>
+          <p>
+            Pro is the distribution layer: signed installers and updater
+            convenience.
+          </p>
+        </details>
+        <details>
+          <summary>Where does /buy go?</summary>
+          <p>
+            `/buy` redirects to the hosted checkout target configured in
+            `landing/vercel.json`.
+          </p>
+        </details>
+      </section>
+    </main>
+
+    <footer class="shell foot">
+      <p>© <span id="year"></span> Split Labs. Dictx by 0xNyk.</p>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = String(
+        new Date().getFullYear(),
+      );
+    </script>
+  </body>
+</html>

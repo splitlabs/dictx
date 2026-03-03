@@ -6,15 +6,9 @@
       "statusCode": 307
     }
   ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/site/index.html"
-    }
-  ],
   "headers": [
     {
-      "source": "/site/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
