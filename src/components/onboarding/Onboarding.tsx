@@ -79,6 +79,14 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
     return downloadStats[modelId]?.speed;
   };
 
+  const getModelDownloadedBytes = (modelId: string): number | undefined => {
+    return downloadProgress[modelId]?.downloaded;
+  };
+
+  const getModelTotalBytes = (modelId: string): number | undefined => {
+    return downloadProgress[modelId]?.total;
+  };
+
   return (
     <div className="h-screen w-screen flex flex-col p-6 gap-4 inset-0">
       <div className="flex flex-col items-center gap-2 shrink-0">
@@ -104,6 +112,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
                 onDownload={handleDownloadModel}
                 downloadProgress={getModelDownloadProgress(model.id)}
                 downloadSpeed={getModelDownloadSpeed(model.id)}
+                downloadedBytes={getModelDownloadedBytes(model.id)}
+                totalBytes={getModelTotalBytes(model.id)}
               />
             ))}
 
@@ -124,6 +134,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
                 onDownload={handleDownloadModel}
                 downloadProgress={getModelDownloadProgress(model.id)}
                 downloadSpeed={getModelDownloadSpeed(model.id)}
+                downloadedBytes={getModelDownloadedBytes(model.id)}
+                totalBytes={getModelTotalBytes(model.id)}
               />
             ))}
         </div>

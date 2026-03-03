@@ -304,6 +304,7 @@ Look for issues labeled `good first issue` or `help wanted` if you're new to the
 ## 📞 Getting Help
 
 - **Discussions**: Ask questions in [GitHub Discussions](https://github.com/0xNyk/dictx/discussions)
+
 ## 📜 License
 
 By contributing to Dictx, you agree that your contributions will be licensed under the MIT License. See [LICENSE](LICENSE) for details.

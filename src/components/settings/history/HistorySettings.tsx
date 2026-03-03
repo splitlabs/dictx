@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { AudioPlayer } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
-import { Copy, Star, Check, Trash2, FolderOpen } from "lucide-react";
+import { Copy, Star, Check, Trash2, FolderOpen, Search } from "lucide-react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { readFile } from "@tauri-apps/plugin-fs";
+import { ask } from "@tauri-apps/plugin-dialog";
 import { commands, type HistoryEntry } from "@/bindings";
 import { formatDateTime } from "@/utils/dateFormat";
 import { useOsType } from "@/hooks/useOsType";
@@ -32,10 +33,13 @@ const OpenRecordingsButton: React.FC<OpenRecordingsButtonProps> = ({
 );
 
 export const HistorySettings: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const osType = useOsType();
   const [historyEntries, setHistoryEntries] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [copiedAll, setCopiedAll] = useState(false);
 
   const loadHistoryEntries = useCallback(async () => {
     try {
@@ -132,6 +136,36 @@ export const HistorySettings: React.FC = () => {
     }
   };
 
+  const filteredEntries = useMemo(() => {
+    let entries = historyEntries;
+    if (showSavedOnly) {
+      entries = entries.filter((e) => e.saved);
+    }
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      entries = entries.filter((e) =>
+        e.transcription_text.toLowerCase().includes(query),
+      );
+    }
+    return entries;
+  }, [historyEntries, searchQuery, showSavedOnly]);
+
+  const copyAllVisible = async () => {
+    const text = filteredEntries
+      .map((e) => {
+        const date = formatDateTime(String(e.timestamp), i18n.language);
+        return `[${date}] ${e.transcription_text}`;
+      })
+      .join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedAll(true);
+      setTimeout(() => setCopiedAll(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy all:", error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-3xl w-full mx-auto space-y-6">
@@ -191,24 +225,80 @@ export const HistorySettings: React.FC = () => {
               {t("settings.history.title")}
             </h2>
           </div>
-          <OpenRecordingsButton
-            onClick={openRecordingsFolder}
-            label={t("settings.history.openFolder")}
-          />
-        </div>
-        <div className="bg-background border border-mid-gray/20 rounded-lg overflow-visible">
-          <div className="divide-y divide-mid-gray/20">
-            {historyEntries.map((entry) => (
-              <HistoryEntryComponent
-                key={entry.id}
-                entry={entry}
-                onToggleSaved={() => toggleSaved(entry.id)}
-                onCopyText={() => copyToClipboard(entry.transcription_text)}
-                getAudioUrl={getAudioUrl}
-                deleteAudio={deleteAudioEntry}
-              />
-            ))}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={copyAllVisible}
+              variant="secondary"
+              size="sm"
+              className="flex items-center gap-2"
+              title={t("settings.history.copyAll")}
+            >
+              {copiedAll ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
+              <span>
+                {copiedAll
+                  ? t("settings.history.copiedAll")
+                  : t("settings.history.copyAll")}
+              </span>
+            </Button>
+            <OpenRecordingsButton
+              onClick={openRecordingsFolder}
+              label={t("settings.history.openFolder")}
+            />
           </div>
+        </div>
+
+        {/* Search and filter bar */}
+        <div className="px-4 flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mid-gray" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t("settings.history.search")}
+              className="w-full pl-9 pr-3 py-1.5 text-sm bg-background border border-mid-gray/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-logo-primary focus:border-transparent"
+            />
+          </div>
+          <button
+            onClick={() => setShowSavedOnly(!showSavedOnly)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg border transition-colors cursor-pointer ${
+              showSavedOnly
+                ? "border-logo-primary/50 bg-logo-primary/10 text-logo-primary"
+                : "border-mid-gray/20 text-text/60 hover:border-mid-gray/40"
+            }`}
+          >
+            <Star
+              width={14}
+              height={14}
+              fill={showSavedOnly ? "currentColor" : "none"}
+            />
+            {t("settings.history.filterSaved")}
+          </button>
+        </div>
+
+        <div className="bg-background border border-mid-gray/20 rounded-lg overflow-visible">
+          {filteredEntries.length === 0 ? (
+            <div className="px-4 py-3 text-center text-text/60">
+              {t("settings.history.noResults")}
+            </div>
+          ) : (
+            <div className="divide-y divide-mid-gray/20">
+              {filteredEntries.map((entry) => (
+                <HistoryEntryComponent
+                  key={entry.id}
+                  entry={entry}
+                  onToggleSaved={() => toggleSaved(entry.id)}
+                  onCopyText={() => copyToClipboard(entry.transcription_text)}
+                  getAudioUrl={getAudioUrl}
+                  deleteAudio={deleteAudioEntry}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -245,11 +335,15 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   };
 
   const handleDeleteEntry = async () => {
+    const confirmed = await ask(t("settings.history.deleteConfirm"), {
+      title: t("settings.history.deleteTitle"),
+      kind: "warning",
+    });
+    if (!confirmed) return;
     try {
       await deleteAudio(entry.id);
     } catch (error) {
       console.error("Failed to delete entry:", error);
-      alert("Failed to delete entry. Please try again.");
     }
   };
 
@@ -262,8 +356,9 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
         <div className="flex items-center gap-1">
           <button
             onClick={handleCopyText}
-            className="text-text/50 hover:text-logo-primary  hover:border-logo-primary transition-colors cursor-pointer"
+            className="text-text/50 hover:text-logo-primary hover:border-logo-primary transition-all cursor-pointer active:scale-110 duration-100"
             title={t("settings.history.copyToClipboard")}
+            aria-label={t("settings.history.copyToClipboard")}
           >
             {showCopied ? (
               <Check width={16} height={16} />
@@ -273,12 +368,17 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
           </button>
           <button
             onClick={onToggleSaved}
-            className={`p-2 rounded-md transition-colors cursor-pointer ${
+            className={`p-2 rounded-md transition-all cursor-pointer active:scale-110 duration-100 ${
               entry.saved
                 ? "text-logo-primary hover:text-logo-primary/80"
                 : "text-text/50 hover:text-logo-primary"
             }`}
             title={
+              entry.saved
+                ? t("settings.history.unsave")
+                : t("settings.history.save")
+            }
+            aria-label={
               entry.saved
                 ? t("settings.history.unsave")
                 : t("settings.history.save")
@@ -292,8 +392,9 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
           </button>
           <button
             onClick={handleDeleteEntry}
-            className="text-text/50 hover:text-logo-primary transition-colors cursor-pointer"
+            className="text-text/50 hover:text-logo-primary transition-all cursor-pointer active:scale-110 duration-100"
             title={t("settings.history.delete")}
+            aria-label={t("settings.history.delete")}
           >
             <Trash2 width={16} height={16} />
           </button>

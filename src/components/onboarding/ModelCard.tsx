@@ -52,8 +52,23 @@ interface ModelCardProps {
   onCancel?: (modelId: string) => void;
   downloadProgress?: number;
   downloadSpeed?: number; // MB/s
+  downloadedBytes?: number;
+  totalBytes?: number;
   showRecommended?: boolean;
 }
+
+const formatEta = (seconds: number): string => {
+  if (seconds < 60)
+    return `0:${Math.round(seconds).toString().padStart(2, "0")}`;
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
+const formatBytes = (bytes: number): string => {
+  const mb = bytes / (1024 * 1024);
+  return mb >= 1000 ? `${(mb / 1024).toFixed(1)} GB` : `${Math.round(mb)} MB`;
+};
 
 const ModelCard: React.FC<ModelCardProps> = ({
   model,
@@ -67,6 +82,8 @@ const ModelCard: React.FC<ModelCardProps> = ({
   onCancel,
   downloadProgress,
   downloadSpeed,
+  downloadedBytes,
+  totalBytes,
   showRecommended = true,
 }) => {
   const { t } = useTranslation();
@@ -74,9 +91,11 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const isClickable =
     status === "available" || status === "active" || status === "downloadable";
 
-  // Get translated model name and description
+  // Get translated model name, description, and use-case hint
   const displayName = getTranslatedModelName(model, t);
   const displayDescription = getTranslatedModelDescription(model, t);
+  const useCaseKey = `onboarding.models.${model.id}.useCase`;
+  const useCase = t(useCaseKey, { defaultValue: "" });
 
   const baseClasses =
     "flex flex-col rounded-xl px-4 py-3 gap-2 text-left transition-all duration-200";
@@ -159,6 +178,9 @@ const ModelCard: React.FC<ModelCardProps> = ({
           <p className="text-text/60 text-sm leading-relaxed">
             {displayDescription}
           </p>
+          {useCase && (
+            <p className="text-text/40 text-xs mt-0.5 italic">{useCase}</p>
+          )}
         </div>
         {(model.accuracy_score > 0 || model.speed_score > 0) && (
           <div className="hidden sm:flex items-center ml-4">
@@ -245,6 +267,27 @@ const ModelCard: React.FC<ModelCardProps> = ({
               style={{ width: `${downloadProgress}%` }}
             />
           </div>
+          {/* Size progress line */}
+          {downloadedBytes !== undefined &&
+            totalBytes !== undefined &&
+            totalBytes > 0 && (
+              <div className="text-xs text-text/40 mt-1">
+                {t("onboarding.downloadSize", {
+                  downloaded: formatBytes(downloadedBytes),
+                  total: formatBytes(totalBytes),
+                })}
+                {downloadSpeed !== undefined &&
+                  downloadSpeed > 0 &&
+                  (() => {
+                    const remaining = totalBytes - downloadedBytes;
+                    const etaSeconds =
+                      remaining / (downloadSpeed * 1024 * 1024);
+                    return etaSeconds > 0 && etaSeconds < 36000
+                      ? ` — ${t("onboarding.downloadEta", { time: formatEta(etaSeconds) })}`
+                      : "";
+                  })()}
+              </div>
+            )}
           <div className="flex items-center justify-between text-xs mt-1">
             <span className="text-text/50">
               {t("modelSelector.downloading", {
