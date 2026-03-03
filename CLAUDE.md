@@ -152,6 +152,14 @@ Dictx supports command-line parameters on all platforms for integration with scr
 
 Access debug features: `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux)
 
+## License & Distribution
+
+Dictx is licensed under **GPL-3.0-or-later**. See `LICENSE` and `NOTICE` for details.
+
+**Monetization model**: Open source code + paid signed binary ($29 one-time via Gumroad). All features are available when building from source — no feature gating, no license key validation. The paid product is the convenience of a signed binary with auto-updates.
+
+**Purchase links**: Gumroad product page at `https://0xnyk.gumroad.com/l/dictx`. This URL appears in `AboutSettings.tsx`, `Onboarding.tsx`, and `README.md`.
+
 ## Platform Notes
 
 - **macOS**: Metal acceleration, accessibility permissions required

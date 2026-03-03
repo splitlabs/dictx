@@ -1,0 +1,34 @@
+Dictx — Privacy-First Desktop Speech-to-Text
+=============================================
+
+License: GNU General Public License v3.0 (GPL-3.0-or-later)
+See LICENSE for the full license text.
+
+
+License History
+---------------
+
+This project was originally released as "Handy" by CJ Pais under the
+MIT License (Copyright 2025 CJ Pais).
+
+  Source: https://github.com/cjpais/Handy
+
+The project was forked and rebranded as "Dictx" by 0xNyk. Starting with
+this fork, the license was changed from MIT to GPL v3. This relicense is
+permitted because:
+
+  1. MIT is a permissive license that allows sublicensing under any terms,
+     including GPL v3.
+  2. All original MIT-licensed code retains its copyright attribution to
+     CJ Pais as required by the MIT license terms.
+  3. All new code contributed to the Dictx fork is licensed under GPL v3.
+
+
+Attribution
+-----------
+
+Original author:  CJ Pais (https://github.com/cjpais)
+Fork maintainer:  0xNyk (https://github.com/0xNyk)
+
+Third-party dependencies are listed in Cargo.toml (Rust) and
+package.json (TypeScript/React). Each dependency retains its own license.

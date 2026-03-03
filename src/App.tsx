@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2025 CJ Pais — original Handy project (MIT)
+// Copyright (C) 2026 0xNyk — Dictx fork (GPL-3.0-or-later)
+
 import { useEffect, useState, useRef } from "react";
 import { Toaster } from "sonner";
 import { useTranslation } from "react-i18next";

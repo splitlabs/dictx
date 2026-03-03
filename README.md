@@ -7,6 +7,17 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/0xNyk/dictx/releases"><img src="https://img.shields.io/github/v/release/0xNyk/dictx?label=Download&style=for-the-badge&color=4f46e5" alt="Download" /></a>
+  &nbsp;
+  <a href="https://0xnyk.gumroad.com/l/dictx"><img src="https://img.shields.io/badge/Get_Dictx_Pro-$29-10b981?style=for-the-badge" alt="Get Dictx Pro" /></a>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue.svg" alt="GPL-3.0" /></a>
+  <a href="https://github.com/0xNyk/dictx/stargazers"><img src="https://img.shields.io/github/stars/0xNyk/dictx?style=social" alt="Stars" /></a>
+</p>
+
+<p align="center">
   <a href="#installation">Installation</a> &middot;
   <a href="#how-it-works">How It Works</a> &middot;
   <a href="#obsidian-integration">Obsidian Integration</a> &middot;
@@ -16,6 +27,8 @@
 </p>
 
 ---
+
+> **Free and open source.** Dictx is GPL-3.0 licensed — you can build it from source with full functionality. [Buy Dictx Pro](https://0xnyk.gumroad.com/l/dictx) ($29 one-time) for a signed binary, auto-updates, and to support development.
 
 Dictx is a cross-platform desktop application for speech transcription. Press a shortcut, speak, and your words appear in any text field — no cloud, no API keys, no data leaving your computer.
 
@@ -36,13 +49,14 @@ Built with [Tauri](https://tauri.app) (Rust + React/TypeScript). Forked from [Ha
 
 Download the latest release for your platform from the [Releases page](https://github.com/0xNyk/dictx/releases).
 
-| Platform | Format |
-|----------|--------|
-| macOS | `.dmg` |
-| Windows | `.msi` |
-| Linux | `.AppImage` / `.deb` |
+| Platform | Format               |
+| -------- | -------------------- |
+| macOS    | `.dmg`               |
+| Windows  | `.msi`               |
+| Linux    | `.AppImage` / `.deb` |
 
 After installation:
+
 1. Launch Dictx and grant the required permissions (microphone, accessibility on macOS)
 2. Select and download a transcription model
 3. Configure your keyboard shortcut in Settings
@@ -59,13 +73,13 @@ After installation:
 
 ### Models
 
-| Model | Type | Speed | Accuracy | Requirements |
-|-------|------|-------|----------|--------------|
-| Whisper Small | GPU | Fast | Good | GPU recommended |
-| Whisper Medium | GPU | Moderate | Better | GPU recommended |
-| Whisper Turbo | GPU | Fast | Very Good | GPU recommended |
-| Whisper Large | GPU | Slower | Best | GPU required |
-| Parakeet V3 | CPU | Fast | Very Good | CPU only, auto language detection |
+| Model          | Type | Speed    | Accuracy  | Requirements                      |
+| -------------- | ---- | -------- | --------- | --------------------------------- |
+| Whisper Small  | GPU  | Fast     | Good      | GPU recommended                   |
+| Whisper Medium | GPU  | Moderate | Better    | GPU recommended                   |
+| Whisper Turbo  | GPU  | Fast     | Very Good | GPU recommended                   |
+| Whisper Large  | GPU  | Slower   | Best      | GPU required                      |
+| Parakeet V3    | CPU  | Fast     | Very Good | CPU only, auto language detection |
 
 ## Obsidian Integration
 
@@ -100,6 +114,7 @@ dictx --debug                   # Enable verbose logging
 Combine flags for autostart scenarios: `dictx --start-hidden --no-tray`
 
 > **macOS:** When installed as an app bundle, invoke the binary directly:
+>
 > ```bash
 > /Applications/Dictx.app/Contents/MacOS/Dictx --toggle-transcription
 > ```
@@ -130,11 +145,13 @@ src/                    React/TypeScript frontend
 ## Platform Notes
 
 ### macOS
+
 - Metal acceleration for Whisper models
 - Requires Accessibility and Microphone permissions
 - Debug mode: `Cmd+Shift+D`
 
 ### Windows
+
 - Vulkan acceleration for Whisper models
 - Debug mode: `Ctrl+Shift+D`
 
@@ -142,11 +159,11 @@ src/                    React/TypeScript frontend
 
 Requires a text input tool for reliable typing:
 
-| Display Server | Tool | Install |
-|---|---|---|
-| X11 | `xdotool` | `sudo apt install xdotool` |
-| Wayland | `wtype` | `sudo apt install wtype` |
-| Both | `dotool` | `sudo apt install dotool` |
+| Display Server | Tool      | Install                    |
+| -------------- | --------- | -------------------------- |
+| X11            | `xdotool` | `sudo apt install xdotool` |
+| Wayland        | `wtype`   | `sudo apt install wtype`   |
+| Both           | `dotool`  | `sudo apt install dotool`  |
 
 - Recording overlay disabled by default (compositors may treat it as active window)
 - If issues occur, try: `WEBKIT_DISABLE_DMABUF_RENDERER=1 dictx`
@@ -158,11 +175,11 @@ Requires a text input tool for reliable typing:
 
 If you're behind a proxy or firewall, models can be installed manually. Download the model files and place them in the app data directory:
 
-| Platform | Path |
-|----------|------|
-| macOS | `~/Library/Application Support/com.0xnyk.dictx/` |
-| Windows | `C:\Users\{username}\AppData\Roaming\com.0xnyk.dictx\` |
-| Linux | `~/.config/com.0xnyk.dictx/` |
+| Platform | Path                                                   |
+| -------- | ------------------------------------------------------ |
+| macOS    | `~/Library/Application Support/com.0xnyk.dictx/`       |
+| Windows  | `C:\Users\{username}\AppData\Roaming\com.0xnyk.dictx\` |
+| Linux    | `~/.config/com.0xnyk.dictx/`                           |
 
 ## Contributing
 
@@ -170,9 +187,9 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+GPL-3.0. See [LICENSE](LICENSE) for details and [NOTICE](NOTICE) for attribution and license history.
 
-Originally created by [cjpais](https://github.com/cjpais) as [Handy](https://github.com/cjpais/Handy). Forked and extended by [0xNyk](https://github.com/0xNyk).
+Originally created by [cjpais](https://github.com/cjpais) as [Handy](https://github.com/cjpais/Handy) (MIT). Forked and extended by [0xNyk](https://github.com/0xNyk) under GPL-3.0.
 
 ## Acknowledgments
 
