@@ -172,14 +172,9 @@ pub fn update_tray_menu(app: &AppHandle, state: &TrayIconState, locale: Option<&
                     format!("{} ({})", strings.start_dictation, binding_str)
                 }
             };
-            let start_dictation_i = MenuItem::with_id(
-                app,
-                "start_dictation",
-                &shortcut_label,
-                true,
-                None::<&str>,
-            )
-            .expect("failed to create start dictation item");
+            let start_dictation_i =
+                MenuItem::with_id(app, "start_dictation", &shortcut_label, true, None::<&str>)
+                    .expect("failed to create start dictation item");
 
             Menu::with_items(
                 app,

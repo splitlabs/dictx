@@ -1068,10 +1068,7 @@ pub fn change_show_tray_icon_setting(app: AppHandle, enabled: bool) -> Result<()
 
 #[tauri::command]
 #[specta::specta]
-pub fn change_obsidian_export_enabled_setting(
-    app: AppHandle,
-    enabled: bool,
-) -> Result<(), String> {
+pub fn change_obsidian_export_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.obsidian_export_enabled = enabled;
     settings::write_settings(&app, settings);
@@ -1080,10 +1077,7 @@ pub fn change_obsidian_export_enabled_setting(
 
 #[tauri::command]
 #[specta::specta]
-pub fn change_obsidian_vault_path_setting(
-    app: AppHandle,
-    path: String,
-) -> Result<(), String> {
+pub fn change_obsidian_vault_path_setting(app: AppHandle, path: String) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.obsidian_vault_path = if path.is_empty() { None } else { Some(path) };
     settings::write_settings(&app, settings);

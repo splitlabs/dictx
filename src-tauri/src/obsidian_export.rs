@@ -39,7 +39,10 @@ pub fn export_to_obsidian(
     let export_dir = PathBuf::from(&vault_path).join(subfolder);
 
     if let Err(e) = fs::create_dir_all(&export_dir) {
-        error!("Failed to create Obsidian export directory {:?}: {}", export_dir, e);
+        error!(
+            "Failed to create Obsidian export directory {:?}: {}",
+            export_dir, e
+        );
         return;
     }
 
@@ -84,15 +87,14 @@ pub fn export_to_obsidian(
 
 /// Build a short title from the transcription text
 fn build_title(text: &str) -> String {
-    let cleaned: String = text
-        .chars()
-        .take(60)
-        .take_while(|c| *c != '\n')
-        .collect();
+    let cleaned: String = text.chars().take(60).take_while(|c| *c != '\n').collect();
 
     let trimmed = cleaned.trim();
     if trimmed.len() < text.len() {
-        format!("{}...", trimmed.trim_end_matches(|c: char| c.is_whitespace() || c == '.'))
+        format!(
+            "{}...",
+            trimmed.trim_end_matches(|c: char| c.is_whitespace() || c == '.')
+        )
     } else {
         trimmed.to_string()
     }
