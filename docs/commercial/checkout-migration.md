@@ -1,6 +1,6 @@
 # Dictx Commerce Migration (Gumroad -> Professional Checkout)
 
-This runbook moves Dictx Pro sales to `https://buy.splitlabs.io` while keeping the OSS/free path unchanged.
+This runbook moves Dictx Pro sales to `https://dictx.splitlabs.io/buy` while keeping the OSS/free path unchanged.
 
 ## Scope
 
@@ -10,7 +10,7 @@ This runbook moves Dictx Pro sales to `https://buy.splitlabs.io` while keeping t
 
 ## 1) Domain + Checkout
 
-1. Create `buy.splitlabs.io` DNS record and point it to your checkout provider.
+1. Create `dictx.splitlabs.io` as your Vercel custom domain and serve the landing site there.
 2. Configure branded checkout:
 
 - Product name: `Dictx Pro`
@@ -53,9 +53,9 @@ Implementation reference:
 
 Completed in this repo:
 
-- `README` Pro links now point to `https://buy.splitlabs.io`
+- `README` Pro links now point to `https://dictx.splitlabs.io/buy`
 - In-app CTA links point to a shared `PRO_PURCHASE_URL`
-- GitHub funding link points to `https://buy.splitlabs.io`
+- GitHub funding link points to `https://dictx.splitlabs.io/buy`
 
 ## 5) Migration Messaging
 
@@ -63,7 +63,7 @@ Completed in this repo:
 2. Publish FAQ with key points:
 
 - Existing licenses remain honored
-- New purchases happen at `buy.splitlabs.io`
+- New purchases go through `https://dictx.splitlabs.io/buy`
 - Support contact stays unchanged
 
 3. Use template:
@@ -78,7 +78,7 @@ Before launch:
 - Webhook signature validation works in production
 - `dictx_pro` entitlement is granted/revoked correctly
 - Customer portal access works from receipt email
-- Purchase links from app + README resolve to `buy.splitlabs.io`
+- Purchase links from app + README resolve to `https://dictx.splitlabs.io/buy`
 
 After launch:
 

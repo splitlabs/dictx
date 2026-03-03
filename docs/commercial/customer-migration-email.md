@@ -1,9 +1,9 @@
-Subject: Dictx Pro checkout is now at buy.splitlabs.io
+Subject: Dictx Pro checkout is now at dictx.splitlabs.io/buy
 
 Hi,
 
 We upgraded Dictx Pro purchasing to a new hosted checkout at:
-https://buy.splitlabs.io
+https://dictx.splitlabs.io/buy
 
 What this means:
 

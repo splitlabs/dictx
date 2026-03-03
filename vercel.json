@@ -1,0 +1,26 @@
+{
+  "redirects": [
+    {
+      "source": "/buy",
+      "destination": "https://buy.splitlabs.io",
+      "statusCode": 307
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/site/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/site/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=600"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dictx | Private speech-to-text for serious writing</title>
+    <meta
+      name="description"
+      content="Dictx is privacy-first desktop speech-to-text. Runs locally, ships signed binaries, and auto-updates on Pro."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="grain"></div>
+    <header class="topbar">
+      <a class="brand" href="#top">Dictx</a>
+      <nav>
+        <a href="#pricing">Pricing</a>
+        <a
+          href="https://github.com/0xNyk/dictx"
+          target="_blank"
+          rel="noreferrer"
+          >GitHub</a
+        >
+        <a class="cta-mini" href="/buy">Get Pro</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">Split Labs</p>
+        <h1>
+          Talk. Edit. Ship.
+          <span>Without sending your voice to the cloud.</span>
+        </h1>
+        <p class="lead">
+          Dictx is desktop speech-to-text for people who write all day. Local
+          transcription, polished text output, and pro-grade distribution.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/buy">Buy Dictx Pro</a>
+          <a
+            class="btn btn-ghost"
+            href="https://github.com/0xNyk/dictx/releases"
+            target="_blank"
+            rel="noreferrer"
+            >Download Release</a
+          >
+        </div>
+        <p class="subline">
+          $29 one-time • signed binary • auto-updates • macOS / Windows / Linux
+        </p>
+      </section>
+
+      <section class="pillars">
+        <article>
+          <h2>Private by default</h2>
+          <p>
+            All core transcription runs locally on your machine. No voice data
+            routed through Dictx servers.
+          </p>
+        </article>
+        <article>
+          <h2>Fast enough for flow state</h2>
+          <p>
+            Built for real writing sessions, with quick trigger-to-text loops
+            and model options for speed or precision.
+          </p>
+        </article>
+        <article>
+          <h2>Built for Obsidian workflows</h2>
+          <p>
+            Capture, clean, and export voice notes into your vault with
+            metadata-rich output.
+          </p>
+        </article>
+      </section>
+
+      <section id="pricing" class="pricing">
+        <h2>Choose your path</h2>
+        <div class="cards">
+          <article class="card free">
+            <p class="card-label">Free</p>
+            <p class="price">$0</p>
+            <ul>
+              <li>Full GPL source code</li>
+              <li>Build from source</li>
+              <li>All core transcription features</li>
+              <li>Community support</li>
+            </ul>
+            <a
+              class="btn btn-ghost"
+              href="https://github.com/0xNyk/dictx"
+              target="_blank"
+              rel="noreferrer"
+              >View Source</a
+            >
+          </article>
+          <article class="card pro">
+            <p class="card-label">Pro</p>
+            <p class="price">$29<span> one-time</span></p>
+            <ul>
+              <li>Signed installers</li>
+              <li>Built-in auto-updates</li>
+              <li>Professional distribution</li>
+              <li>Funds active development</li>
+            </ul>
+            <a class="btn btn-primary" href="/buy">Get Dictx Pro</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="faq">
+        <h2>FAQ</h2>
+        <details open>
+          <summary>Is Dictx still open source?</summary>
+          <p>Yes. Dictx remains GPL-licensed and free to build from source.</p>
+        </details>
+        <details>
+          <summary>What does Pro include?</summary>
+          <p>
+            Pro is the convenience layer: signed binaries and updater flow so
+            you do not have to compile manually.
+          </p>
+        </details>
+        <details>
+          <summary>How do updates work?</summary>
+          <p>
+            The app checks signed release metadata and applies updates in-app
+            when available.
+          </p>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <p>© <span id="year"></span> Split Labs. Dictx by 0xNyk.</p>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = String(
+        new Date().getFullYear(),
+      );
+    </script>
+  </body>
+</html>
