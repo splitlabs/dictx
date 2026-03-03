@@ -5,7 +5,7 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 6px;
-  background: #000000cc;
+  background: rgba(9, 9, 11, 0.8);
   border-radius: 18px;
   opacity: 0;
   transition: opacity 300ms ease-out;
@@ -41,7 +41,7 @@
 
 .bar {
   width: 6px;
-  background: #ffe5ee;
+  background: var(--color-logo-stroke, #ffe5ee);
   max-height: 20px;
   border-radius: 2px;
   transition: height 80ms linear;
@@ -70,6 +70,17 @@
   }
 }
 
+.timer-text {
+  color: white;
+  font-size: 11px;
+  font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+  opacity: 0.7;
+  margin-inline-start: 6px;
+  white-space: nowrap;
+  min-width: 28px;
+  text-align: end;
+}
+
 .cancel-button {
   width: 24px;
   height: 24px;
@@ -86,7 +97,11 @@
 }
 
 .cancel-button:hover {
-  background: #faa2ca33;
+  background: color-mix(
+    in srgb,
+    var(--color-logo-primary, #faa2ca) 20%,
+    transparent
+  );
   transform: scale(1.05);
 }
 

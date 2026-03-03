@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Cog, FlaskConical, History, Info, Sparkles, Cpu } from "lucide-react";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import DictxTextLogo from "./icons/DictxTextLogo";
 import DictxIcon from "./icons/DictxIcon";
 import { useSettings } from "../hooks/useSettings";
@@ -95,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="flex flex-col w-40 h-full border-e border-mid-gray/20 items-center px-2">
       <DictxTextLogo width={120} className="m-4" />
-      <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-mid-gray/20">
+      <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-mid-gray/20 flex-1">
         {availableSections.map((section) => {
           const Icon = section.icon;
           const isActive = activeSection === section.id;
@@ -103,12 +104,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
           return (
             <div
               key={section.id}
-              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors ${
+              role="button"
+              tabIndex={0}
+              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors focus:ring-2 focus:ring-logo-primary focus:outline-none ${
                 isActive
                   ? "bg-logo-primary/80"
                   : "hover:bg-mid-gray/20 hover:opacity-100 opacity-85"
               }`}
               onClick={() => onSectionChange(section.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSectionChange(section.id);
+                }
+              }}
             >
               <Icon width={24} height={24} className="shrink-0" />
               <p
@@ -120,6 +129,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           );
         })}
+        <div className="mt-auto pb-3 w-full px-1">
+          <button
+            onClick={() => openUrl("https://0xnyk.gumroad.com/l/dictx")}
+            className="text-xs text-text/40 hover:text-logo-primary transition-colors cursor-pointer w-full text-center"
+          >
+            {t("sidebar.getPro")}
+          </button>
+        </div>
       </div>
     </div>
   );

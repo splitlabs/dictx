@@ -104,6 +104,14 @@ export const ModelsSettings: React.FC = () => {
     return stats?.speed;
   };
 
+  const getDownloadedBytes = (modelId: string): number | undefined => {
+    return downloadProgress[modelId]?.downloaded;
+  };
+
+  const getTotalBytes = (modelId: string): number | undefined => {
+    return downloadProgress[modelId]?.total;
+  };
+
   const handleModelSelect = async (modelId: string) => {
     setSwitchingModelId(modelId);
     try {
@@ -323,6 +331,8 @@ export const ModelsSettings: React.FC = () => {
                 onCancel={handleModelCancel}
                 downloadProgress={getDownloadProgress(model.id)}
                 downloadSpeed={getDownloadSpeed(model.id)}
+                downloadedBytes={getDownloadedBytes(model.id)}
+                totalBytes={getTotalBytes(model.id)}
                 showRecommended={false}
               />
             ))}

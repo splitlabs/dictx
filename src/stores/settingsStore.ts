@@ -140,7 +140,9 @@ const settingUpdaters: {
   obsidian_vault_path: (value) =>
     commands.changeObsidianVaultPathSetting((value as string) ?? ""),
   obsidian_export_subfolder: (value) =>
-    commands.changeObsidianExportSubfolderSetting((value as string) ?? "voice-notes"),
+    commands.changeObsidianExportSubfolderSetting(
+      (value as string) ?? "voice-notes",
+    ),
   obsidian_append_to_daily: (value) =>
     commands.changeObsidianAppendToDailySetting(value as boolean),
 };

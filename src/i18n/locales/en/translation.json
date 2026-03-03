@@ -15,7 +15,8 @@
     "postProcessing": "Post Process",
     "history": "History",
     "debug": "Debug",
-    "about": "About"
+    "about": "About",
+    "getPro": "Get Dictx Pro"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -31,58 +32,73 @@
     "models": {
       "small": {
         "name": "Whisper Small",
-        "description": "Fast and fairly accurate."
+        "description": "Fast and fairly accurate.",
+        "useCase": "Quick notes and casual dictation"
       },
       "medium": {
         "name": "Whisper Medium",
-        "description": "Good accuracy, medium speed"
+        "description": "Good accuracy, medium speed",
+        "useCase": "Meetings and longer recordings"
       },
       "turbo": {
         "name": "Whisper Turbo",
-        "description": "Balanced accuracy and speed."
+        "description": "Balanced accuracy and speed.",
+        "useCase": "Best all-rounder for most users"
       },
       "large": {
         "name": "Whisper Large",
-        "description": "Good accuracy, but slow."
+        "description": "Good accuracy, but slow.",
+        "useCase": "When accuracy matters more than speed"
       },
       "parakeet-tdt-0.6b-v2": {
         "name": "Parakeet V2",
-        "description": "English only. The best model for English speakers."
+        "description": "English only. The best model for English speakers.",
+        "useCase": "Professional English dictation"
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Fast and accurate"
+        "description": "Fast and accurate",
+        "useCase": "Fast, high-quality English transcription"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
-        "description": "Very fast, English only. Handles accents well."
+        "description": "Very fast, English only. Handles accents well.",
+        "useCase": "Real-time dictation with accents"
       },
       "moonshine-tiny-streaming-en": {
         "name": "Moonshine V2 Tiny",
-        "description": "Ultra-fast, English only"
+        "description": "Ultra-fast, English only",
+        "useCase": "Instant dictation on low-power devices"
       },
       "moonshine-small-streaming-en": {
         "name": "Moonshine V2 Small",
-        "description": "Fast, English only. Good balance of speed and accuracy."
+        "description": "Fast, English only. Good balance of speed and accuracy.",
+        "useCase": "Everyday English dictation"
       },
       "moonshine-medium-streaming-en": {
         "name": "Moonshine V2 Medium",
-        "description": "English only. High quality."
+        "description": "English only. High quality.",
+        "useCase": "High-quality English with fast response"
       },
       "breeze-asr": {
         "name": "Breeze ASR",
-        "description": "Optimized for Taiwanese Mandarin. Code-switching support."
+        "description": "Optimized for Taiwanese Mandarin. Code-switching support.",
+        "useCase": "Mandarin with mixed English terms"
       },
       "sense-voice-int8": {
         "name": "SenseVoice",
-        "description": "Very fast. Chinese, English, Japanese, Korean, Cantonese."
+        "description": "Very fast. Chinese, English, Japanese, Korean, Cantonese.",
+        "useCase": "Multi-language Asian transcription"
       },
       "gigaam-v3-e2e-ctc": {
         "name": "GigaAM v3",
-        "description": "Russian speech recognition. Fast and accurate."
+        "description": "Russian speech recognition. Fast and accurate.",
+        "useCase": "Russian language dictation"
       }
     },
     "supportCta": "Get Dictx Pro — signed binary with auto-updates ($29)",
+    "downloadEta": "~{{time}} remaining",
+    "downloadSize": "{{downloaded}} / {{total}} MB",
     "errors": {
       "loadModels": "Failed to load available models",
       "downloadModel": "Failed to download model: {{error}}"
@@ -420,7 +436,14 @@
       "save": "Save transcription",
       "unsave": "Remove from saved",
       "delete": "Delete entry",
-      "deleteError": "Failed to delete entry. Please try again."
+      "deleteError": "Failed to delete entry. Please try again.",
+      "deleteConfirm": "Are you sure you want to delete this transcription? This cannot be undone.",
+      "deleteTitle": "Delete Transcription",
+      "search": "Search transcriptions...",
+      "filterSaved": "Saved",
+      "noResults": "No transcriptions match your search.",
+      "copyAll": "Copy All",
+      "copiedAll": "Copied all transcriptions to clipboard"
     },
     "debug": {
       "title": "Debug",
@@ -576,5 +599,14 @@
   "overlay": {
     "transcribing": "Transcribing...",
     "processing": "Processing..."
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "description": "Available keyboard shortcuts in Dictx",
+    "transcribe": "Start/Stop Transcription",
+    "cancel": "Cancel Recording",
+    "postProcess": "Transcribe with Post-Processing",
+    "debugToggle": "Toggle Debug Mode",
+    "shortcutsHelp": "Show This Dialog"
   }
 }
