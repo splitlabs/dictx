@@ -101,6 +101,9 @@
       "grant": "Grant Permission",
       "granted": "Granted",
       "waiting": "Waiting...",
+      "retry": "Retry",
+      "restartHint": "If stuck, try toggling the permission off and on in System Settings, then click Retry.",
+      "skipForNow": "Continue without permissions — I'll fix this later",
       "allGranted": "All set!",
       "errors": {
         "checkFailed": "Failed to check permissions. Please try again.",

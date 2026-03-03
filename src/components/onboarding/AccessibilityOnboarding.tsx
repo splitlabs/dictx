@@ -11,10 +11,11 @@ import { toast } from "sonner";
 import { commands } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
 import DictxTextLogo from "../icons/DictxTextLogo";
-import { Keyboard, Mic, Check, Loader2 } from "lucide-react";
+import { Keyboard, Mic, Check, Loader2, RefreshCw } from "lucide-react";
 
 interface AccessibilityOnboardingProps {
   onComplete: () => void;
+  isReturningUser?: boolean;
 }
 
 type PermissionStatus = "checking" | "needed" | "waiting" | "granted";
@@ -26,6 +27,7 @@ interface PermissionsState {
 
 const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   onComplete,
+  isReturningUser = false,
 }) => {
   const { t } = useTranslation();
   const refreshAudioDevices = useSettingsStore(
@@ -200,6 +202,39 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
     }
   };
 
+  const handleRetryCheck = async () => {
+    try {
+      const [accessibilityGranted, microphoneGranted] = await Promise.all([
+        checkAccessibilityPermission(),
+        checkMicrophonePermission(),
+      ]);
+
+      if (accessibilityGranted) {
+        await Promise.all([
+          commands.initializeEnigo(),
+          commands.initializeShortcuts(),
+        ]).catch((e) =>
+          console.warn("Failed to initialize after permission grant:", e),
+        );
+      }
+
+      setPermissions({
+        accessibility: accessibilityGranted ? "granted" : "waiting",
+        microphone: microphoneGranted ? "granted" : "waiting",
+      });
+
+      if (accessibilityGranted && microphoneGranted) {
+        await Promise.all([refreshAudioDevices(), refreshOutputDevices()]);
+        timeoutRef.current = setTimeout(() => onComplete(), 300);
+      } else {
+        startPolling();
+      }
+    } catch (error) {
+      console.error("Failed to retry permission check:", error);
+      toast.error(t("onboarding.permissions.errors.checkFailed"));
+    }
+  };
+
   // Still checking platform/initial permissions
   if (
     isMacOS === null ||
@@ -263,9 +298,18 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                   {t("onboarding.permissions.granted")}
                 </div>
               ) : permissions.microphone === "waiting" ? (
-                <div className="flex items-center gap-2 text-text/50 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  {t("onboarding.permissions.waiting")}
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-text/50 text-sm">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    {t("onboarding.permissions.waiting")}
+                  </div>
+                  <button
+                    onClick={handleRetryCheck}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-text/70 text-xs font-medium transition-colors"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    {t("onboarding.permissions.retry")}
+                  </button>
                 </div>
               ) : (
                 <button
@@ -298,9 +342,18 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                   {t("onboarding.permissions.granted")}
                 </div>
               ) : permissions.accessibility === "waiting" ? (
-                <div className="flex items-center gap-2 text-text/50 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  {t("onboarding.permissions.waiting")}
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-text/50 text-sm">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    {t("onboarding.permissions.waiting")}
+                  </div>
+                  <button
+                    onClick={handleRetryCheck}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-text/70 text-xs font-medium transition-colors"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    {t("onboarding.permissions.retry")}
+                  </button>
                 </div>
               ) : (
                 <button
@@ -313,6 +366,25 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Restart hint */}
+        {(permissions.accessibility === "waiting" ||
+          permissions.microphone === "waiting") && (
+          <p className="text-text/40 text-xs text-center">
+            {t("onboarding.permissions.restartHint")}
+          </p>
+        )}
+
+        {/* Continue anyway for returning users */}
+        {isReturningUser && (
+          <button
+            type="button"
+            className="text-text/40 text-xs underline hover:text-text/60 transition-colors bg-transparent border-none cursor-pointer mt-2"
+            onClick={onComplete}
+          >
+            {t("onboarding.permissions.skipForNow")}
+          </button>
+        )}
       </div>
     </div>
   );

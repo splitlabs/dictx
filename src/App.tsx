@@ -151,7 +151,12 @@ function App() {
   }
 
   if (onboardingStep === "accessibility") {
-    return <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />;
+    return (
+      <AccessibilityOnboarding
+        onComplete={handleAccessibilityComplete}
+        isReturningUser={isReturningUser}
+      />
+    );
   }
 
   if (onboardingStep === "model") {
