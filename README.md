@@ -1,4 +1,6 @@
-# Dictx
+<p align="center">
+  <img src="assets/banner.png" alt="Dictx — Privacy-First Desktop Speech-to-Text" />
+</p>
 
 **A free, open source, and extensible speech-to-text application that works completely offline — with Obsidian integration.**
 
