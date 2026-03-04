@@ -50,6 +50,7 @@ Activation flow in app:
 - App verifies against `https://dictx.splitlabs.io/api/pro/verify`
 - On success, app stores active entitlement and enables updater checks
 - Legacy checkout keys (`polar_cl_...`) are supported temporarily for migration
+- Early-adopter promo: the first 100 unique installs can auto-claim free Pro via `POST /api/pro/early-access/claim`
 
 ## 3) Webhook Processing
 
@@ -94,6 +95,7 @@ Before launch:
 - Webhook signature validation works in production
 - `dictx_pro` entitlement is granted/revoked correctly
 - `landing/api/pro/verify` returns `{ active: true }` only for valid granted license key (`lk_...`)
+- `landing/api/pro/early-access/claim` enforces the first-100 cap using durable Redis storage
 - Customer portal access works from receipt email
 - Purchase links from app + README resolve to `https://dictx.splitlabs.io/buy`
 

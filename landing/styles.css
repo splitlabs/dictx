@@ -216,6 +216,18 @@ h1 {
   font-size: 13px;
 }
 
+.offer-pill {
+  margin: 14px 0 0;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-logo-primary) 45%, transparent);
+  background: color-mix(in srgb, var(--color-logo-primary) 18%, transparent);
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-text) 88%, transparent);
+}
+
 .hero-proof {
   margin-top: 16px;
   border-top: 1px solid
@@ -321,6 +333,13 @@ h1 {
   border-color: color-mix(in srgb, var(--color-logo-primary) 48%, transparent);
   box-shadow: inset 0 0 0 1px
     color-mix(in srgb, var(--color-logo-primary) 18%, transparent);
+}
+
+.plan-offer {
+  margin: 6px 0 0;
+  color: color-mix(in srgb, var(--color-logo-primary) 84%, white 16%);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .plan-name {

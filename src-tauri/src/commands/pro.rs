@@ -64,6 +64,10 @@ fn resolve_install_id(app_settings: &mut settings::AppSettings) -> String {
     install_id
 }
 
+fn is_early_adopter_marker(value: &str) -> bool {
+    value.starts_with("EARLY-")
+}
+
 async fn verify_checkout(license_key: &str) -> Result<bool, String> {
     let payload = VerifyRequest {
         license_key: license_key.trim().to_string(),
@@ -206,6 +210,12 @@ pub async fn refresh_pro_entitlement(app: AppHandle) -> Result<ProEntitlement, S
     let mut app_settings = settings::get_settings(&app);
     let now = Utc::now().timestamp();
     let install_id = resolve_install_id(&mut app_settings);
+    let source = app_settings.pro_entitlement.source;
+    let has_early_marker = app_settings
+        .pro_entitlement
+        .license_key
+        .as_deref()
+        .is_some_and(is_early_adopter_marker);
 
     // Support legacy activations by falling back to checkout_id if license_key is missing.
     let license_key = app_settings
@@ -215,7 +225,35 @@ pub async fn refresh_pro_entitlement(app: AppHandle) -> Result<ProEntitlement, S
         .or_else(|| app_settings.pro_entitlement.checkout_id.clone())
         .filter(|value| !value.trim().is_empty());
 
-    if let Some(license_key) = license_key {
+    if source == Some(ProEntitlementSource::EarlyAdopter) || has_early_marker {
+        if app_settings.pro_entitlement.active {
+            app_settings.pro_entitlement.source = Some(ProEntitlementSource::EarlyAdopter);
+            app_settings.pro_entitlement.last_verified_at = Some(now);
+            app_settings.pro_entitlement.verification_error = None;
+        } else {
+            let app_version = app.package_info().version.to_string();
+            match claim_early_access(&install_id, &app_version).await {
+                Ok(Some(grant_id)) => {
+                    app_settings.pro_entitlement.active = true;
+                    app_settings.pro_entitlement.source = Some(ProEntitlementSource::EarlyAdopter);
+                    app_settings.pro_entitlement.license_key = Some(grant_id);
+                    app_settings.pro_entitlement.activated_at = Some(now);
+                    app_settings.pro_entitlement.last_verified_at = Some(now);
+                    app_settings.pro_entitlement.verification_error = None;
+                    app_settings.update_checks_enabled = true;
+                }
+                Ok(None) => {
+                    app_settings.pro_entitlement.last_verified_at = Some(now);
+                    app_settings.pro_entitlement.verification_error = None;
+                }
+                Err(err) => {
+                    app_settings.pro_entitlement.verification_error = Some(err.clone());
+                    settings::write_settings(&app, app_settings.clone());
+                    return Err(err);
+                }
+            }
+        }
+    } else if let Some(license_key) = license_key {
         match verify_checkout(&license_key).await {
             Ok(true) => {
                 app_settings.pro_entitlement.active = true;
@@ -279,5 +317,11 @@ mod tests {
         let id = make_install_id();
         assert!(id.starts_with("dictx-"));
         assert!(id.len() > "dictx-".len());
+    }
+
+    #[test]
+    fn early_adopter_marker_detection() {
+        assert!(is_early_adopter_marker("EARLY-dictx-123"));
+        assert!(!is_early_adopter_marker("lk_123"));
     }
 }
