@@ -21,6 +21,7 @@ import { ModelSelect } from "../PostProcessingSettingsApi/ModelSelect";
 import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePostProcessProviderState";
 import { ShortcutInput } from "../ShortcutInput";
 import { useSettings } from "../../../hooks/useSettings";
+import { ToggleSwitch } from "@/components/ui";
 
 const PostProcessingSettingsApiComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -436,6 +437,7 @@ export const PostProcessingSettings: React.FC = () => {
   ];
 
   const selectedMode = (getSetting("dictation_mode") || "cleanup") as DictationMode;
+  const voiceCommandsEnabled = getSetting("voice_commands_enabled") ?? true;
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
@@ -460,6 +462,15 @@ export const PostProcessingSettings: React.FC = () => {
             disabled={isUpdating("dictation_mode")}
           />
         </SettingContainer>
+        <ToggleSwitch
+          checked={voiceCommandsEnabled}
+          onChange={(enabled) => updateSetting("voice_commands_enabled", enabled)}
+          isUpdating={isUpdating("voice_commands_enabled")}
+          label="Voice commands"
+          description='Enable spoken commands prefixed with "dictx", e.g. "dictx summary ..."'
+          descriptionMode="tooltip"
+          grouped={true}
+        />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.postProcessing.api.title")}>

@@ -56,8 +56,8 @@ fn build_system_prompt(prompt_template: &str) -> String {
     prompt_template.replace("${output}", "").trim().to_string()
 }
 
-fn resolve_post_process_prompt(settings: &AppSettings) -> Option<String> {
-    match settings.dictation_mode {
+fn resolve_post_process_prompt(settings: &AppSettings, mode: DictationMode) -> Option<String> {
+    match mode {
         DictationMode::Raw => None,
         DictationMode::Cleanup => {
             let selected_prompt_id = settings.post_process_selected_prompt_id.as_ref()?;
@@ -97,8 +97,110 @@ fn resolve_post_process_prompt(settings: &AppSettings) -> Option<String> {
     }
 }
 
-async fn post_process_transcription(settings: &AppSettings, transcription: &str) -> Option<String> {
-    if settings.dictation_mode == DictationMode::Raw {
+struct VoiceCommandResult {
+    text: String,
+    mode_override: Option<DictationMode>,
+    force_post_process: Option<bool>,
+}
+
+fn transform_to_bullets(text: &str) -> String {
+    let segments: Vec<String> = text
+        .split(['.', '!', '?', '\n'])
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(|s| format!("- {}", s))
+        .collect();
+
+    if segments.is_empty() {
+        text.to_string()
+    } else {
+        segments.join("\n")
+    }
+}
+
+fn apply_voice_command(settings: &AppSettings, text: &str) -> VoiceCommandResult {
+    if !settings.voice_commands_enabled {
+        return VoiceCommandResult {
+            text: text.to_string(),
+            mode_override: None,
+            force_post_process: None,
+        };
+    }
+
+    let normalized = text.trim();
+    if !normalized.to_ascii_lowercase().starts_with("dictx ") {
+        return VoiceCommandResult {
+            text: text.to_string(),
+            mode_override: None,
+            force_post_process: None,
+        };
+    }
+
+    let command_body = normalized["dictx ".len()..].trim();
+    let mut parts = command_body.splitn(2, char::is_whitespace);
+    let action = parts.next().unwrap_or_default().to_ascii_lowercase();
+    let remainder = parts.next().unwrap_or_default().trim();
+    let base_text = if remainder.is_empty() {
+        text.to_string()
+    } else {
+        remainder.to_string()
+    };
+
+    match action.as_str() {
+        "raw" => VoiceCommandResult {
+            text: base_text,
+            mode_override: Some(DictationMode::Raw),
+            force_post_process: Some(false),
+        },
+        "cleanup" => VoiceCommandResult {
+            text: base_text,
+            mode_override: Some(DictationMode::Cleanup),
+            force_post_process: Some(true),
+        },
+        "email" => VoiceCommandResult {
+            text: base_text,
+            mode_override: Some(DictationMode::Email),
+            force_post_process: Some(true),
+        },
+        "summary" => VoiceCommandResult {
+            text: base_text,
+            mode_override: Some(DictationMode::Summary),
+            force_post_process: Some(true),
+        },
+        "notes" | "meeting" => VoiceCommandResult {
+            text: base_text,
+            mode_override: Some(DictationMode::MeetingNotes),
+            force_post_process: Some(true),
+        },
+        "upper" => VoiceCommandResult {
+            text: base_text.to_uppercase(),
+            mode_override: None,
+            force_post_process: Some(false),
+        },
+        "lower" => VoiceCommandResult {
+            text: base_text.to_lowercase(),
+            mode_override: None,
+            force_post_process: Some(false),
+        },
+        "bullets" => VoiceCommandResult {
+            text: transform_to_bullets(&base_text),
+            mode_override: None,
+            force_post_process: Some(false),
+        },
+        _ => VoiceCommandResult {
+            text: text.to_string(),
+            mode_override: None,
+            force_post_process: None,
+        },
+    }
+}
+
+async fn post_process_transcription(
+    settings: &AppSettings,
+    transcription: &str,
+    mode: DictationMode,
+) -> Option<String> {
+    if mode == DictationMode::Raw {
         return Some(transcription.to_string());
     }
 
@@ -124,7 +226,7 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
         return None;
     }
 
-    let prompt = match resolve_post_process_prompt(settings) {
+    let prompt = match resolve_post_process_prompt(settings, mode) {
         Some(prompt) => prompt,
         None => {
             debug!("Post-processing skipped because no prompt could be resolved");
@@ -470,20 +572,31 @@ impl ShortcutAction for TranscribeAction {
                                 final_text = converted_text;
                             }
 
+                            let voice_command_result = apply_voice_command(&settings, &final_text);
+                            final_text = voice_command_result.text;
+                            let effective_mode = voice_command_result
+                                .mode_override
+                                .unwrap_or(settings.dictation_mode);
+                            let should_post_process = voice_command_result
+                                .force_post_process
+                                .unwrap_or(post_process);
+
                             // Then apply LLM post-processing if this is the post-process hotkey
                             // Uses final_text which may already have Chinese conversion applied
-                            if post_process {
+                            if should_post_process {
                                 show_processing_overlay(&ah);
                             }
-                            let processed = if post_process {
-                                post_process_transcription(&settings, &final_text).await
+                            let processed = if should_post_process {
+                                post_process_transcription(&settings, &final_text, effective_mode)
+                                    .await
                             } else {
                                 None
                             };
                             if let Some(processed_text) = processed {
                                 post_processed_text = Some(processed_text.clone());
                                 final_text = processed_text;
-                                post_process_prompt = resolve_post_process_prompt(&settings);
+                                post_process_prompt =
+                                    resolve_post_process_prompt(&settings, effective_mode);
                             } else if final_text != transcription {
                                 // Chinese conversion was applied but no LLM post-processing
                                 post_processed_text = Some(final_text.clone());
