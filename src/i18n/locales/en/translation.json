@@ -201,6 +201,10 @@
       "pushToTalk": {
         "label": "Push To Talk",
         "description": "Hold to record, release to stop"
+      },
+      "transcribeHover": {
+        "label": "Always Show Transcribe Hover",
+        "description": "Keep the transcribe hover button visible when idle."
       }
     },
     "models": {

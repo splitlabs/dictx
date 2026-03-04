@@ -10,6 +10,7 @@ import { useSettings } from "../../../hooks/useSettings";
 import { VolumeSlider } from "../VolumeSlider";
 import { MuteWhileRecording } from "../MuteWhileRecording";
 import { ModelSettingsCard } from "./ModelSettingsCard";
+import { AlwaysShowTranscribeHover } from "../AlwaysShowTranscribeHover";
 
 export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ export const GeneralSettings: React.FC = () => {
       <SettingsGroup title={t("settings.general.title")}>
         <ShortcutInput shortcutId="transcribe" grouped={true} />
         <PushToTalk descriptionMode="tooltip" grouped={true} />
+        <AlwaysShowTranscribeHover descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
       <ModelSettingsCard />
       <SettingsGroup title={t("settings.sound.title")}>

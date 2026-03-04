@@ -3,9 +3,9 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  MicrophoneIcon,
   TranscriptionIcon,
   CancelIcon,
+  DictxIcon,
 } from "../components/icons";
 import "./RecordingOverlay.css";
 import { commands } from "@/bindings";
@@ -29,6 +29,7 @@ const RecordingOverlay: React.FC = () => {
   const smoothedLevelsRef = useRef<number[]>(Array(16).fill(0));
   const [elapsed, setElapsed] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isDraggingRef = useRef(false);
   const direction = getLanguageDirection(i18n.language);
   const overlayWindow = getCurrentWindow();
 
@@ -50,6 +51,7 @@ const RecordingOverlay: React.FC = () => {
     if (event.button !== 0) {
       return;
     }
+    isDraggingRef.current = true;
     void overlayWindow.startDragging();
   };
 
@@ -138,18 +140,28 @@ const RecordingOverlay: React.FC = () => {
 
     void setupEventListeners();
 
+    const handleGlobalMouseUp = () => {
+      if (!isDraggingRef.current) {
+        return;
+      }
+      isDraggingRef.current = false;
+      void persistOverlayPosition();
+    };
+    window.addEventListener("mouseup", handleGlobalMouseUp);
+
     return () => {
       disposed = true;
       unlistenShow?.();
       unlistenHide?.();
       unlistenLevel?.();
       stopTimer();
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
     };
   }, []);
 
   const getIcon = () =>
     state === "recording" || state === "idle" ? (
-      <MicrophoneIcon />
+      <DictxIcon width={16} height={16} />
     ) : (
       <TranscriptionIcon />
     );
@@ -160,6 +172,13 @@ const RecordingOverlay: React.FC = () => {
       className={`recording-overlay ${isVisible ? "fade-in" : ""} ${
         state === "idle" ? "is-idle" : ""
       }`}
+      onMouseDown={(event) => {
+        const target = event.target as HTMLElement;
+        if (target.closest("button")) {
+          return;
+        }
+        handleDragStart(event);
+      }}
     >
       <button
         className={`overlay-left overlay-action-button ${
@@ -178,10 +197,6 @@ const RecordingOverlay: React.FC = () => {
 
       <div
         className="overlay-middle overlay-drag-handle"
-        onMouseDown={handleDragStart}
-        onMouseUp={() => {
-          void persistOverlayPosition();
-        }}
       >
         {state === "idle" && (
           <div className="idle-text">{t("shortcuts.transcribe")}</div>

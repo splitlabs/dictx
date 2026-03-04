@@ -4,6 +4,7 @@ import { Cog, FlaskConical, History, Info, Sparkles, Cpu } from "lucide-react";
 import DictxTextLogo from "./icons/DictxTextLogo";
 import DictxIcon from "./icons/DictxIcon";
 import { useSettings } from "../hooks/useSettings";
+import { useProEntitlement } from "@/hooks/useProEntitlement";
 import { openProPurchasePage } from "@/utils/commerce";
 import {
   GeneralSettings,
@@ -88,6 +89,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
+  const { entitlement } = useProEntitlement();
+  const isProActive = entitlement?.active ?? false;
 
   const availableSections = Object.entries(SECTIONS_CONFIG)
     .filter(([_, config]) => config.enabled(settings))
@@ -129,14 +132,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           );
         })}
-        <div className="mt-auto pb-3 w-full px-1">
-          <button
-            onClick={() => void openProPurchasePage()}
-            className="text-xs text-text/40 hover:text-logo-primary transition-colors cursor-pointer w-full text-center"
-          >
-            {t("sidebar.getPro")}
-          </button>
-        </div>
+        {!isProActive && (
+          <div className="mt-auto pb-3 w-full px-1">
+            <button
+              onClick={() => void openProPurchasePage()}
+              className="text-xs text-text/40 hover:text-logo-primary transition-colors cursor-pointer w-full text-center"
+            >
+              {t("sidebar.getPro")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
