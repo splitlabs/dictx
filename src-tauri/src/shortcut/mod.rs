@@ -538,17 +538,26 @@ pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Resu
         "none" => OverlayPosition::None,
         "top" => OverlayPosition::Top,
         "bottom" => OverlayPosition::Bottom,
+        "custom" => OverlayPosition::Custom,
         other => {
             warn!("Invalid overlay position '{}', defaulting to bottom", other);
             OverlayPosition::Bottom
         }
     };
+
+    if parsed != OverlayPosition::Custom {
+        settings.overlay_custom_x = None;
+        settings.overlay_custom_y = None;
+    }
+
     settings.overlay_position = parsed;
     settings::write_settings(&app, settings);
 
     match parsed {
         OverlayPosition::None => crate::utils::hide_recording_overlay(&app),
-        OverlayPosition::Top | OverlayPosition::Bottom => crate::utils::show_idle_overlay(&app),
+        OverlayPosition::Top | OverlayPosition::Bottom | OverlayPosition::Custom => {
+            crate::utils::show_idle_overlay(&app)
+        }
     }
 
     Ok(())

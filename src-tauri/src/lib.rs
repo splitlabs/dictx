@@ -340,6 +340,7 @@ pub fn run(cli_args: CliArgs) {
         trigger_update_check,
         commands::cancel_operation,
         commands::start_transcription_from_overlay,
+        commands::set_overlay_custom_position,
         commands::get_app_dir_path,
         commands::get_app_settings,
         commands::get_default_settings,

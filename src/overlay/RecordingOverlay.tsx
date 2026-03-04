@@ -1,4 +1,5 @@
 import { listen } from "@tauri-apps/api/event";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -29,6 +30,28 @@ const RecordingOverlay: React.FC = () => {
   const [elapsed, setElapsed] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const direction = getLanguageDirection(i18n.language);
+  const overlayWindow = getCurrentWindow();
+
+  const persistOverlayPosition = async () => {
+    try {
+      const [position, scaleFactor] = await Promise.all([
+        overlayWindow.outerPosition(),
+        overlayWindow.scaleFactor(),
+      ]);
+      const logicalX = position.x / scaleFactor;
+      const logicalY = position.y / scaleFactor;
+      await commands.setOverlayCustomPosition(logicalX, logicalY);
+    } catch (error) {
+      console.error("Failed to persist overlay position:", error);
+    }
+  };
+
+  const handleDragStart = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.button !== 0) {
+      return;
+    }
+    void overlayWindow.startDragging();
+  };
 
   useEffect(() => {
     let unlistenShow: (() => void) | null = null;
@@ -153,7 +176,13 @@ const RecordingOverlay: React.FC = () => {
         {getIcon()}
       </button>
 
-      <div className="overlay-middle">
+      <div
+        className="overlay-middle overlay-drag-handle"
+        onMouseDown={handleDragStart}
+        onMouseUp={() => {
+          void persistOverlayPosition();
+        }}
+      >
         {state === "idle" && (
           <div className="idle-text">{t("shortcuts.transcribe")}</div>
         )}

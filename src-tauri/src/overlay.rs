@@ -56,7 +56,7 @@ fn update_gtk_layer_shell_anchors(overlay_window: &tauri::webview::WebviewWindow
                     gtk_window.set_anchor(Edge::Top, true);
                     gtk_window.set_anchor(Edge::Bottom, false);
                 }
-                OverlayPosition::Bottom | OverlayPosition::None => {
+                OverlayPosition::Bottom | OverlayPosition::None | OverlayPosition::Custom => {
                     gtk_window.set_anchor(Edge::Bottom, true);
                     gtk_window.set_anchor(Edge::Top, false);
                 }
@@ -181,11 +181,30 @@ fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
 
         let settings = settings::get_settings(app_handle);
 
-        let x = work_area_x + (work_area_width - OVERLAY_WIDTH) / 2.0;
-        let y = match settings.overlay_position {
+        let default_x = work_area_x + (work_area_width - OVERLAY_WIDTH) / 2.0;
+        let default_y = match settings.overlay_position {
             OverlayPosition::Top => work_area_y + OVERLAY_TOP_OFFSET,
-            OverlayPosition::Bottom | OverlayPosition::None => {
+            OverlayPosition::Bottom | OverlayPosition::None | OverlayPosition::Custom => {
                 work_area_y + work_area_height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_OFFSET
+            }
+        };
+
+        let (x, y) = match settings.overlay_position {
+            OverlayPosition::Custom => {
+                if let (Some(custom_x), Some(custom_y)) =
+                    (settings.overlay_custom_x, settings.overlay_custom_y)
+                {
+                    let min_x = work_area_x;
+                    let max_x = work_area_x + (work_area_width - OVERLAY_WIDTH).max(0.0);
+                    let min_y = work_area_y;
+                    let max_y = work_area_y + (work_area_height - OVERLAY_HEIGHT).max(0.0);
+                    (custom_x.clamp(min_x, max_x), custom_y.clamp(min_y, max_y))
+                } else {
+                    (default_x, default_y)
+                }
+            }
+            OverlayPosition::Top | OverlayPosition::Bottom | OverlayPosition::None => {
+                (default_x, default_y)
             }
         };
 

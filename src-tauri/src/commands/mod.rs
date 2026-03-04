@@ -4,7 +4,7 @@ pub mod models;
 pub mod pro;
 pub mod transcription;
 
-use crate::settings::{get_settings, write_settings, AppSettings, LogLevel};
+use crate::settings::{get_settings, write_settings, AppSettings, LogLevel, OverlayPosition};
 use crate::signal_handle::send_transcription_input;
 use crate::utils::cancel_current_operation;
 use tauri::{AppHandle, Manager, Window};
@@ -36,6 +36,26 @@ pub fn cancel_operation(app: AppHandle, window: Window) -> Result<(), String> {
 pub fn start_transcription_from_overlay(app: AppHandle, window: Window) -> Result<(), String> {
     require_window(&window, &["recording_overlay"])?;
     send_transcription_input(&app, "transcribe", "overlay");
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn set_overlay_custom_position(
+    app: AppHandle,
+    window: Window,
+    x: f64,
+    y: f64,
+) -> Result<(), String> {
+    require_window(&window, &["recording_overlay"])?;
+
+    let mut settings = get_settings(&app);
+    settings.overlay_position = OverlayPosition::Custom;
+    settings.overlay_custom_x = Some(x);
+    settings.overlay_custom_y = Some(y);
+    write_settings(&app, settings);
+    crate::utils::update_overlay_position(&app);
+
     Ok(())
 }
 

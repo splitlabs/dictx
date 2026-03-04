@@ -65,6 +65,14 @@
   justify-content: center;
 }
 
+.overlay-drag-handle {
+  cursor: grab;
+}
+
+.overlay-drag-handle:active {
+  cursor: grabbing;
+}
+
 .overlay-right {
   display: flex;
   align-items: center;
