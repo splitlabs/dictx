@@ -18,7 +18,7 @@ export const activateProEntitlement = async (
   licenseKey: string,
 ): Promise<ProEntitlement> => {
   return await invoke<ProEntitlement>("activate_pro_entitlement", {
-    license_key: licenseKey,
+    licenseKey,
   });
 };
 

@@ -124,6 +124,11 @@ const isRateLimited = (clientId) => {
 
 const sendJson = (res, statusCode, payload) => {
   if (res && typeof res.status === "function") {
+    if (typeof res.setHeader === "function") {
+      res.setHeader("cache-control", "no-store");
+      res.setHeader("pragma", "no-cache");
+      res.setHeader("expires", "0");
+    }
     res.status(statusCode).json(payload);
     return null;
   }
