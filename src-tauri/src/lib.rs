@@ -542,6 +542,11 @@ pub fn run(cli_args: CliArgs) {
                     api.prevent_exit();
                     quit_app(app);
                 }
+                tauri::RunEvent::Exit => {
+                    // Some macOS termination paths can bypass ExitRequested.
+                    // Force hard-exit here as a final guard to skip ONNX static teardown.
+                    quit_app(app);
+                }
                 _ => {}
             }
             let _ = (app, event); // suppress unused warnings on non-macOS
