@@ -74,6 +74,63 @@ function App() {
     }
   }, [onboardingStep, refreshAudioDevices, refreshOutputDevices]);
 
+  // Auto-detect accessibility permission changes for returning users on macOS.
+  // If permission is granted later in System Settings, initialize integrations
+  // without requiring onboarding re-entry or manual retries.
+  useEffect(() => {
+    if (onboardingStep !== "done" || platform() !== "macos") return;
+
+    let isDisposed = false;
+    let prevHasAccessibility: boolean | null = null;
+
+    const initializeAfterGrant = async () => {
+      try {
+        await Promise.all([
+          commands.initializeEnigo(),
+          commands.initializeShortcuts(),
+        ]);
+      } catch (error) {
+        console.warn("Failed to initialize after accessibility grant:", error);
+      }
+    };
+
+    const checkAndInitialize = async () => {
+      try {
+        const hasAccessibility = await checkAccessibilityPermission();
+        const transitionedToGranted =
+          prevHasAccessibility === false && hasAccessibility;
+        const firstGrantedCheck =
+          prevHasAccessibility === null && hasAccessibility;
+        prevHasAccessibility = hasAccessibility;
+
+        if (!isDisposed && (transitionedToGranted || firstGrantedCheck)) {
+          await initializeAfterGrant();
+        }
+      } catch (error) {
+        console.warn("Failed to check accessibility permission:", error);
+      }
+    };
+
+    void checkAndInitialize();
+
+    const interval = window.setInterval(() => {
+      void checkAndInitialize();
+    }, 1500);
+    const handleFocus = () => {
+      void checkAndInitialize();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleFocus);
+
+    return () => {
+      isDisposed = true;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleFocus);
+    };
+  }, [onboardingStep]);
+
   // Handle keyboard shortcuts for debug mode toggle and shortcuts dialog
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

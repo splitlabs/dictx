@@ -5,6 +5,7 @@ import {
   checkAccessibilityPermission,
   requestAccessibilityPermission,
 } from "tauri-plugin-macos-permissions-api";
+import { commands } from "@/bindings";
 
 // Define permission state type
 type PermissionState = "request" | "verify" | "granted";
@@ -26,9 +27,28 @@ const AccessibilityPermissions: React.FC = () => {
 
   // Check permissions without requesting
   const checkPermissions = useCallback(async (): Promise<boolean> => {
+    const initializeAfterGrant = async () => {
+      try {
+        await Promise.all([
+          commands.initializeEnigo(),
+          commands.initializeShortcuts(),
+        ]);
+      } catch (error) {
+        console.warn(
+          "Failed to initialize after accessibility permission grant:",
+          error,
+        );
+      }
+    };
+
     try {
       const hasPermissions: boolean = await checkAccessibilityPermission();
-      setHasAccessibility(hasPermissions);
+      setHasAccessibility((prev) => {
+        if (!prev && hasPermissions) {
+          void initializeAfterGrant();
+        }
+        return hasPermissions;
+      });
       setPermissionState(hasPermissions ? "granted" : "verify");
       return hasPermissions;
     } catch (error) {
