@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dictx Pro Activated</title>
+    <meta
+      name="description"
+      content="Your Dictx Pro purchase is complete. Copy your license key and activate in the app."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+
+    <header class="shell nav">
+      <a class="brand" href="/">
+        <img class="brand-icon" src="/logo.png" alt="Dictx logo" />
+        <span class="wordmark">Dictx</span>
+      </a>
+      <div class="menu">
+        <a href="/">Home</a>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="panel hero">
+        <p class="kicker">Purchase Complete</p>
+        <h1>Activate Dictx Pro</h1>
+        <p class="lede">
+          Copy your license key and paste it in Dictx:
+          <strong>Settings -> About -> Activate Dictx Pro</strong>.
+        </p>
+
+        <div class="card" style="margin-top: 16px">
+          <h2 style="font-size: 18px">Your License Key</h2>
+          <p id="license-key-value" style="word-break: break-all; font-family: monospace">
+            Not found in URL. Add <code>?checkout_id=polar_cl_...</code>.
+          </p>
+          <div class="actions" style="margin-top: 12px">
+            <button id="copy-btn" class="btn primary" type="button" disabled>
+              Copy License Key
+            </button>
+            <a class="btn ghost" href="/">Back to Dictx</a>
+          </div>
+          <p id="copy-status" class="meta" style="margin-top: 8px"></p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const key = (params.get("license_key") || params.get("checkout_id") || "").trim();
+      const valueEl = document.getElementById("license-key-value");
+      const copyBtn = document.getElementById("copy-btn");
+      const copyStatus = document.getElementById("copy-status");
+
+      if (key) {
+        valueEl.textContent = key;
+        copyBtn.disabled = false;
+      }
+
+      copyBtn.addEventListener("click", async () => {
+        if (!key) return;
+        try {
+          await navigator.clipboard.writeText(key);
+          copyStatus.textContent = "Copied. Paste it in Dictx Settings -> About.";
+        } catch (_error) {
+          copyStatus.textContent = "Copy failed. Select and copy manually.";
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -23,6 +23,7 @@ This runbook moves Dictx Pro sales to `https://dictx.splitlabs.io/buy` while kee
 - Product name: `Dictx Pro`
 - Offer copy: `Signed binaries, auto-updates, and direct support`
 - Price: `USD 29 one-time`
+- Success URL: `https://dictx.splitlabs.io/buy/success?checkout_id={CHECKOUT_ID}`
 
 3. Enable customer portal for:
 

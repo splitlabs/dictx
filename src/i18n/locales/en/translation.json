@@ -546,7 +546,9 @@
         "refresh": "Re-check Entitlement",
         "clear": "Remove Activation",
         "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "polar_cl_..."
+        "licenseKeyPlaceholder": "polar_cl_...",
+        "pasteFromClipboard": "Paste From Clipboard",
+        "clipboardFailed": "Clipboard access failed. Paste manually."
       },
       "acknowledgments": {
         "title": "Acknowledgments",

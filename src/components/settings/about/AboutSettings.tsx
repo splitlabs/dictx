@@ -16,6 +16,7 @@ export const AboutSettings: React.FC = () => {
   const { t } = useTranslation();
   const [version, setVersion] = useState("");
   const [licenseKey, setLicenseKey] = useState("");
+  const [clipboardError, setClipboardError] = useState<string | null>(null);
   const {
     entitlement,
     isSubmitting: proSubmitting,
@@ -41,6 +42,16 @@ export const AboutSettings: React.FC = () => {
     const ok = await activate(licenseKey);
     if (ok) {
       setLicenseKey("");
+    }
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      setClipboardError(null);
+      const text = await navigator.clipboard.readText();
+      setLicenseKey(text.trim());
+    } catch (_error) {
+      setClipboardError(t("settings.about.proActivation.clipboardFailed"));
     }
   };
 
@@ -93,6 +104,14 @@ export const AboutSettings: React.FC = () => {
                 disabled={proSubmitting}
               />
               <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => void handlePasteFromClipboard()}
+                disabled={proSubmitting}
+              >
+                {t("settings.about.proActivation.pasteFromClipboard")}
+              </Button>
+              <Button
                 variant="primary"
                 size="md"
                 onClick={() => void handleActivate()}
@@ -100,6 +119,9 @@ export const AboutSettings: React.FC = () => {
               >
                 {t("settings.about.proActivation.activate")}
               </Button>
+              {clipboardError && (
+                <p className="text-xs text-red-400">{clipboardError}</p>
+              )}
               {proError && <p className="text-xs text-red-400">{proError}</p>}
               {entitlement?.verification_error && (
                 <p className="text-xs text-red-400">
