@@ -22,16 +22,41 @@ const LICENSE_KEY_PATTERN = /^[A-Za-z0-9_-]{8,128}$/;
 const LEGACY_CHECKOUT_ID_PATTERN = /^polar_cl_[A-Za-z0-9]+$/;
 const requestBuckets = new Map();
 
-const readBody = (req) => {
-  if (!req.body) return {};
-  if (typeof req.body === "string") {
+const getHeader = (req, name) => {
+  if (!req || !req.headers) return "";
+  if (typeof req.headers.get === "function") {
+    return req.headers.get(name) || "";
+  }
+  const lower = name.toLowerCase();
+  return req.headers[lower] || req.headers[name] || "";
+};
+
+const readBody = async (req) => {
+  if (!req) return {};
+
+  if (req.body !== undefined) {
+    if (typeof req.body === "string") {
+      try {
+        return JSON.parse(req.body);
+      } catch (_error) {
+        return {};
+      }
+    }
+
+    if (typeof req.body === "object" && req.body !== null) {
+      return req.body;
+    }
+  }
+
+  if (typeof req.json === "function") {
     try {
-      return JSON.parse(req.body);
+      return await req.json();
     } catch (_error) {
       return {};
     }
   }
-  return req.body;
+
+  return {};
 };
 
 const statusLooksPaid = (status, paid) => {
@@ -65,15 +90,15 @@ const isLicenseGranted = (payload) => {
 };
 
 const getClientId = (req) => {
-  const forwarded = req.headers["x-forwarded-for"];
+  const forwarded = getHeader(req, "x-forwarded-for");
   if (Array.isArray(forwarded)) {
     return forwarded[0] || "unknown";
   }
-  if (typeof forwarded === "string" && forwarded.length > 0) {
+  if (forwarded.length > 0) {
     const [first] = forwarded.split(",");
     return first.trim() || "unknown";
   }
-  return req.socket?.remoteAddress || "unknown";
+  return req?.socket?.remoteAddress || "unknown";
 };
 
 const isRateLimited = (clientId) => {
@@ -97,46 +122,54 @@ const isRateLimited = (clientId) => {
   return existing.count > RATE_LIMIT_MAX;
 };
 
+const sendJson = (res, statusCode, payload) => {
+  if (res && typeof res.status === "function") {
+    res.status(statusCode).json(payload);
+    return null;
+  }
+
+  return new Response(JSON.stringify(payload), {
+    status: statusCode,
+    headers: {
+      "content-type": "application/json",
+      "cache-control": "no-store",
+    },
+  });
+};
+
 const handler = async (req, res) => {
   if (req.method !== "POST") {
-    res.status(405).json({ error: "method_not_allowed" });
-    return;
+    return sendJson(res, 405, { error: "method_not_allowed" });
   }
 
   if (!POLAR_ACCESS_TOKEN) {
-    res.status(500).json({ error: "missing_polar_access_token" });
-    return;
+    return sendJson(res, 500, { error: "missing_polar_access_token" });
   }
 
   if (!POLAR_ORGANIZATION_ID) {
-    res.status(500).json({ error: "missing_polar_organization_id" });
-    return;
+    return sendJson(res, 500, { error: "missing_polar_organization_id" });
   }
 
   const clientId = getClientId(req);
   if (isRateLimited(clientId)) {
-    res.status(429).json({ error: "rate_limited" });
-    return;
+    return sendJson(res, 429, { error: "rate_limited" });
   }
 
-  const body = readBody(req);
+  const body = await readBody(req);
   const licenseKey = (body.licenseKey || body.checkoutId || "").trim();
 
   if (!licenseKey) {
-    res.status(400).json({ error: "licenseKey_required" });
-    return;
+    return sendJson(res, 400, { error: "licenseKey_required" });
   }
 
   if (licenseKey.length > MAX_LICENSE_KEY_LENGTH) {
     console.warn("pro_verify_invalid_key_length", { clientId });
-    res.status(400).json({ error: "invalid_license_key" });
-    return;
+    return sendJson(res, 400, { error: "invalid_license_key" });
   }
 
   if (!LICENSE_KEY_PATTERN.test(licenseKey) && !LEGACY_CHECKOUT_ID_PATTERN.test(licenseKey)) {
     console.warn("pro_verify_invalid_key_format", { clientId });
-    res.status(400).json({ error: "invalid_license_key" });
-    return;
+    return sendJson(res, 400, { error: "invalid_license_key" });
   }
 
   try {
@@ -153,8 +186,7 @@ const handler = async (req, res) => {
       );
 
       if (checkoutResponse.status === 404) {
-        res.status(404).json({ active: false });
-        return;
+        return sendJson(res, 404, { active: false });
       }
 
       if (!checkoutResponse.ok) {
@@ -163,8 +195,7 @@ const handler = async (req, res) => {
           status: checkoutResponse.status,
           clientId,
         });
-        res.status(502).json({ error: "polar_api_error", detail: text });
-        return;
+        return sendJson(res, 502, { error: "polar_api_error", detail: text });
       }
 
       const checkout = await checkoutResponse.json();
@@ -174,8 +205,10 @@ const handler = async (req, res) => {
         ALLOWED_PRODUCT_IDS.length === 0 || ALLOWED_PRODUCT_IDS.includes(productId);
       const paid = statusLooksPaid(checkout.status, checkout.paid);
 
-      res.status(200).json({ active: Boolean(productAllowed && paid), mode: "legacy_checkout" });
-      return;
+      return sendJson(res, 200, {
+        active: Boolean(productAllowed && paid),
+        mode: "legacy_checkout",
+      });
     }
 
     const validateResponse = await fetch(`${POLAR_API_BASE}/license-keys/validate`, {
@@ -191,8 +224,7 @@ const handler = async (req, res) => {
     });
 
     if (validateResponse.status === 404 || validateResponse.status === 422) {
-      res.status(200).json({ active: false, mode: "license_key" });
-      return;
+      return sendJson(res, 200, { active: false, mode: "license_key" });
     }
 
     if (!validateResponse.ok) {
@@ -201,8 +233,7 @@ const handler = async (req, res) => {
         status: validateResponse.status,
         clientId,
       });
-      res.status(502).json({ error: "polar_api_error", detail: text });
-      return;
+      return sendJson(res, 502, { error: "polar_api_error", detail: text });
     }
 
     const license = await validateResponse.json();
@@ -211,10 +242,13 @@ const handler = async (req, res) => {
       ALLOWED_BENEFIT_IDS.length === 0 || ALLOWED_BENEFIT_IDS.includes(benefitId);
     const granted = isLicenseGranted(license);
 
-    res.status(200).json({ active: Boolean(benefitAllowed && granted), mode: "license_key" });
+    return sendJson(res, 200, {
+      active: Boolean(benefitAllowed && granted),
+      mode: "license_key",
+    });
   } catch (error) {
     console.warn("pro_verify_internal_error", { clientId });
-    res.status(500).json({
+    return sendJson(res, 500, {
       error: "internal_error",
       detail: error instanceof Error ? error.message : String(error),
     });
