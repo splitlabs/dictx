@@ -171,6 +171,18 @@ fn is_mouse_within_monitor(
 }
 
 fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
+    let settings = settings::get_settings(app_handle);
+
+    // Preserve absolute custom coordinates exactly as saved. This avoids snapping
+    // to the monitor currently under the cursor when the overlay is draggable.
+    if settings.overlay_position == OverlayPosition::Custom {
+        if let (Some(custom_x), Some(custom_y)) =
+            (settings.overlay_custom_x, settings.overlay_custom_y)
+        {
+            return Some((custom_x, custom_y));
+        }
+    }
+
     if let Some(monitor) = get_monitor_with_cursor(app_handle) {
         let work_area = monitor.work_area();
         let scale = monitor.scale_factor();
@@ -178,8 +190,6 @@ fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
         let work_area_height = work_area.size.height as f64 / scale;
         let work_area_x = work_area.position.x as f64 / scale;
         let work_area_y = work_area.position.y as f64 / scale;
-
-        let settings = settings::get_settings(app_handle);
 
         let default_x = work_area_x + (work_area_width - OVERLAY_WIDTH) / 2.0;
         let default_y = match settings.overlay_position {
@@ -189,26 +199,7 @@ fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
             }
         };
 
-        let (x, y) = match settings.overlay_position {
-            OverlayPosition::Custom => {
-                if let (Some(custom_x), Some(custom_y)) =
-                    (settings.overlay_custom_x, settings.overlay_custom_y)
-                {
-                    let min_x = work_area_x;
-                    let max_x = work_area_x + (work_area_width - OVERLAY_WIDTH).max(0.0);
-                    let min_y = work_area_y;
-                    let max_y = work_area_y + (work_area_height - OVERLAY_HEIGHT).max(0.0);
-                    (custom_x.clamp(min_x, max_x), custom_y.clamp(min_y, max_y))
-                } else {
-                    (default_x, default_y)
-                }
-            }
-            OverlayPosition::Top | OverlayPosition::Bottom | OverlayPosition::None => {
-                (default_x, default_y)
-            }
-        };
-
-        return Some((x, y));
+        return Some((default_x, default_y));
     }
     None
 }

@@ -199,7 +199,7 @@ const RecordingOverlay: React.FC = () => {
         className="overlay-middle overlay-drag-handle"
       >
         {state === "idle" && (
-          <div className="idle-text">{t("shortcuts.transcribe")}</div>
+          <div className="idle-placeholder" aria-hidden="true" />
         )}
         {state === "recording" && (
           <>

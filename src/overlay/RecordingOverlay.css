@@ -118,6 +118,11 @@
   white-space: nowrap;
 }
 
+.idle-placeholder {
+  width: 100%;
+  height: 1px;
+}
+
 .transcribing-text {
   color: white;
   font-size: 12px;
