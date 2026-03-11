@@ -224,7 +224,7 @@ related or neighboring rights to this work.
 ---
 
 <p align="center">
-  <a href="https://star-history.com/#0xNyk/xint&Date">
-    <img src="https://api.star-history.com/svg?repos=0xNyk/xint&type=Date" alt="Star History" width="400">
+  <a href="https://star-history.com/#splitlabs/dictx&Date">
+    <img src="https://api.star-history.com/svg?repos=splitlabs/dictx&type=Date" alt="Star History" width="400">
   </a>
 </p>
