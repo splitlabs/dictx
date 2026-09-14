@@ -32,7 +32,7 @@ Link is the seller of record, as for the other SplitLabs products on the same St
 3. In the Payment Link, set **After payment** to redirect to `https://dictx.splitlabs.io/buy/success?session_id={CHECKOUT_SESSION_ID}`.
 4. Create a restricted live key (`rk_live_...`) with read access to Checkout Sessions, Payment Intents, and Charges only.
 5. Set the Stripe environment variables below in Vercel production.
-6. `/buy` switches from Polar to the Payment Link on the next request once all four are valid. Nothing needs redeploying.
+6. Redeploy production once all four are set: Vercel applies environment variables only at deploy time. `/buy` then sends buyers to the Payment Link.
 
 A purchase earns a key only when the session is live, complete and paid (or fully discounted), holds exactly one Dictx Pro price at quantity 1, and its charge is neither refunded nor disputed. The app re-verifies keys, so a refund or dispute turns Pro off on its next check. A Stripe outage returns an error, which the app treats as "keep current state".
 
