@@ -1,3 +1,9 @@
+const {
+  purchaseForSession,
+  stripeConfig,
+} = require("../_lib/stripe-purchase");
+const { isStripeLicenseKey, parseLicenseKey } = require("../_lib/license");
+
 const POLAR_API_BASE = process.env.POLAR_API_BASE || "https://api.polar.sh/v1";
 const POLAR_ACCESS_TOKEN = process.env.POLAR_ACCESS_TOKEN || "";
 const POLAR_ORGANIZATION_ID = process.env.POLAR_ORGANIZATION_ID || "";
@@ -142,17 +148,46 @@ const sendJson = (res, statusCode, payload) => {
   });
 };
 
+// Positive Stripe verifications are cached briefly so an app refresh storm
+// does not become a Stripe request storm. Refusals are never cached.
+const STRIPE_ACTIVE_TTL_MS = 10 * 60 * 1000;
+const stripeActiveUntil = new Map();
+
+const verifyStripeLicense = async (res, licenseKey) => {
+  const config = stripeConfig();
+  if (!config.ready) {
+    return sendJson(res, 503, { error: "stripe_not_configured" });
+  }
+  const parsed = parseLicenseKey(licenseKey, config.licenseSecret);
+  if (!parsed) {
+    return sendJson(res, 200, { active: false, mode: "stripe_license" });
+  }
+  if ((stripeActiveUntil.get(parsed.sessionId) || 0) > Date.now()) {
+    return sendJson(res, 200, { active: true, mode: "stripe_license" });
+  }
+  const purchase = await purchaseForSession(parsed.sessionId, config);
+  if (purchase.ok) {
+    stripeActiveUntil.set(parsed.sessionId, Date.now() + STRIPE_ACTIVE_TTL_MS);
+    return sendJson(res, 200, { active: true, mode: "stripe_license" });
+  }
+  if (
+    purchase.reason === "provider_unavailable" ||
+    purchase.reason === "provider_invalid"
+  ) {
+    // An outage must not revoke Pro: the app keeps its entitlement on errors.
+    return sendJson(res, 502, { error: "stripe_api_error" });
+  }
+  stripeActiveUntil.delete(parsed.sessionId);
+  return sendJson(res, 200, {
+    active: false,
+    mode: "stripe_license",
+    reason: purchase.reason,
+  });
+};
+
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     return sendJson(res, 405, { error: "method_not_allowed" });
-  }
-
-  if (!POLAR_ACCESS_TOKEN) {
-    return sendJson(res, 500, { error: "missing_polar_access_token" });
-  }
-
-  if (!POLAR_ORGANIZATION_ID) {
-    return sendJson(res, 500, { error: "missing_polar_organization_id" });
   }
 
   const clientId = getClientId(req);
@@ -165,6 +200,20 @@ const handler = async (req, res) => {
 
   if (!licenseKey) {
     return sendJson(res, 400, { error: "licenseKey_required" });
+  }
+
+  // Stripe Managed Payments keys (dxp-...) verify without any Polar config.
+  // Everything below is the Polar path, kept so earlier purchases still work.
+  if (isStripeLicenseKey(licenseKey)) {
+    return verifyStripeLicense(res, licenseKey);
+  }
+
+  if (!POLAR_ACCESS_TOKEN) {
+    return sendJson(res, 500, { error: "missing_polar_access_token" });
+  }
+
+  if (!POLAR_ORGANIZATION_ID) {
+    return sendJson(res, 500, { error: "missing_polar_organization_id" });
   }
 
   if (licenseKey.length > MAX_LICENSE_KEY_LENGTH) {
