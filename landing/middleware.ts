@@ -11,8 +11,8 @@ declare const process: { env: Record<string, string | undefined> };
  * A local user-agent check on document requests; only known AI crawlers
  * produce one background POST, scheduled with context.waitUntil and never
  * awaited, so humans never trigger a network call and no response waits on
- * DataFast. Returning nothing passes the request through to the static file
- * or function untouched. No-op until DATAFAST_WEBSITE_ID is set.
+ * DataFast. The request always passes through to the static file or function
+ * untouched. No-op until DATAFAST_WEBSITE_ID is set.
  */
 // Node.js runtime: Vercel deprecated Edge for Routing Middleware.
 export const config = {
@@ -28,4 +28,8 @@ export default function middleware(
 ) {
   const websiteId = process.env.DATAFAST_WEBSITE_ID?.trim();
   if (websiteId) trackAICrawlerRequest(request, context, { websiteId });
+  // Pass through untouched. This is exactly what next() from @vercel/functions
+  // returns; returning nothing is not a pass-through on the Node.js runtime
+  // and made every matched page a 500 on the first preview.
+  return new Response(null, { headers: { "x-middleware-next": "1" } });
 }
