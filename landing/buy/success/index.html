@@ -10,6 +10,29 @@
     />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="stylesheet" href="/styles.css" />
+    <!-- DataFast (cookieless build), served first-party via landing/vercel.json
+         rewrites and injected after the load event. On this page it also
+         attributes the purchase: the tag reads the checkout id from the URL
+         and DataFast joins it to the payment via its provider connection. -->
+    <script id="datafast-queue">
+      window.datafast =
+        window.datafast ||
+        function () {
+          (window.datafast.q = window.datafast.q || []).push(arguments);
+        };
+      addEventListener(
+        "load",
+        function () {
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "/js/script.cookieless.js";
+          s.dataset.websiteId = "dfid_kcdGTJEa3xayul7fOPaip";
+          s.dataset.domain = "dictx.splitlabs.io";
+          document.head.appendChild(s);
+        },
+        { once: true },
+      );
+    </script>
   </head>
   <body>
     <div class="noise"></div>
@@ -35,11 +58,21 @@
 
         <div class="card" style="margin-top: 16px">
           <h2 style="font-size: 18px">Your License Key</h2>
-          <p id="license-key-value" style="word-break: break-all; font-family: monospace">
-            If no key is shown here, copy your key from Polar customer portal or receipt email.
+          <p
+            id="license-key-value"
+            style="word-break: break-all; font-family: monospace"
+          >
+            If no key is shown here, copy your key from Polar customer portal or
+            receipt email.
           </p>
           <div class="actions" style="margin-top: 12px">
-            <button id="copy-btn" class="btn primary" type="button" disabled>
+            <button
+              id="copy-btn"
+              class="btn primary"
+              type="button"
+              data-fast-goal="license_key_copied"
+              disabled
+            >
               Copy License Key
             </button>
             <a class="btn ghost" href="/">Back to Dictx</a>
@@ -70,7 +103,8 @@
         if (!key) return;
         try {
           await navigator.clipboard.writeText(key);
-          copyStatus.textContent = "Copied. Paste it in Dictx Settings -> About.";
+          copyStatus.textContent =
+            "Copied. Paste it in Dictx Settings -> About.";
         } catch (_error) {
           copyStatus.textContent = "Copy failed. Select and copy manually.";
         }

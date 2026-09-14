@@ -1,4 +1,14 @@
 {
+  "rewrites": [
+    {
+      "source": "/js/script.cookieless.js",
+      "destination": "https://datafa.st/js/script.cookieless.js"
+    },
+    {
+      "source": "/api/events",
+      "destination": "https://datafa.st/api/events"
+    }
+  ],
   "redirects": [
     {
       "source": "/buy",

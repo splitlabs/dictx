@@ -20,6 +20,28 @@
       href="./apple-touch-icon.png"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <!-- DataFast (cookieless build), served first-party via landing/vercel.json
+         rewrites and injected after the load event so a slow vendor cannot
+         hold page load. The queue stub keeps goals fired before it arrives. -->
+    <script id="datafast-queue">
+      window.datafast =
+        window.datafast ||
+        function () {
+          (window.datafast.q = window.datafast.q || []).push(arguments);
+        };
+      addEventListener(
+        "load",
+        function () {
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "/js/script.cookieless.js";
+          s.dataset.websiteId = "dfid_kcdGTJEa3xayul7fOPaip";
+          s.dataset.domain = "dictx.splitlabs.io";
+          document.head.appendChild(s);
+        },
+        { once: true },
+      );
+    </script>
   </head>
   <body>
     <div class="noise"></div>
@@ -31,14 +53,21 @@
       <nav class="menu" aria-label="Primary">
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
-        <a href="/api/download/macos">Download DMG</a>
+        <a
+          href="/api/download/macos"
+          data-fast-goal="download_dmg"
+          data-fast-goal-location="nav"
+          >Download DMG</a
+        >
         <a
           href="https://github.com/splitlabs/dictx"
           target="_blank"
           rel="noreferrer"
+          data-fast-goal="github_click"
+          data-fast-goal-location="nav"
           >GitHub</a
         >
-        <a class="mini-cta" href="/buy">Get Pro</a>
+        <a class="mini-cta" href="/buy" data-buy-location="nav">Get Pro</a>
       </nav>
     </header>
 
@@ -56,8 +85,14 @@
           <li>Signed Pro builds</li>
         </ul>
         <div class="actions">
-          <a class="btn primary" href="/buy">Buy Dictx Pro</a>
-          <a class="btn soft" href="/api/download/macos"
+          <a class="btn primary" href="/buy" data-buy-location="hero"
+            >Buy Dictx Pro</a
+          >
+          <a
+            class="btn soft"
+            href="/api/download/macos"
+            data-fast-goal="download_dmg"
+            data-fast-goal-location="hero"
             >Download Latest macOS DMG</a
           >
         </div>
@@ -96,7 +131,11 @@
         </article>
       </section>
 
-      <section id="pricing" class="panel pricing">
+      <section
+        id="pricing"
+        class="panel pricing"
+        data-fast-scroll="scroll_pricing"
+      >
         <h2>Free or Pro</h2>
         <p class="pricing-lead">
           Free stays powerful for daily use. Pro removes setup friction and
@@ -118,13 +157,17 @@
               href="https://github.com/splitlabs/dictx"
               target="_blank"
               rel="noreferrer"
+              data-fast-goal="github_click"
+              data-fast-goal-location="pricing"
               >View source</a
             >
           </article>
           <article class="plan pro">
             <p class="plan-name">Pro</p>
             <p class="plan-price">$29 <span>one-time</span></p>
-            <p class="plan-offer">Early access: first 100 installs get Pro free</p>
+            <p class="plan-offer">
+              Early access: first 100 installs get Pro free
+            </p>
             <ul>
               <li>Signed desktop binaries</li>
               <li>In-app auto-updater</li>
@@ -132,7 +175,9 @@
               <li>Professional checkout</li>
               <li>Priority support contact</li>
             </ul>
-            <a class="btn primary" href="/buy">Get Dictx Pro</a>
+            <a class="btn primary" href="/buy" data-buy-location="pricing"
+              >Get Dictx Pro</a
+            >
           </article>
         </div>
         <div class="matrix-wrap" aria-label="Feature comparison">
@@ -185,7 +230,7 @@
         </div>
       </section>
 
-      <section class="panel faq">
+      <section class="panel faq" data-fast-scroll="scroll_faq">
         <h2>FAQ</h2>
         <details open>
           <summary>Is Dictx still open source?</summary>
@@ -194,17 +239,16 @@
         <details>
           <summary>What does Pro actually add?</summary>
           <p>
-            Pro is the convenience layer: signed installers, in-app updates,
-            and priority support. Free still includes the full local dictation
+            Pro is the convenience layer: signed installers, in-app updates, and
+            priority support. Free still includes the full local dictation
             workflow.
           </p>
         </details>
         <details>
           <summary>How does the first-100 free Pro claim work?</summary>
           <p>
-            The app claims it automatically on first activation. If your
-            install lands in the first 100, Pro is enabled instantly at no
-            cost.
+            The app claims it automatically on first activation. If your install
+            lands in the first 100, Pro is enabled instantly at no cost.
           </p>
         </details>
         <details>
@@ -235,8 +279,16 @@
             signed installers and one-click updates.
           </p>
           <div class="actions">
-            <a class="btn primary" href="/buy">Get Dictx Pro</a>
-            <a class="btn soft" href="/api/download/macos">Download DMG</a>
+            <a class="btn primary" href="/buy" data-buy-location="final"
+              >Get Dictx Pro</a
+            >
+            <a
+              class="btn soft"
+              href="/api/download/macos"
+              data-fast-goal="download_dmg"
+              data-fast-goal-location="final"
+              >Download DMG</a
+            >
           </div>
         </div>
       </section>
@@ -250,6 +302,32 @@
       document.getElementById("year").textContent = String(
         new Date().getFullYear(),
       );
+
+      // Buy clicks leave the page for checkout at once, and DataFast posts
+      // goals with a plain XHR that the browser cancels on navigation. So the
+      // goal is sent here (not via data-fast-goal, which would double-count)
+      // and a plain click waits briefly before following /buy. Modified
+      // clicks open a new tab and need no delay.
+      document.addEventListener("click", function (event) {
+        var link = event.target.closest("a[data-buy-location]");
+        if (!link) return;
+        window.datafast("buy_pro_click", {
+          location: link.getAttribute("data-buy-location"),
+        });
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        )
+          return;
+        event.preventDefault();
+        setTimeout(function () {
+          window.location.href = link.href;
+        }, 250);
+      });
     </script>
   </body>
 </html>

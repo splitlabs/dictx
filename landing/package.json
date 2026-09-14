@@ -1,3 +1,7 @@
 {
-  "type": "commonjs"
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "@datafast/ai-crawl": "1.0.9"
+  }
 }
