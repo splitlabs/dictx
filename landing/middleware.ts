@@ -1,5 +1,9 @@
 import { trackAICrawlerRequest } from "@datafast/ai-crawl";
 
+// Provided by the Vercel runtime; declared so type-checking the middleware
+// does not require @types/node in this dependency-free static project.
+declare const process: { env: Record<string, string | undefined> };
+
 /**
  * DataFast bot traffic (datafa.st/docs/bot-traffic-tracking) as Vercel
  * Routing Middleware for this static project.
@@ -10,7 +14,9 @@ import { trackAICrawlerRequest } from "@datafast/ai-crawl";
  * DataFast. Returning nothing passes the request through to the static file
  * or function untouched. No-op until DATAFAST_WEBSITE_ID is set.
  */
+// Node.js runtime: Vercel deprecated Edge for Routing Middleware.
 export const config = {
+  runtime: "nodejs",
   matcher: [
     "/((?!api/|js/|.*\\.(?:png|jpe?g|gif|svg|webp|avif|ico|css|js|map|woff2?|ttf)$).*)",
   ],
