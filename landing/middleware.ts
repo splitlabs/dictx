@@ -14,9 +14,10 @@ declare const process: { env: Record<string, string | undefined> };
  * DataFast. The request always passes through to the static file or function
  * untouched. No-op until DATAFAST_WEBSITE_ID is set.
  */
-// Node.js runtime: Vercel deprecated Edge for Routing Middleware.
+// Edge runtime on purpose. Vercel warns that Edge is deprecated for Routing
+// Middleware, but on this static "Other" project the Node.js runtime served
+// every matched page as a 500 on preview, while Edge served 200.
 export const config = {
-  runtime: "nodejs",
   matcher: [
     "/((?!api/|js/|.*\\.(?:png|jpe?g|gif|svg|webp|avif|ico|css|js|map|woff2?|ttf)$).*)",
   ],
@@ -29,7 +30,6 @@ export default function middleware(
   const websiteId = process.env.DATAFAST_WEBSITE_ID?.trim();
   if (websiteId) trackAICrawlerRequest(request, context, { websiteId });
   // Pass through untouched. This is exactly what next() from @vercel/functions
-  // returns; returning nothing is not a pass-through on the Node.js runtime
-  // and made every matched page a 500 on the first preview.
+  // returns, so the pass-through does not depend on runtime defaults.
   return new Response(null, { headers: { "x-middleware-next": "1" } });
 }
