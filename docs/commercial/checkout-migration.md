@@ -1,105 +1,38 @@
-# Dictx Commerce Migration (Gumroad -> Professional Checkout)
+# Dictx Commerce: Stripe Managed Payments
 
-This runbook moves Dictx Pro sales to `https://dictx.splitlabs.io/buy` while keeping the OSS/free path unchanged.
+Dictx Pro is sold at `https://dictx.splitlabs.io/buy` through Stripe Managed Payments, where Link is the seller of record. The OSS/free path is unchanged. Polar was retired on 2026-09-15.
 
 ## Scope
 
-- Product: Dictx Pro (signed binaries + auto-updates)
-- Price: `$29` one-time
+- Product: Dictx Pro (signed binaries, in-app auto-updates, priority support)
+- Price: `$29` one-time (tax added at checkout where applicable)
 - Free version: unchanged (GPL source build)
 
-## 1) Domain + Checkout
+## Checkout
 
-1. Create `dictx.splitlabs.io` as your Vercel custom domain and serve the landing site there.
-2. Deploy the dedicated Vercel landing project from `landing/`:
+- `/buy` redirects to the live Payment Link, or shows "checkout unavailable" if Stripe is not fully configured.
+- After payment Stripe redirects to `https://dictx.splitlabs.io/buy/success?session_id={CHECKOUT_SESSION_ID}`.
+- The success page calls `/api/pro/license`, which verifies the Checkout Session and shows the `dxp-` license key.
 
-- Root Directory: `landing`
-- Framework Preset: `Other`
-- Build Command: empty
-- Output Directory: empty
+Setup, live object ids, and environment variables: [landing/README.md](../../landing/README.md).
 
-3. Configure branded checkout:
+## License + Entitlements
 
-- Product name: `Dictx Pro`
-- Offer copy: `Signed binaries, auto-updates, and direct support`
-- Price: `USD 29 one-time`
-- Success URL: `https://dictx.splitlabs.io/buy/success?checkout_id={CHECKOUT_ID}`
+Activation flow in the app:
 
-3. Enable customer portal for:
+- User opens **Settings -> About -> Activate Dictx Pro** and enters the `dxp-` key.
+- The app verifies against `https://dictx.splitlabs.io/api/pro/verify`.
+- On success, the app stores the entitlement and enables updater checks.
+- The app re-verifies on refresh; a refund or dispute turns Pro off, a Stripe outage keeps the current state.
+- Keys from the retired Polar checkout (`lk_...`, `polar_cl_...`) answer `410`, so apps that already activated one keep Pro. New activations with them fail.
+- Early-adopter promo: the first 100 unique installs can auto-claim free Pro via `POST /api/pro/early-access/claim`.
 
-- Receipts/invoices
-- Download access
-- Billing/profile management
+No webhook is needed: entitlement comes from re-verifying the live Checkout Session.
 
-## 2) License + Entitlements
+## Validation Checklist
 
-Define one entitlement key:
-
-- `dictx_pro`
-
-Entitlement grants:
-
-- Access to release downloads
-- Auto-update eligibility
-- Priority support queue (if enabled)
-
-Activation flow in app:
-
-- User opens **Settings -> About -> Upgrade to Dictx Pro**
-- User enters Polar license key (`lk_...`)
-- App verifies against `https://dictx.splitlabs.io/api/pro/verify`
-- On success, app stores active entitlement and enables updater checks
-- Legacy checkout keys (`polar_cl_...`) are supported temporarily for migration
-- Early-adopter promo: the first 100 unique installs can auto-claim free Pro via `POST /api/pro/early-access/claim`
-
-## 3) Webhook Processing
-
-Use a webhook endpoint to sync purchases to your entitlement store.
-
-Events to handle:
-
-- `order.paid` (grant entitlement)
-- `subscription.active` (if you add annual support plans)
-- `order.refunded` or `subscription.canceled` (revoke entitlement)
-
-Implementation reference:
-
-- [scripts/commerce/polar-webhook-example.ts](/Users/nyk/repos/dictx/scripts/commerce/polar-webhook-example.ts)
-
-## 4) App + Repo Link Updates
-
-Completed in this repo:
-
-- `README` Pro links now point to `https://dictx.splitlabs.io/buy`
-- In-app CTA links point to a shared `PRO_PURCHASE_URL`
-- GitHub funding link points to `https://dictx.splitlabs.io/buy`
-
-## 5) Migration Messaging
-
-1. Send announcement to existing buyers.
-2. Publish FAQ with key points:
-
-- Existing licenses remain honored
-- New purchases go through `https://dictx.splitlabs.io/buy` (redirect target managed in `landing/vercel.json`)
-- Support contact stays unchanged
-
-3. Use template:
-
-- [customer-migration-email.md](/Users/nyk/repos/dictx/docs/commercial/customer-migration-email.md)
-
-## 6) Validation Checklist
-
-Before launch:
-
-- Checkout success flow creates receipt + customer record
-- Webhook signature validation works in production
-- `dictx_pro` entitlement is granted/revoked correctly
-- `landing/api/pro/verify` returns `{ active: true }` only for valid granted license key (`lk_...`)
-- `landing/api/pro/early-access/claim` enforces the first-100 cap using durable Redis storage
-- Customer portal access works from receipt email
-- Purchase links from app + README resolve to `https://dictx.splitlabs.io/buy`
-
-After launch:
-
-- Track conversion rate from in-app CTA
-- Track support tickets tagged `billing` and `license`
+- `/buy` redirects to the Stripe Payment Link (307).
+- A completed checkout lands on `/buy/success` and shows a `dxp-` key.
+- `/api/pro/verify` returns `{ active: true }` for that key and `{ active: false }` for a tampered one.
+- `/api/pro/license` returns `404` for an unknown session and `410` for a refunded one.
+- `landing/tests/billing.test.js` passes.

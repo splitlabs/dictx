@@ -511,7 +511,7 @@
         "refresh": "Re-check Entitlement",
         "clear": "Remove Activation",
         "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-... / lk_... (or migration key)",
+        "licenseKeyPlaceholder": "dxp-...",
         "pasteFromClipboard": "Paste From Clipboard",
         "clipboardFailed": "Clipboard access failed. Paste manually."
       }

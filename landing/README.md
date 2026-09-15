@@ -16,31 +16,32 @@ Attach `dictx.splitlabs.io` to this Vercel project.
 ## Routes
 
 - `/` serves `landing/index.html`
-- `/buy` runs `api/buy.js`: the Stripe Payment Link once Stripe is fully configured, otherwise the Polar checkout
-- `/buy/success` shows the license key. Stripe purchases fetch it from `/api/pro/license`; earlier Polar purchases read it from the URL
+- `/buy` runs `api/buy.js`: redirects to the Stripe Payment Link, or shows "checkout unavailable" if Stripe is not fully configured
+- `/buy/success?session_id=cs_live_...` shows the license key, fetched from `/api/pro/license`
 - `/api/pro/license?session_id=cs_live_...` issues the `dxp-` license key for a verified Stripe purchase
-- `/api/pro/verify` validates `dxp-` keys against Stripe and `lk_...` / `polar_cl_...` keys against Polar
+- `/api/pro/verify` validates `dxp-` keys against Stripe. Keys from the retired Polar checkout (`lk_...`, `polar_cl_...`) answer `410`, so apps that already activated one keep Pro
 - `/api/pro/early-access/claim` grants free Pro for the first 100 unique installs
-- `/js/script.cookieless.js` and `/api/events` proxy DataFast first-party; `middleware.ts` reports AI crawler requests
+- `/js/script.cookieless.js` and `/api/events` proxy DataFast first-party; `middleware.ts` reports AI crawler requests (Edge runtime: the Node.js runtime served every page as 500 on this project)
 
-## Stripe Managed Payments setup
+## Stripe Managed Payments
 
-Link is the seller of record, as for the other SplitLabs products on the same Stripe account.
+Link is the seller of record, as for the other SplitLabs products on the same Stripe account (`acct_1U0p1zIOmsupAvc3`).
 
-1. Create the product **Dictx Pro** with a tax code Stripe labels "Eligible for Managed Payments" (downloadable software), and a one-time price of $29 USD.
-2. Create a Payment Link for that price with Managed Payments on and quantity fixed at 1.
-3. In the Payment Link, set **After payment** to redirect to `https://dictx.splitlabs.io/buy/success?session_id={CHECKOUT_SESSION_ID}`.
-4. Create a restricted live key (`rk_live_...`) with read access to Checkout Sessions, Payment Intents, and Charges only.
-5. Set the Stripe environment variables below in Vercel production.
-6. Redeploy production once all four are set: Vercel applies environment variables only at deploy time. `/buy` then sends buyers to the Payment Link.
+Live objects:
+
+- Product `prod_VGAwMgXh0UgB0w` "Dictx Pro", tax code `txcd_10202000` (Downloadable Software)
+- Price `price_1UFeb2IOmsupAvc3VoCin47h`, $29 USD one-time
+- Payment Link `plink_1UFebaIOmsupAvc3m6DV45ul`, Managed Payments on, after payment redirects to `https://dictx.splitlabs.io/buy/success?session_id={CHECKOUT_SESSION_ID}`
 
 A purchase earns a key only when the session is live, complete and paid (or fully discounted), holds exactly one Dictx Pro price at quantity 1, and its charge is neither refunded nor disputed. The app re-verifies keys, so a refund or dispute turns Pro off on its next check. A Stripe outage returns an error, which the app treats as "keep current state".
 
 If a buyer loses the key, find their Checkout Session id in Stripe and send them `https://dictx.splitlabs.io/buy/success?session_id=<id>`. It reissues the same key.
 
+To set up again from scratch: create the product with a Managed Payments–eligible tax code, a one-time price, and a Payment Link with Managed Payments on and the redirect above; create a restricted live key with read access to Checkout Sessions, Payment Intents, and Charges; set the variables below; then **redeploy production**, because Vercel applies environment variables only at deploy time.
+
 ## Environment Variables (Vercel)
 
-Stripe (all required before `/buy` switches):
+Stripe (all required, otherwise `/buy` shows "checkout unavailable"):
 
 - `STRIPE_SECRET_KEY`: restricted live read key (`rk_live_...`), Sensitive
 - `DICTX_STRIPE_PRICE_ID`: the Dictx Pro price id (`price_...`)
@@ -51,14 +52,6 @@ Stripe (all required before `/buy` switches):
 DataFast:
 
 - `DATAFAST_WEBSITE_ID`: the public website id; enables crawler tracking in `middleware.ts`
-
-Polar (verifies keys from earlier purchases; keep until those customers are migrated):
-
-- `POLAR_ACCESS_TOKEN`: Polar API token
-- `POLAR_ORGANIZATION_ID`: Polar organization id (`org_...`) used by license-key validation
-- `POLAR_DICTX_BENEFIT_IDS`: optional comma-separated benefit IDs allowed for Dictx Pro activation
-- `POLAR_DICTX_PRODUCT_IDS`: optional legacy fallback for checkout-key migration (`polar_cl_...`)
-- `POLAR_API_BASE`: optional override (defaults to `https://api.polar.sh/v1`)
 
 Rate limits and early access:
 
@@ -73,5 +66,5 @@ Rate limits and early access:
 ## Tests
 
 ```bash
-node --test landing/tests/
+node --test landing/tests/billing.test.js
 ```

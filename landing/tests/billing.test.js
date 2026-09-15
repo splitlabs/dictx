@@ -11,8 +11,6 @@ const ENV_KEYS = [
   "DICTX_STRIPE_PRICE_ID",
   "DICTX_LICENSE_SECRET",
   "DICTX_STRIPE_PAYMENT_LINK",
-  "POLAR_ACCESS_TOKEN",
-  "POLAR_ORGANIZATION_ID",
 ];
 const savedEnv = {};
 const realFetch = globalThis.fetch;
@@ -55,6 +53,12 @@ const stubStripe = ({
   return calls;
 };
 
+const failOnNetwork = () => {
+  globalThis.fetch = async (url) => {
+    throw new Error(`unexpected network call: ${url}`);
+  };
+};
+
 const fakeRes = () => ({
   statusCode: 0,
   headers: {},
@@ -67,6 +71,10 @@ const fakeRes = () => ({
     return this;
   },
   json(body) {
+    this.body = body;
+    return this;
+  },
+  send(body) {
     this.body = body;
     return this;
   },
@@ -187,21 +195,27 @@ test("production forces live mode whatever STRIPE_COMMERCE_MODE says", () => {
   assert.equal(sessionIdPattern().test("cs_test_a1B2c3D4e5F6g7H8"), false);
 });
 
-test("/buy stays on Polar until Stripe is fully and canonically configured", () => {
+test("/buy redirects only to a fully configured canonical live link, else 503", () => {
   const buy = fresh("../api/buy");
-  const location = () => {
+  const visit = () => {
     const res = fakeRes();
     buy({ method: "GET" }, res);
-    assert.equal(res.statusCode, 307);
     assert.equal(res.headers["cache-control"], "no-store");
-    return res.headers.location;
+    return res;
   };
 
-  assert.equal(location(), buy.POLAR_CHECKOUT_URL);
+  let res = visit();
+  assert.equal(res.statusCode, 503, "nothing configured");
+  assert.match(res.body, /Checkout is temporarily unavailable/);
+  assert.doesNotMatch(res.body, /polar/i);
+
   process.env.DICTX_STRIPE_PAYMENT_LINK = "https://buy.stripe.com/abc123";
-  assert.equal(location(), buy.POLAR_CHECKOUT_URL, "link alone is not enough");
+  assert.equal(visit().statusCode, 503, "a link alone is not enough");
+
   configureStripe();
-  assert.equal(location(), "https://buy.stripe.com/abc123");
+  res = visit();
+  assert.equal(res.statusCode, 307);
+  assert.equal(res.headers.location, "https://buy.stripe.com/abc123");
 
   for (const bad of [
     "https://buy.stripe.com/test_abc123",
@@ -210,7 +224,7 @@ test("/buy stays on Polar until Stripe is fully and canonically configured", () 
     "https://buy.stripe.com/abc123?prefilled_email=x",
   ]) {
     process.env.DICTX_STRIPE_PAYMENT_LINK = bad;
-    assert.equal(location(), buy.POLAR_CHECKOUT_URL, bad);
+    assert.equal(visit().statusCode, 503, bad);
   }
 });
 
@@ -261,39 +275,52 @@ test("the license endpoint issues keys only for verified purchases", async () =>
   assert.equal((await call("not-a-session")).statusCode, 404);
 });
 
-test("verify accepts Stripe keys without Polar config and keeps outages non-revoking", async () => {
+const postVerify = async (verify, licenseKey, clientId) => {
+  const res = fakeRes();
+  await verify(
+    {
+      method: "POST",
+      body: { licenseKey },
+      headers: { "x-forwarded-for": clientId },
+    },
+    res,
+  );
+  return res;
+};
+
+test("verify checks Stripe keys and keeps outages non-revoking", async () => {
   const verify = fresh("../api/pro/verify");
   const { issueLicenseKey } = require("../api/_lib/license");
-  const post = async (licenseKey, clientId) => {
-    const res = fakeRes();
-    await verify(
-      {
-        method: "POST",
-        body: { licenseKey },
-        headers: { "x-forwarded-for": clientId },
-      },
-      res,
-    );
-    return res;
-  };
   configureStripe();
   const key = issueLicenseKey(LIVE_SESSION, SECRET);
 
   stubStripe({ status: 500 });
-  let res = await post(key, "verify-1");
+  let res = await postVerify(verify, key, "verify-1");
   assert.equal(res.statusCode, 502, "an outage is an error, not a revocation");
 
   stubStripe();
-  res = await post(key, "verify-2");
+  res = await postVerify(verify, key, "verify-2");
   assert.deepEqual([res.statusCode, res.body.active], [200, true]);
 
-  res = await post(key.slice(0, -2) + "00", "verify-3");
+  res = await postVerify(verify, key.slice(0, -2) + "00", "verify-3");
   assert.deepEqual([res.statusCode, res.body.active], [200, false]);
+});
 
-  // Earlier Polar keys still take the Polar path, which needs its own config.
-  res = await post("lk_legacyKey12345", "verify-4");
-  assert.equal(res.statusCode, 500);
-  assert.equal(res.body.error, "missing_polar_access_token");
+test("retired Polar keys answer 410 without any network call", async () => {
+  const verify = fresh("../api/pro/verify");
+  configureStripe();
+  failOnNetwork();
+  for (const [index, key] of [
+    "lk_legacyKey12345",
+    "polar_cl_abcdef123",
+  ].entries()) {
+    const res = await postVerify(verify, key, `polar-${index}`);
+    // 410 is an error to installed apps, so an already-activated Polar
+    // customer keeps Pro instead of being switched off by the retirement.
+    assert.deepEqual([res.statusCode, res.body.error], [410, "polar_retired"]);
+  }
+  const unknown = await postVerify(verify, "somethingElse123", "polar-x");
+  assert.deepEqual([unknown.statusCode, unknown.body.active], [200, false]);
 });
 
 test("a refunded Stripe purchase deactivates on the next verification", async () => {
@@ -305,14 +332,10 @@ test("a refunded Stripe purchase deactivates on the next verification", async ()
       payment_intent: { latest_charge: { refunded: true } },
     }),
   });
-  const res = fakeRes();
-  await verify(
-    {
-      method: "POST",
-      body: { licenseKey: issueLicenseKey(LIVE_SESSION, SECRET) },
-      headers: { "x-forwarded-for": "verify-5" },
-    },
-    res,
+  const res = await postVerify(
+    verify,
+    issueLicenseKey(LIVE_SESSION, SECRET),
+    "verify-5",
   );
   assert.deepEqual(
     [res.statusCode, res.body.active, res.body.reason],
