@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="/styles.css" />
     <!-- DataFast (cookieless build), served first-party via landing/vercel.json
          rewrites and injected after the load event. On this page it also
-         attributes the purchase: the tag reads the checkout id from the URL
-         and DataFast joins it to the payment via its provider connection. -->
+         attributes the purchase: the tag reads the Stripe session id from the URL
+         and DataFast joins it to the payment via its Stripe connection. -->
     <script id="datafast-queue">
       window.datafast =
         window.datafast ||
@@ -133,19 +133,8 @@
             valueEl.textContent = FALLBACK_MESSAGE;
           });
       } else {
-        // Earlier Polar purchases: the key or checkout id arrives in the URL.
-        const legacy = (
-          params.get("license_key") ||
-          params.get("licenseKey") ||
-          params.get("checkout_id") ||
-          ""
-        ).trim();
-        if (legacy) {
-          showKey(legacy);
-        } else {
-          valueEl.textContent =
-            "If no key is shown here, copy your key from the Polar customer portal or receipt email.";
-        }
+        valueEl.textContent =
+          "Open this page from the link Stripe sends you to after checkout. It shows your license key.";
       }
 
       copyBtn.addEventListener("click", async () => {
