@@ -3,23 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dictx | Privacy-first desktop speech-to-text</title>
+    <title>Dictx for Mac: local speech-to-text in any app</title>
     <meta
       name="description"
-      content="Dictx is local-first desktop speech-to-text. Dictx Pro gives you signed binaries and in-app auto-updates."
+      content="Hold Option and Space, speak, and Dictx pastes the text where you were typing. Transcription runs on your Mac. Free and open source; Pro is $29."
+    />
+    <link rel="canonical" href="https://dictx.splitlabs.io/" />
+    <meta
+      name="theme-color"
+      content="#f7f5fb"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#16131d"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Dictx" />
+    <meta property="og:url" content="https://dictx.splitlabs.io/" />
+    <meta
+      property="og:title"
+      content="Dictx for Mac: local speech-to-text in any app"
+    />
+    <meta
+      property="og:description"
+      content="Hold Option and Space, speak, and Dictx pastes the text where you were typing. Transcription runs on your Mac."
+    />
+    <meta property="og:image" content="https://dictx.splitlabs.io/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Dictx app icon with the words Privacy-first desktop speech-to-text"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="/apple-touch-icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/familjen-grotesk-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
     <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./favicon-32x32.png"
+      rel="preload"
+      href="/fonts/atkinson-hyperlegible-next-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
-    <link
-      rel="apple-touch-icon"
-      sizes="128x128"
-      href="./apple-touch-icon.png"
-    />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Dictx",
+        "url": "https://dictx.splitlabs.io/",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "macOS, Windows, Linux",
+        "description": "Desktop speech-to-text that transcribes on your computer and pastes the text into the app you are typing in.",
+        "downloadUrl": "https://dictx.splitlabs.io/api/download/macos",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "publisher": { "@type": "Organization", "name": "Split Labs" },
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Dictx",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "name": "Dictx Pro",
+            "price": "29",
+            "priceCurrency": "USD"
+          }
+        ]
+      }
+    </script>
     <!-- DataFast (cookieless build), served first-party via landing/vercel.json
          rewrites and injected after the load event so a slow vendor cannot
          hold page load. The queue stub keeps goals fired before it arrives. -->
@@ -44,21 +107,17 @@
     </script>
   </head>
   <body>
-    <div class="noise"></div>
-    <header class="nav shell">
-      <a class="brand" href="#top" aria-label="Dictx home">
-        <img src="./logo.png" class="brand-icon" alt="Dictx logo" />
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header shell">
+      <a class="brand" href="/" aria-label="Dictx home">
+        <img src="/logo.png" class="brand-icon" alt="" width="32" height="32" />
         <span class="wordmark">Dictx</span>
       </a>
-      <nav class="menu" aria-label="Primary">
-        <a href="#features">Features</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
-        <a
-          href="/api/download/macos"
-          data-fast-goal="download_dmg"
-          data-fast-goal-location="nav"
-          >Download DMG</a
-        >
+        <a href="#faq">FAQ</a>
         <a
           href="https://github.com/splitlabs/dictx"
           target="_blank"
@@ -67,235 +126,304 @@
           data-fast-goal-location="nav"
           >GitHub</a
         >
-        <a class="mini-cta" href="/buy" data-buy-location="nav">Get Pro</a>
       </nav>
     </header>
 
-    <main id="top" class="shell">
-      <section class="hero panel">
-        <p class="kicker">Split Labs • Dictx</p>
-        <h1>Transcription you can trust in real work.</h1>
-        <p class="lede">
-          Transcribe locally, keep control of your data, and ship faster with a
-          desktop app designed for daily use.
-        </p>
-        <ul class="trust-points" aria-label="Core value points">
-          <li>No cloud lock-in</li>
-          <li>Runs on your machine</li>
-          <li>Signed Pro builds</li>
-        </ul>
-        <div class="actions">
-          <a class="btn primary" href="/buy" data-buy-location="hero"
-            >Buy Dictx Pro</a
-          >
-          <a
-            class="btn soft"
-            href="/api/download/macos"
-            data-fast-goal="download_dmg"
-            data-fast-goal-location="hero"
-            >Download Latest macOS DMG</a
-          >
+    <main id="main">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <h1 id="hero-title">Dictation that stays on your Mac</h1>
+          <p class="hero-lede">
+            Hold Option and Space, say what you mean, let go. Dictx pastes the
+            text into whatever app you were typing in.
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button button-primary"
+              href="/api/download/macos"
+              data-fast-goal="download_dmg"
+              data-fast-goal-location="hero"
+              data-fast-goal-arch="apple_silicon"
+              >Download for Mac</a
+            >
+            <a class="button button-quiet" href="/buy" data-buy-location="hero"
+              >Buy Pro for $29</a
+            >
+          </div>
+          <p class="hero-arch">
+            For Apple silicon.
+            <a
+              href="/api/download/macos?arch=intel"
+              data-fast-goal="download_dmg"
+              data-fast-goal-location="hero"
+              data-fast-goal-arch="intel"
+              >Download for an Intel Mac</a
+            >
+          </p>
+          <p class="hero-note">
+            Free and open source. Works offline once you have downloaded a
+            model.
+          </p>
         </div>
-        <p class="offer-pill">
-          First 100 installs unlock Dictx Pro for free automatically in-app.
-        </p>
-        <p class="meta">
-          $29 one-time • signed binaries • auto-updates • macOS / Windows /
-          Linux
-        </p>
-        <div class="hero-proof">
-          <p>Open source (GPL) • 17 locales • macOS / Windows / Linux</p>
-        </div>
+
+        <figure class="shortcut" aria-labelledby="shortcut-caption">
+          <div class="keys" aria-hidden="true">
+            <kbd class="key key-option"
+              ><span class="key-glyph">⌥</span> option</kbd
+            >
+            <span class="key-plus">+</span>
+            <kbd class="key key-space">space</kbd>
+          </div>
+          <div class="listening">
+            <img
+              src="/overlay-recording.png"
+              alt=""
+              width="64"
+              height="64"
+              class="listening-icon"
+            />
+            <p class="typed" aria-hidden="true">
+              <span>Remind me to send the invoice on Friday.</span>
+            </p>
+          </div>
+          <figcaption id="shortcut-caption" class="shortcut-caption">
+            The default shortcut. Hold it, speak, and the words land where your
+            cursor is.
+          </figcaption>
+        </figure>
       </section>
 
-      <section id="features" class="grid3">
-        <article class="card">
-          <h2>100% local transcription</h2>
-          <p>
-            No cloud dependency for core speech-to-text. Your audio stays
-            on-device.
-          </p>
-        </article>
-        <article class="card">
-          <h2>Built for daily flow</h2>
-          <p>
-            Hotkeys, quick model switching, and output controls that fit real
-            writing sessions.
-          </p>
-        </article>
-        <article class="card">
-          <h2>Obsidian-ready output</h2>
-          <p>
-            Export notes with metadata and keep your knowledge workflow tidy.
-          </p>
-        </article>
+      <section
+        id="how"
+        class="how shell"
+        aria-labelledby="how-title"
+        data-fast-scroll="scroll_how"
+      >
+        <h2 id="how-title">From your voice to the text field in four steps</h2>
+        <ol class="steps">
+          <li>
+            <h3>Hold the shortcut</h3>
+            <p>
+              Press and hold Option and Space. The menu bar icon switches to
+              recording.
+            </p>
+          </li>
+          <li>
+            <h3>Talk normally</h3>
+            <p>
+              Dictx trims the silence while you speak, so pauses cost nothing.
+            </p>
+          </li>
+          <li>
+            <h3>Let go</h3>
+            <p>The model you picked transcribes the recording on your Mac.</p>
+          </li>
+          <li>
+            <h3>Keep typing</h3>
+            <p>
+              The text is pasted into the field you were in. Prefer tapping to
+              holding? Switch to toggle mode in Settings.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="mac shell" aria-labelledby="mac-title">
+        <h2 id="mac-title">What it does on a Mac</h2>
+        <dl class="facts">
+          <div>
+            <dt>Your audio stays here</dt>
+            <dd>
+              Recording and transcription run on your Mac. Dictx goes online to
+              download a model and, with Pro, to check for updates.
+            </dd>
+          </div>
+          <div>
+            <dt>Two permissions, and why</dt>
+            <dd>
+              Microphone, so it can hear you. Accessibility, so it can paste the
+              text into the app you were using.
+            </dd>
+          </div>
+          <div>
+            <dt>Models for your hardware</dt>
+            <dd>
+              Whisper Small, Medium, Turbo, and Large use the GPU. Parakeet V3
+              is tuned for the CPU. Switch between them in Settings.
+            </dd>
+          </div>
+          <div>
+            <dt>Cleanup, if you want it</dt>
+            <dd>
+              Option, Shift, and Space runs the transcript through a
+              post-processing prompt. Use a provider you set up, or Apple
+              Intelligence on Apple silicon with macOS Tahoe 26.
+            </dd>
+          </div>
+          <div>
+            <dt>Notes into Obsidian</dt>
+            <dd>
+              Save transcripts as Markdown notes with YAML frontmatter, or
+              append them to your daily note.
+            </dd>
+          </div>
+          <div>
+            <dt>Scriptable</dt>
+            <dd>
+              Start or stop recording from a script:
+              <code
+                >/Applications/Dictx.app/Contents/MacOS/Dictx
+                --toggle-transcription</code
+              >
+            </dd>
+          </div>
+        </dl>
       </section>
 
       <section
         id="pricing"
-        class="panel pricing"
+        class="pricing shell"
+        aria-labelledby="pricing-title"
         data-fast-scroll="scroll_pricing"
       >
-        <h2>Free or Pro</h2>
-        <p class="pricing-lead">
-          Free stays powerful for daily use. Pro removes setup friction and
-          keeps your app maintained automatically.
-        </p>
-        <div class="price-grid">
-          <article class="plan">
-            <p class="plan-name">Free</p>
+        <h2 id="pricing-title">Free to use. Pro keeps it updated.</h2>
+        <div class="plans">
+          <section class="plan" aria-labelledby="plan-free">
+            <h3 id="plan-free">Free</h3>
             <p class="plan-price">$0</p>
             <ul>
-              <li>GPL source code</li>
-              <li>Build from source</li>
-              <li>All core dictation features</li>
-              <li>Local history with retention controls</li>
-              <li>Community support</li>
+              <li>Every dictation feature</li>
+              <li>Download the app or build it from source</li>
+              <li>Update by installing new releases</li>
+              <li>Help from the community on GitHub</li>
             </ul>
             <a
-              class="btn ghost"
+              class="button button-quiet"
+              href="/api/download/macos"
+              data-fast-goal="download_dmg"
+              data-fast-goal-location="pricing"
+              data-fast-goal-arch="apple_silicon"
+              >Download for Mac</a
+            >
+          </section>
+          <section class="plan plan-pro" aria-labelledby="plan-pro">
+            <h3 id="plan-pro">Pro</h3>
+            <p class="plan-price">$29 <span>once</span></p>
+            <ul>
+              <li>Automatic updates inside the app</li>
+              <li>Priority email support</li>
+              <li>One license key, activated in Settings</li>
+              <li>Pays for signed, notarized Mac releases</li>
+            </ul>
+            <a
+              class="button button-primary"
+              href="/buy"
+              data-buy-location="pricing"
+              >Buy Pro for $29</a
+            >
+            <p class="plan-note">Tax is added at checkout where it applies.</p>
+          </section>
+        </div>
+      </section>
+
+      <section
+        id="faq"
+        class="faq shell"
+        aria-labelledby="faq-title"
+        data-fast-scroll="scroll_faq"
+      >
+        <h2 id="faq-title">Questions</h2>
+        <details>
+          <summary>Does my audio leave the Mac?</summary>
+          <p>
+            No. Recording and transcription happen locally. Post-processing is
+            off until you turn it on, and then it uses the provider you chose.
+          </p>
+        </details>
+        <details>
+          <summary>Which Macs does it run on?</summary>
+          <p>
+            Apple silicon and Intel Macs each have their own download. Apple
+            Intelligence cleanup needs Apple silicon and macOS Tahoe 26.
+          </p>
+        </details>
+        <details>
+          <summary>Why does it ask for Accessibility access?</summary>
+          <p>
+            macOS treats pasting into another app as controlling it. Dictx needs
+            that permission to put the transcript where your cursor is.
+          </p>
+        </details>
+        <details>
+          <summary>How do I activate Pro?</summary>
+          <p>
+            After checkout you get a license key that starts with
+            <code>dxp-</code>. Paste it in Settings, under About, then Activate
+            Dictx Pro.
+          </p>
+        </details>
+        <details>
+          <summary>Is Dictx open source?</summary>
+          <p>
+            Yes, under GPL-3.0.
+            <a
               href="https://github.com/splitlabs/dictx"
               target="_blank"
               rel="noreferrer"
               data-fast-goal="github_click"
-              data-fast-goal-location="pricing"
-              >View source</a
-            >
-          </article>
-          <article class="plan pro">
-            <p class="plan-name">Pro</p>
-            <p class="plan-price">$29 <span>one-time</span></p>
-            <p class="plan-offer">
-              Early access: first 100 installs get Pro free
-            </p>
-            <ul>
-              <li>Signed desktop binaries</li>
-              <li>In-app auto-updater</li>
-              <li>Faster install for non-technical users</li>
-              <li>Professional checkout</li>
-              <li>Priority support contact</li>
-            </ul>
-            <a class="btn primary" href="/buy" data-buy-location="pricing"
-              >Get Dictx Pro</a
-            >
-          </article>
-        </div>
-        <div class="matrix-wrap" aria-label="Feature comparison">
-          <table class="matrix">
-            <thead>
-              <tr>
-                <th>Feature</th>
-                <th>Free</th>
-                <th>Pro</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Local transcription pipeline</td>
-                <td>Included</td>
-                <td>Included</td>
-              </tr>
-              <tr>
-                <td>History + retention controls</td>
-                <td>Included</td>
-                <td>Included</td>
-              </tr>
-              <tr>
-                <td>Model downloads and management</td>
-                <td>Included</td>
-                <td>Included</td>
-              </tr>
-              <tr>
-                <td>Signed installers</td>
-                <td>No</td>
-                <td>Yes</td>
-              </tr>
-              <tr>
-                <td>In-app auto-updates</td>
-                <td>No</td>
-                <td>Yes</td>
-              </tr>
-              <tr>
-                <td>Checkout + receipt workflow</td>
-                <td>No</td>
-                <td>Yes</td>
-              </tr>
-              <tr>
-                <td>Support level</td>
-                <td>Community</td>
-                <td>Priority email</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              data-fast-goal-location="faq"
+              >Read the code on GitHub</a
+            >, build it yourself, or send a pull request.
+          </p>
+        </details>
+        <details>
+          <summary>Is there a Windows or Linux version?</summary>
+          <p>
+            Yes. Installers for both are on the
+            <a
+              href="https://github.com/splitlabs/dictx/releases/latest"
+              target="_blank"
+              rel="noreferrer"
+              data-fast-goal="github_click"
+              data-fast-goal-location="faq_platforms"
+              >GitHub releases page</a
+            >.
+          </p>
+        </details>
       </section>
 
-      <section class="panel faq" data-fast-scroll="scroll_faq">
-        <h2>FAQ</h2>
-        <details open>
-          <summary>Is Dictx still open source?</summary>
-          <p>Yes. Dictx remains GPL-licensed and free to build from source.</p>
-        </details>
-        <details>
-          <summary>What does Pro actually add?</summary>
-          <p>
-            Pro is the convenience layer: signed installers, in-app updates, and
-            priority support. Free still includes the full local dictation
-            workflow.
-          </p>
-        </details>
-        <details>
-          <summary>How does the first-100 free Pro claim work?</summary>
-          <p>
-            The app claims it automatically on first activation. If your install
-            lands in the first 100, Pro is enabled instantly at no cost.
-          </p>
-        </details>
-        <details>
-          <summary>How do I activate Pro inside the app?</summary>
-          <p>
-            Open Settings, go to About, and enter the license key shown after
-            checkout (<code>dxp-...</code>).
-          </p>
-        </details>
-        <details>
-          <summary>Where does /buy go?</summary>
-          <p>
-            <code>/buy</code> opens the hosted checkout. After payment you land
-            on a page that shows your license key, and opening that page again
-            shows the same key.
-          </p>
-        </details>
-        <details>
-          <summary>Where does the DMG download come from?</summary>
-          <p>
-            `/api/download/macos` resolves the latest GitHub release and
-            redirects to the newest macOS <code>.dmg</code> asset.
-          </p>
-        </details>
-        <div class="final-cta">
-          <p>
-            Keep Free if you like building from source. Upgrade when you want
-            signed installers and one-click updates.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="/buy" data-buy-location="final"
-              >Get Dictx Pro</a
-            >
+      <section class="closing" aria-labelledby="closing-title">
+        <div class="shell closing-inner">
+          <h2 id="closing-title">Say your next message instead of typing it</h2>
+          <div class="hero-actions">
             <a
-              class="btn soft"
+              class="button button-primary"
               href="/api/download/macos"
               data-fast-goal="download_dmg"
               data-fast-goal-location="final"
-              >Download DMG</a
+              data-fast-goal-arch="apple_silicon"
+              >Download for Mac</a
+            >
+            <a class="button button-quiet" href="/buy" data-buy-location="final"
+              >Buy Pro for $29</a
             >
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="shell foot">
-      <p>© <span id="year"></span> Split Labs. Dictx by 0xNyk.</p>
+    <footer class="site-footer shell">
+      <p>© <span id="year">2026</span> Split Labs. Dictx is made by 0xNyk.</p>
+      <p>
+        <a
+          href="https://github.com/splitlabs/dictx"
+          target="_blank"
+          rel="noreferrer"
+          data-fast-goal="github_click"
+          data-fast-goal-location="footer"
+          >GitHub</a
+        >
+      </p>
     </footer>
 
     <script>
