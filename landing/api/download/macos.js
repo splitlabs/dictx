@@ -1,86 +1,90 @@
+/**
+ * GET /api/download/macos[?arch=intel]
+ *
+ * Redirects to the macOS DMG in the latest GitHub release. Apple silicon is
+ * the default; `arch=intel` picks the x64 build. When the latest release has
+ * no DMG for that architecture, it redirects to the release page instead of
+ * handing out a build for the wrong Mac or an older, unsigned release.
+ */
 const GITHUB_OWNER = "splitlabs";
 const GITHUB_REPO = "dictx";
 const GITHUB_API_BASE = "https://api.github.com";
 const RELEASES_LATEST_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
 
-const sendJson = (res, statusCode, payload) => {
-  if (res && typeof res.status === "function") {
-    res.status(statusCode).json(payload);
-    return null;
-  }
+const ARCH_PATTERNS = {
+  apple_silicon: /(aarch64|arm64)/,
+  intel: /(x64|x86_64|intel)/,
+};
 
-  return new Response(JSON.stringify(payload), {
-    status: statusCode,
-    headers: {
-      "content-type": "application/json",
-      "cache-control": "no-store",
-    },
-  });
+const resolveArch = (value) =>
+  String(value || "").toLowerCase() === "intel" ? "intel" : "apple_silicon";
+
+const sendJson = (res, statusCode, payload) => {
+  res.setHeader("cache-control", "no-store");
+  res.status(statusCode).json(payload);
+  return null;
 };
 
 const redirectTo = (res, location) => {
-  if (res && typeof res.redirect === "function") {
-    res.setHeader("cache-control", "no-store");
-    res.redirect(302, location);
-    return null;
-  }
-
-  return new Response(null, {
-    status: 302,
-    headers: {
-      location,
-      "cache-control": "no-store",
-    },
-  });
+  res.setHeader("cache-control", "no-store");
+  res.redirect(302, location);
+  return null;
 };
 
-const pickMacDmgAsset = (assets) => {
-  const dmgAssets = (assets || []).filter((asset) => {
-    const name = String(asset?.name || "").toLowerCase();
-    return name.endsWith(".dmg");
-  });
-
-  if (dmgAssets.length === 0) {
-    return null;
-  }
-
-  // Prefer Apple Silicon naming first, then universal / generic DMG.
+/** Pick the DMG for one architecture, or a universal DMG, never the other arch. */
+const pickMacDmgAsset = (assets, arch = "apple_silicon") => {
+  const dmgs = (assets || []).filter((asset) =>
+    String(asset?.name || "")
+      .toLowerCase()
+      .endsWith(".dmg"),
+  );
+  const name = (asset) => String(asset?.name || "").toLowerCase();
   return (
-    dmgAssets.find((asset) => /aarch64|arm64/.test(String(asset?.name || "").toLowerCase())) ||
-    dmgAssets.find((asset) => /universal/.test(String(asset?.name || "").toLowerCase())) ||
-    dmgAssets[0]
+    dmgs.find((asset) => ARCH_PATTERNS[arch].test(name(asset))) ||
+    dmgs.find((asset) => /universal/.test(name(asset))) ||
+    null
   );
 };
 
+const getQueryArch = (req) => {
+  if (req?.query && typeof req.query.arch === "string") return req.query.arch;
+  try {
+    return new URL(req.url, "http://localhost").searchParams.get("arch");
+  } catch (_error) {
+    return "";
+  }
+};
+
 const handler = async (req, res) => {
-  if (req.method !== "GET") {
+  if (req.method !== "GET" && req.method !== "HEAD") {
     return sendJson(res, 405, { error: "method_not_allowed" });
   }
 
-  try {
-    const apiUrl = `${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
-    const releaseResponse = await fetch(apiUrl, {
-      headers: {
-        Accept: "application/vnd.github+json",
-        "User-Agent": "dictx-landing-download-resolver",
-      },
-    });
+  const arch = resolveArch(getQueryArch(req));
 
-    if (!releaseResponse.ok) {
-      return redirectTo(res, RELEASES_LATEST_URL);
-    }
+  try {
+    const releaseResponse = await fetch(
+      `${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "User-Agent": "dictx-landing-download-resolver",
+        },
+      },
+    );
+    if (!releaseResponse.ok) return redirectTo(res, RELEASES_LATEST_URL);
 
     const release = await releaseResponse.json();
-    const asset = pickMacDmgAsset(release?.assets);
-
-    if (!asset?.browser_download_url) {
+    const asset = pickMacDmgAsset(release?.assets, arch);
+    if (!asset?.browser_download_url)
       return redirectTo(res, RELEASES_LATEST_URL);
-    }
 
     return redirectTo(res, asset.browser_download_url);
-  } catch (error) {
+  } catch (_error) {
     return redirectTo(res, RELEASES_LATEST_URL);
   }
 };
 
 module.exports = handler;
+module.exports.pickMacDmgAsset = pickMacDmgAsset;
+module.exports.RELEASES_LATEST_URL = RELEASES_LATEST_URL;
