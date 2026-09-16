@@ -20,7 +20,7 @@ Attach `dictx.splitlabs.io` to this Vercel project.
 - `/buy/success?session_id=cs_live_...` shows the license key, fetched from `/api/pro/license`
 - `/api/pro/license?session_id=cs_live_...` issues the `dxp-` license key for a verified Stripe purchase
 - `/api/pro/verify` validates `dxp-` keys against Stripe. Keys from the retired Polar checkout (`lk_...`, `polar_cl_...`) answer `410`, so apps that already activated one keep Pro
-- `/api/pro/early-access/claim` grants free Pro for the first 100 unique installs
+- `/api/pro/early-access/claim` answers `404 early_access_closed`. The "first 100 installs get Pro free" offer is retired: its claim store was never provisioned, so it only ever returned 500. Installed apps read 404 as "no grant" and carry on, so the route stays instead of 404ing as a missing file
 - `/js/script.cookieless.js` and `/api/events` proxy DataFast first-party; `middleware.ts` reports AI crawler requests (Edge runtime: the Node.js runtime served every page as 500 on this project)
 
 ## Stripe Managed Payments
@@ -53,15 +53,10 @@ DataFast:
 
 - `DATAFAST_WEBSITE_ID`: the public website id; enables crawler tracking in `middleware.ts`
 
-Rate limits and early access:
+Rate limits:
 
 - `PRO_VERIFY_RATE_LIMIT_WINDOW_MS`: optional API rate-limit window
 - `PRO_VERIFY_RATE_LIMIT_MAX`: optional API rate-limit max requests per client per window
-- `UPSTASH_REDIS_REST_URL`: Upstash REST URL for early-access claim counter
-- `UPSTASH_REDIS_REST_TOKEN`: Upstash REST token for early-access claim counter
-- `DICTX_PRO_EARLY_ACCESS_LIMIT`: optional free-claim cap (defaults to `100`)
-- `PRO_EARLY_ACCESS_RATE_LIMIT_WINDOW_MS`: optional rate-limit window for claim API
-- `PRO_EARLY_ACCESS_RATE_LIMIT_MAX`: optional rate-limit max for claim API
 
 ## Tests
 
