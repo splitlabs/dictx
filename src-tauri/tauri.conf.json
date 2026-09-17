@@ -40,7 +40,7 @@
     "createUpdaterArtifacts": true,
     "targets": "all",
     "resources": ["resources/**/*"],
-    "license": "MIT",
+    "license": "GPL-3.0-or-later",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -73,9 +73,7 @@
   },
   "plugins": {
     "updater": {
-      "endpoints": [
-        "https://github.com/splitlabs/dictx/releases/latest/download/latest.json"
-      ],
+      "endpoints": ["https://updates.dictx.splitlabs.io/latest.json"],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMzMTRDRUZDN0Y0NDdGQTYKUldTbWYwUi8vTTRVdzVGSWFGdjJtK1NxZFBFbXlZTnBJWVo1MUpZQUlnRGxITkUvR2FFWFFpbWcK"
     }
   }

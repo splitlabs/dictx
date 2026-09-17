@@ -15,8 +15,7 @@
     "postProcessing": "后处理",
     "history": "历史记录",
     "debug": "调试",
-    "about": "关于",
-    "getPro": "获取 Dictx Pro"
+    "about": "关于"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -123,7 +122,7 @@
       "restartHint": "如果卡住，请在系统设置中关闭再开启权限，然后点击重试。",
       "skipForNow": "跳过权限继续 — 稍后再设置"
     },
-    "supportCta": "获取 Dictx Pro — 带自动更新的签名二进制文件（$29）",
+    "supportCta": "购买签名版应用以支持开发（一次性 $29）",
     "downloadEta": "剩余约 {{time}}",
     "downloadSize": "{{downloaded}} / {{total}} MB"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "检查更新",
-        "description": "自动检查 Dictx 的新版本",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "自动检查 Dictx 的新版本"
       },
       "soundTheme": {
         "label": "声音主题",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "支持开发",
-        "description": "帮助我们继续开发 Dictx",
-        "button": "捐赠"
+        "description": "从源码构建了 Dictx？购买签名版应用以支持开发。",
+        "button": "购买签名版应用"
       },
       "acknowledgments": {
         "title": "致谢",
@@ -525,17 +522,6 @@
           "description": "OpenAI Whisper 自动语音识别模型的高性能推理",
           "details": "Dictx 使用 Whisper.cpp 进行快速的本地语音转文字处理。感谢 Georgi Gerganov 和贡献者们的出色工作。"
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {

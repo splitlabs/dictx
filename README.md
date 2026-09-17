@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/splitlabs/dictx/releases"><img src="https://img.shields.io/github/v/release/splitlabs/dictx?label=Download&style=for-the-badge&color=4f46e5" alt="Download" /></a>
+  <a href="https://dictx.splitlabs.io"><img src="https://img.shields.io/badge/Download-dictx.splitlabs.io-4f46e5?style=for-the-badge" alt="Download" /></a>
   &nbsp;
   <a href="https://dictx.splitlabs.io/buy"><img src="https://img.shields.io/badge/Get_Dictx_Pro-$29-10b981?style=for-the-badge" alt="Get Dictx Pro" /></a>
 </p>
@@ -28,7 +28,7 @@
 
 ---
 
-> **Free and open source.** Dictx is GPL-3.0 licensed — you can build it from source with full functionality. [Buy Dictx Pro](https://dictx.splitlabs.io/buy) ($29 one-time) for signed builds, in-app auto-updates, and priority support.
+> **Free and open source.** Dictx is GPL-3.0 licensed — build it from source for the exact same functionality as the paid build, no feature gating and no license key. [Buy the signed macOS build](https://dictx.splitlabs.io/buy) ($29 one-time) if you'd rather skip building it yourself; both paths auto-update from the same feed.
 
 Dictx is a cross-platform desktop application for speech transcription. Press a shortcut, speak, and your words appear in any text field — no cloud, no API keys, no data leaving your computer.
 
@@ -47,13 +47,15 @@ Built with [Tauri](https://tauri.app) (Rust + React/TypeScript). Forked from [Ha
 
 ## Installation
 
-Download the latest release for your platform from the [Releases page](https://github.com/splitlabs/dictx/releases).
+**macOS:** buy the signed, notarized DMG at [dictx.splitlabs.io](https://dictx.splitlabs.io) — download from a private link tied to your purchase, install, and auto-update forever. No license key, no activation step.
 
-| Platform | Format               |
-| -------- | -------------------- |
-| macOS    | `.dmg`               |
-| Windows  | `.msi`               |
-| Linux    | `.AppImage` / `.deb` |
+**Any platform, free:** build from source (see [BUILD.md](BUILD.md)). The GPL source has the exact same functionality as the paid build — signing is the only thing you're paying for. Source builds auto-update from the same public feed as the paid build.
+
+| Platform | Paid signed build          | Free (build from source) |
+| -------- | -------------------------- | ------------------------ |
+| macOS    | `.dmg`, signed + notarized | yes                      |
+| Windows  | not offered                | yes                      |
+| Linux    | not offered                | yes                      |
 
 After installation:
 
@@ -61,8 +63,6 @@ After installation:
 2. Select and download a transcription model
 3. Configure your keyboard shortcut in Settings
 4. Start transcribing
-
-> To build from source, see [BUILD.md](BUILD.md).
 
 ## How It Works
 
@@ -198,7 +198,7 @@ Originally created by [cjpais](https://github.com/cjpais) as [Handy](https://git
 - [whisper.cpp](https://github.com/ggerganov/whisper.cpp) / [ggml](https://github.com/ggerganov/ggml) — cross-platform inference
 - [Silero VAD](https://github.com/snakers4/silero-vad) — voice activity detection
 - [Tauri](https://tauri.app) — desktop application framework
-- 
+-
 
 ## Contributing
 

@@ -15,8 +15,7 @@
     "postProcessing": "後処理",
     "history": "履歴",
     "debug": "デバッグ",
-    "about": "概要",
-    "getPro": "Dictx Proを入手"
+    "about": "概要"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしモデルを選択してください",
@@ -123,7 +122,7 @@
       "restartHint": "動かない場合は、システム設定で権限をオフ・オンし、再試行をクリックしてください。",
       "skipForNow": "権限なしで続行 — 後で設定します"
     },
-    "supportCta": "Dictx Proを入手 — 自動更新付き署名済みバイナリ（$29）",
+    "supportCta": "署名済みアプリを購入して開発を支援 ($29、一回限り)",
     "downloadEta": "残り約{{time}}",
     "downloadSize": "{{downloaded}} / {{total}} MB"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "アップデートを確認",
-        "description": "Dictxの新しいバージョンを自動的にチェック",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "Dictxの新しいバージョンを自動的にチェック"
       },
       "soundTheme": {
         "label": "サウンドテーマ",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "開発を支援",
-        "description": "Dictxの開発を支援してください",
-        "button": "寄付する"
+        "description": "ソースからDictxをビルドしましたか?署名済みアプリを購入して開発を支援してください。",
+        "button": "署名済みアプリを購入"
       },
       "acknowledgments": {
         "title": "謝辞",
@@ -525,17 +522,6 @@
           "description": "OpenAIのWhisper自動音声認識モデルの高性能推論",
           "details": "Dictxは高速でローカルな音声からテキストへの変換にWhisper.cppを使用しています。Georgi Gerganov氏と貢献者の皆様の素晴らしい仕事に感謝します。"
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {

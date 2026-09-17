@@ -38,6 +38,4 @@ blob-report/
 .direnv
 .envrc
 
-# Gumroad
-gumroad-delivery.txt
 config.bat

@@ -51,19 +51,16 @@ const stripeConfig = () => {
   const mode = commerceMode();
   const secretKey = (process.env.STRIPE_SECRET_KEY || "").trim();
   const priceId = (process.env.DICTX_STRIPE_PRICE_ID || "").trim();
-  const licenseSecret = (process.env.DICTX_LICENSE_SECRET || "").trim();
   const paymentLink = (process.env.DICTX_STRIPE_PAYMENT_LINK || "").trim();
   const missing = [];
   if (!secretKeyPattern(mode).test(secretKey))
     missing.push("STRIPE_SECRET_KEY");
   if (!/^price_[A-Za-z0-9]+$/.test(priceId))
     missing.push("DICTX_STRIPE_PRICE_ID");
-  if (licenseSecret.length < 32) missing.push("DICTX_LICENSE_SECRET");
   return {
     mode,
     secretKey,
     priceId,
-    licenseSecret,
     paymentLink: isCanonicalPaymentLink(paymentLink) ? paymentLink : "",
     ready: missing.length === 0,
     missing,
@@ -120,7 +117,17 @@ const classifyPurchase = ({
     typeof paymentIntent.latest_charge === "object"
       ? paymentIntent.latest_charge
       : null;
-  if (charge && (charge.refunded === true || charge.disputed === true)) {
+  // A paid session must expose its charge, or refunds and disputes cannot be
+  // checked; refuse rather than assume. Free (100% discount) sessions have none.
+  if (session.payment_status === "paid" && !charge) {
+    return fail("provider_invalid");
+  }
+  if (
+    charge &&
+    (charge.refunded === true ||
+      charge.disputed === true ||
+      Number(charge.amount_refunded) > 0)
+  ) {
     return fail("refunded");
   }
 

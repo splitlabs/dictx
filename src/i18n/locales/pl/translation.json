@@ -15,8 +15,7 @@
     "postProcessing": "Postproces",
     "history": "Historia",
     "debug": "Debugowanie",
-    "about": "O programie",
-    "getPro": "Kup Dictx Pro"
+    "about": "O programie"
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -123,7 +122,7 @@
       "restartHint": "Jeśli się zacięło, spróbuj przełączyć uprawnienie w Ustawieniach systemu, a następnie kliknij Ponów.",
       "skipForNow": "Kontynuuj bez uprawnień — naprawię to później"
     },
-    "supportCta": "Kup Dictx Pro — podpisany plik binarny z auto-aktualizacjami ($29)",
+    "supportCta": "Kup podpisaną aplikację, aby wesprzeć rozwój (jednorazowo $29)",
     "downloadEta": "~{{time}} pozostało",
     "downloadSize": "{{downloaded}} / {{total}} MB"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "Sprawdzaj aktualizacje",
-        "description": "Automatycznie sprawdzaj nowe wersje Dictx",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "Automatycznie sprawdzaj nowe wersje Dictx"
       },
       "soundTheme": {
         "label": "Motyw dźwiękowy",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "Wspieraj rozwój",
-        "description": "Pomóż nam dalej rozwijać Dictx",
-        "button": "Wesprzyj"
+        "description": "Zbudowałeś Dictx ze źródeł? Kup podpisaną aplikację, aby wesprzeć rozwój.",
+        "button": "Kup podpisaną aplikację"
       },
       "acknowledgments": {
         "title": "Podziękowania",
@@ -525,17 +522,6 @@
           "description": "Wydajne wykonywanie modelu rozpoznawania mowy Whisper od OpenAI",
           "details": "Dictx używa Whisper.cpp do szybkiego, lokalnego przetwarzania mowy na tekst. Dzięki niesamowitej pracy Georgi Gerganova i współtwórców."
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {

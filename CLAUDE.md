@@ -156,9 +156,9 @@ Access debug features: `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux)
 
 Dictx is licensed under **GPL-3.0-or-later**. See `LICENSE` and `NOTICE` for details.
 
-**Monetization model**: Open source code + paid signed binary ($29 one-time via Gumroad). All features are available when building from source — no feature gating, no license key validation. The paid product is the convenience of a signed binary with auto-updates.
+**Monetization model**: Open source code + paid signed macOS binary ($29 one-time via Stripe checkout at `https://dictx.splitlabs.io/buy`). All features are available when building from source — no feature gating, no license keys, no activation step. The paid product is a signed, notarized DMG downloaded from private Cloudflare R2 storage after the checkout is verified server-side; every install, free or paid, auto-updates from the same public Tauri update feed at `https://updates.dictx.splitlabs.io/latest.json`.
 
-**Purchase links**: Gumroad product page at `https://0xnyk.gumroad.com/l/dictx`. This URL appears in `AboutSettings.tsx`, `Onboarding.tsx`, and `README.md`.
+**Purchase links**: the About settings page and the landing site link to `https://dictx.splitlabs.io/buy`.
 
 ## Platform Notes
 

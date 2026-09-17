@@ -3,36 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dictx Pro Activated</title>
+    <meta name="referrer" content="no-referrer" />
+    <title>Download Dictx</title>
     <meta
       name="description"
-      content="Your Dictx Pro purchase is complete. Copy your license key and activate in the app."
+      content="Your Dictx purchase is complete. Download the signed macOS app."
     />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="stylesheet" href="/styles.css" />
-    <!-- DataFast (cookieless build), served first-party via landing/vercel.json
-         rewrites and injected after the load event. On this page it also
-         attributes the purchase: the tag reads the Stripe session id from the URL
-         and DataFast joins it to the payment via its Stripe connection. -->
-    <script id="datafast-queue">
-      window.datafast =
-        window.datafast ||
-        function () {
-          (window.datafast.q = window.datafast.q || []).push(arguments);
-        };
-      addEventListener(
-        "load",
-        function () {
-          var s = document.createElement("script");
-          s.async = true;
-          s.src = "/js/script.cookieless.js";
-          s.dataset.websiteId = "dfid_kcdGTJEa3xayul7fOPaip";
-          s.dataset.domain = "dictx.splitlabs.io";
-          document.head.appendChild(s);
-        },
-        { once: true },
-      );
-    </script>
+    <!-- No analytics on this page: its URL carries the Stripe session id,
+         which is the buyer's download link. Third-party scripts read the full
+         URL, so loading one here would hand them working download tokens. -->
   </head>
   <body>
     <div class="noise"></div>
@@ -50,103 +31,76 @@
     <main class="shell">
       <section class="panel hero">
         <p class="kicker">Purchase Complete</p>
-        <h1>Activate Dictx Pro</h1>
+        <h1>Download Dictx</h1>
         <p class="lede">
-          Copy your license key and paste it in Dictx:
-          <strong>Settings -> About -> Activate Dictx Pro</strong>.
+          Choose your Mac below. The link is valid for a few minutes, so
+          download right away.
         </p>
 
         <div class="card" style="margin-top: 16px">
-          <h2 style="font-size: 18px">Your License Key</h2>
-          <p
-            id="license-key-value"
-            style="word-break: break-all; font-family: monospace"
-          >
-            Your license key appears here after checkout. Opening this page
-            again from the same link shows the same key.
-          </p>
-          <div class="actions" style="margin-top: 12px">
+          <h2 style="font-size: 18px">Download</h2>
+          <div class="download-actions" id="download-actions" hidden>
             <button
-              id="copy-btn"
+              id="download-arm"
               class="btn primary"
               type="button"
-              data-fast-goal="license_key_copied"
-              disabled
+              aria-label="Download for Apple Silicon Macs"
             >
-              Copy License Key
+              Download for Apple Silicon
             </button>
-            <a class="btn ghost" href="/">Back to Dictx</a>
+            <button
+              id="download-intel"
+              class="btn ghost"
+              type="button"
+              aria-label="Download for Intel Macs"
+            >
+              Intel Mac
+            </button>
           </div>
-          <p id="copy-status" class="meta" style="margin-top: 8px"></p>
+          <p id="empty-state" class="meta" hidden>
+            Open this page from the link Stripe sent you after checkout, or
+            <a href="/download">paste your purchase link here</a>.
+          </p>
+          <p
+            id="download-status"
+            class="download-status"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <p class="meta" style="margin-top: 12px">
+            <strong>Bookmark this page. It is your download link.</strong>
+            You can come back and download again any time.
+          </p>
+          <p class="actions" style="margin-top: 12px">
+            <a class="btn ghost" href="/">Back to Dictx</a>
+          </p>
         </div>
       </section>
     </main>
 
+    <script src="/download.js"></script>
     <script>
-      const SUPPORT_EMAIL = "nyk@builderz.dev";
-      const params = new URLSearchParams(window.location.search);
-      const sessionId = (params.get("session_id") || "").trim();
-      const valueEl = document.getElementById("license-key-value");
-      const copyBtn = document.getElementById("copy-btn");
-      const copyStatus = document.getElementById("copy-status");
-      let key = "";
+      var params = new URLSearchParams(window.location.search);
+      var sessionId = (params.get("session_id") || "").trim();
+      var actionsEl = document.getElementById("download-actions");
+      var emptyEl = document.getElementById("empty-state");
+      var statusEl = document.getElementById("download-status");
 
-      const showKey = (value) => {
-        key = value;
-        valueEl.textContent = value;
-        copyBtn.disabled = false;
-      };
-
-      const MESSAGES = {
-        402: "Your payment is still being confirmed. Refresh this page in a minute.",
-        409:
-          "This checkout was not for Dictx Pro. Email " +
-          SUPPORT_EMAIL +
-          " with this page's address.",
-        410: "This purchase was refunded, so no license key is issued.",
-      };
-      const FALLBACK_MESSAGE =
-        "We could not load your license key. Refresh in a minute, or email " +
-        SUPPORT_EMAIL +
-        " with this page's address.";
-
-      if (sessionId) {
-        // Stripe checkout: the server verifies the purchase and issues the key.
-        valueEl.textContent = "Fetching your license key...";
-        fetch("/api/pro/license?session_id=" + encodeURIComponent(sessionId), {
-          cache: "no-store",
-        })
-          .then((response) =>
-            response
-              .json()
-              .catch(() => ({}))
-              .then((body) => ({ response, body })),
-          )
-          .then(({ response, body }) => {
-            if (response.ok && body.licenseKey) {
-              showKey(body.licenseKey);
-              return;
-            }
-            valueEl.textContent = MESSAGES[response.status] || FALLBACK_MESSAGE;
-          })
-          .catch(() => {
-            valueEl.textContent = FALLBACK_MESSAGE;
-          });
+      if (!sessionId) {
+        emptyEl.hidden = false;
       } else {
-        valueEl.textContent =
-          "Open this page from the link Stripe sends you to after checkout. It shows your license key.";
+        actionsEl.hidden = false;
+        window.DictxDownload.wireButtons({
+          buttons: [
+            { el: document.getElementById("download-arm"), arch: "aarch64" },
+            { el: document.getElementById("download-intel"), arch: "x64" },
+          ],
+          statusEl: statusEl,
+          getSessionId: function () {
+            return sessionId;
+          },
+        });
       }
-
-      copyBtn.addEventListener("click", async () => {
-        if (!key) return;
-        try {
-          await navigator.clipboard.writeText(key);
-          copyStatus.textContent =
-            "Copied. Paste it in Dictx Settings -> About.";
-        } catch (_error) {
-          copyStatus.textContent = "Copy failed. Select and copy manually.";
-        }
-      });
     </script>
   </body>
 </html>

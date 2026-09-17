@@ -15,8 +15,7 @@
     "history": "السجل",
     "debug": "تصحيح الأخطاء",
     "about": "حول",
-    "models": "النماذج",
-    "getPro": "احصل على Dictx Pro"
+    "models": "النماذج"
   },
   "onboarding": {
     "subtitle": "للبدء، اختر نموذج التفريغ الصوتي",
@@ -123,7 +122,7 @@
       "restartHint": "إذا علقت، جرب تبديل الإذن في إعدادات النظام، ثم انقر إعادة المحاولة.",
       "skipForNow": "المتابعة بدون أذونات — سأصلح هذا لاحقًا"
     },
-    "supportCta": "احصل على Dictx Pro — نسخة موقعة مع تحديثات تلقائية ($29)",
+    "supportCta": "اشترِ التطبيق الموقّع لدعم التطوير ($29 مرة واحدة)",
     "downloadEta": "~{{time}} متبقي",
     "downloadSize": "{{downloaded}} / {{total}} ميغابايت"
   },
@@ -414,9 +413,7 @@
       },
       "updateChecks": {
         "label": "التحقق من وجود تحديثات",
-        "description": "التحقق تلقائياً من وجود إصدارات جديدة من Dictx",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "التحقق تلقائياً من وجود إصدارات جديدة من Dictx"
       },
       "soundTheme": {
         "label": "سمة الصوت",
@@ -493,8 +490,8 @@
       },
       "supportDevelopment": {
         "title": "دعم التطوير",
-        "description": "ساعدنا في مواصلة بناء Dictx",
-        "button": "تبرع"
+        "description": "هل بنيت Dictx من المصدر؟ اشترِ التطبيق الموقّع لدعم التطوير.",
+        "button": "شراء التطبيق الموقّع"
       },
       "acknowledgments": {
         "title": "شكر وتقدير",
@@ -503,17 +500,6 @@
           "description": "استنتاج عالي الأداء لنموذج التعرف التلقائي على الكلام Whisper من OpenAI",
           "details": ".يستخدم Dictx برنامج Whisper.cpp لمعالجة سريعة ومحلية لتحويل الكلام إلى نص. شكراً للعمل الرائع الذي قام به Georgi Gerganov والمساهمون"
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "modelSettings": {

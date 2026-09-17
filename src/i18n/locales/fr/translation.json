@@ -15,8 +15,7 @@
     "postProcessing": "Post-traitement",
     "history": "Historique",
     "debug": "Débogage",
-    "about": "À propos",
-    "getPro": "Obtenir Dictx Pro"
+    "about": "À propos"
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -123,7 +122,7 @@
       "restartHint": "Si bloqué, essayez de basculer l'autorisation dans les Réglages Système, puis cliquez Réessayer.",
       "skipForNow": "Continuer sans autorisations — je corrigerai plus tard"
     },
-    "supportCta": "Obtenir Dictx Pro — binaire signé avec mises à jour automatiques (29 $)",
+    "supportCta": "Achetez l'application signée pour soutenir le développement (29 $ une seule fois)",
     "downloadEta": "~{{time}} restant",
     "downloadSize": "{{downloaded}} / {{total}} Mo"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "Vérifier les mises à jour",
-        "description": "Vérifier automatiquement les nouvelles versions de Dictx",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "Vérifier automatiquement les nouvelles versions de Dictx"
       },
       "soundTheme": {
         "label": "Thème sonore",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "Soutenir le développement",
-        "description": "Aidez-nous à continuer à construire Dictx",
-        "button": "Faire un don"
+        "description": "Vous avez compilé Dictx depuis les sources ? Achetez l'application signée pour soutenir le développement.",
+        "button": "Acheter l'application signée"
       },
       "acknowledgments": {
         "title": "Remerciements",
@@ -525,17 +522,6 @@
           "description": "Inférence haute performance du modèle de reconnaissance vocale automatique Whisper d'OpenAI",
           "details": "Dictx utilise Whisper.cpp pour un traitement rapide et local de la parole en texte. Merci au travail incroyable de Georgi Gerganov et des contributeurs."
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Download Dictx</title>
+    <meta
+      name="description"
+      content="Re-download the signed Dictx macOS app with your purchase link, or get Dictx free by building from source."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <!-- DataFast (cookieless build), served first-party via landing/vercel.json
+         rewrites and injected after the load event so a slow vendor cannot
+         hold page load. -->
+    <script id="datafast-queue">
+      window.datafast =
+        window.datafast ||
+        function () {
+          (window.datafast.q = window.datafast.q || []).push(arguments);
+        };
+      addEventListener(
+        "load",
+        function () {
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "/js/script.cookieless.js";
+          s.dataset.websiteId = "dfid_kcdGTJEa3xayul7fOPaip";
+          s.dataset.domain = "dictx.splitlabs.io";
+          document.head.appendChild(s);
+        },
+        { once: true },
+      );
+    </script>
+  </head>
+  <body>
+    <div class="noise"></div>
+
+    <header class="shell nav">
+      <a class="brand" href="/">
+        <img class="brand-icon" src="/logo.png" alt="Dictx logo" />
+        <span class="wordmark">Dictx</span>
+      </a>
+      <div class="menu">
+        <a href="/">Home</a>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="panel hero">
+        <p class="kicker">Already bought Dictx?</p>
+        <h1>Download Dictx</h1>
+        <p class="lede">
+          Paste the link from your purchase page (or the checkout id it
+          contains) to get a fresh download link.
+        </p>
+
+        <div class="card" style="margin-top: 16px">
+          <label class="field-label" for="link-input"
+            >Your purchase link or checkout id</label
+          >
+          <input
+            id="link-input"
+            class="text-input"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="https://dictx.splitlabs.io/buy/success?session_id=cs_live_... or cs_live_..."
+          />
+
+          <div class="download-actions" id="download-actions">
+            <button
+              id="download-arm"
+              class="btn primary"
+              type="button"
+              aria-label="Download for Apple Silicon Macs"
+            >
+              Download for Apple Silicon
+            </button>
+            <button
+              id="download-intel"
+              class="btn ghost"
+              type="button"
+              aria-label="Download for Intel Macs"
+            >
+              Intel Mac
+            </button>
+          </div>
+          <p
+            id="download-status"
+            class="download-status"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </div>
+
+        <div class="card" style="margin-top: 16px">
+          <h2 style="font-size: 18px">Don't have a purchase yet?</h2>
+          <p class="meta">
+            Dictx Pro is a one-time $29 purchase for a signed, notarized macOS
+            app with automatic updates.
+          </p>
+          <p class="actions">
+            <a class="btn primary" href="/buy">Buy Dictx Pro</a>
+            <a
+              class="btn ghost"
+              href="https://github.com/splitlabs/dictx"
+              target="_blank"
+              rel="noreferrer"
+              >Free: build from source</a
+            >
+          </p>
+          <p class="meta" style="margin-top: 12px">
+            Lost access or something not working?
+            <a
+              href="https://github.com/splitlabs/dictx/issues"
+              target="_blank"
+              rel="noreferrer"
+              >Open an issue on GitHub</a
+            >.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="/download.js"></script>
+    <script>
+      var input = document.getElementById("link-input");
+      var statusEl = document.getElementById("download-status");
+
+      window.DictxDownload.wireButtons({
+        buttons: [
+          { el: document.getElementById("download-arm"), arch: "aarch64" },
+          { el: document.getElementById("download-intel"), arch: "x64" },
+        ],
+        statusEl: statusEl,
+        getSessionId: function () {
+          return window.DictxDownload.extractSessionId(input.value);
+        },
+      });
+    </script>
+  </body>
+</html>

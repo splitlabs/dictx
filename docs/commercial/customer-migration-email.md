@@ -11,7 +11,7 @@ What this means:
 - Existing customers keep access to Dictx Pro
 - Dictx remains open source (GPL) and free to build from source
 
-If you need help with receipts, downloads, or license access, reply to this email and include:
+If you need help with receipts or downloads, reply to this email and include:
 
 - Purchase email
 - Approximate purchase date

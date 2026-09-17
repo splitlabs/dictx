@@ -37,7 +37,9 @@ jobs:
       platform: ${{ matrix.platform }}
       target: ${{ matrix.target }}
       build-args: ${{ matrix.args }}
-      sign-binaries: true
+      # Unsigned: run artifacts on this public repo are downloadable by anyone,
+      # so a signed DMG here would bypass the paid download.
+      sign-binaries: false
       asset-prefix: "handy-test"
       upload-artifacts: true
       is-debug-build: ${{ contains(matrix.args, '--debug') }}

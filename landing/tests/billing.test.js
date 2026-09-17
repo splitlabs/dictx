@@ -1,7 +1,6 @@
 const assert = require("node:assert/strict");
 const { test, beforeEach, afterEach } = require("node:test");
 
-const SECRET = "a".repeat(64);
 const PRICE = "price_DictxPro123";
 const LIVE_SESSION = "cs_live_a1B2c3D4e5F6g7H8i9J0kLmNoPqRsTuVwXyZ";
 const ENV_KEYS = [
@@ -9,7 +8,6 @@ const ENV_KEYS = [
   "STRIPE_COMMERCE_MODE",
   "STRIPE_SECRET_KEY",
   "DICTX_STRIPE_PRICE_ID",
-  "DICTX_LICENSE_SECRET",
   "DICTX_STRIPE_PAYMENT_LINK",
 ];
 const savedEnv = {};
@@ -18,7 +16,6 @@ const realFetch = globalThis.fetch;
 const configureStripe = () => {
   process.env.STRIPE_SECRET_KEY = "rk_live_restrictedKey123";
   process.env.DICTX_STRIPE_PRICE_ID = PRICE;
-  process.env.DICTX_LICENSE_SECRET = SECRET;
 };
 
 const paidSession = (overrides = {}) => ({
@@ -37,27 +34,6 @@ const oneProItem = (overrides = {}) => ({
   data: [{ quantity: 1, price: { id: PRICE }, ...overrides }],
   has_more: false,
 });
-
-const stubStripe = ({
-  session = paidSession(),
-  items = oneProItem(),
-  status = 200,
-} = {}) => {
-  const calls = [];
-  globalThis.fetch = async (url) => {
-    calls.push(String(url));
-    if (status !== 200) return new Response("{}", { status });
-    const body = String(url).includes("/line_items") ? items : session;
-    return new Response(JSON.stringify(body), { status: 200 });
-  };
-  return calls;
-};
-
-const failOnNetwork = () => {
-  globalThis.fetch = async (url) => {
-    throw new Error(`unexpected network call: ${url}`);
-  };
-};
 
 const fakeRes = () => ({
   statusCode: 0,
@@ -105,21 +81,6 @@ afterEach(() => {
   globalThis.fetch = realFetch;
 });
 
-test("license keys round-trip, reject tampering, and fit the verify charset", () => {
-  const { issueLicenseKey, parseLicenseKey } = require("../api/_lib/license");
-  const key = issueLicenseKey(LIVE_SESSION, SECRET);
-  assert.match(key, /^[A-Za-z0-9_-]{8,128}$/);
-  assert.deepEqual(parseLicenseKey(key, SECRET), { sessionId: LIVE_SESSION });
-  assert.equal(parseLicenseKey(key, "b".repeat(64)), null);
-  const flipped = key.slice(0, -1) + (key.endsWith("0") ? "1" : "0");
-  assert.equal(parseLicenseKey(flipped, SECRET), null);
-  assert.equal(
-    parseLicenseKey(key.replace("cs_live_a1", "cs_live_z9"), SECRET),
-    null,
-  );
-  assert.equal(parseLicenseKey("lk_abcdef123456", SECRET), null);
-});
-
 test("purchase classification is exact and fail-closed", () => {
   const { classifyPurchase } = require("../api/_lib/stripe-purchase");
   const base = {
@@ -136,7 +97,7 @@ test("purchase classification is exact and fail-closed", () => {
       session: paidSession({ payment_status: "no_payment_required" }),
     }).ok,
     true,
-    "a 100% promotion code still earns the license",
+    "a 100% promotion code still counts as paid",
   );
   assert.equal(
     reason({ session: paidSession({ payment_status: "unpaid" }) }),
@@ -180,6 +141,30 @@ test("purchase classification is exact and fail-closed", () => {
       }),
     }),
     "refunded",
+  );
+  assert.equal(
+    reason({
+      session: paidSession({
+        payment_intent: {
+          latest_charge: {
+            refunded: false,
+            disputed: false,
+            amount_refunded: 500,
+          },
+        },
+      }),
+    }),
+    "refunded",
+    "a partial refund also ends the download",
+  );
+  assert.equal(
+    reason({ session: paidSession({ payment_intent: null }) }),
+    "provider_invalid",
+    "a paid session without a charge to check fails closed",
+  );
+  assert.equal(
+    reason({ session: paidSession({ payment_intent: "pi_unexpanded" }) }),
+    "provider_invalid",
   );
 });
 
@@ -226,119 +211,4 @@ test("/buy redirects only to a fully configured canonical live link, else 503", 
     process.env.DICTX_STRIPE_PAYMENT_LINK = bad;
     assert.equal(visit().statusCode, 503, bad);
   }
-});
-
-test("the license endpoint issues keys only for verified purchases", async () => {
-  const license = fresh("../api/pro/license");
-  const { parseLicenseKey } = require("../api/_lib/license");
-  let client = 0;
-  const call = async (sessionId) => {
-    const res = fakeRes();
-    client += 1;
-    await license(
-      {
-        method: "GET",
-        query: { session_id: sessionId },
-        headers: { "x-forwarded-for": `license-${client}` },
-      },
-      res,
-    );
-    return res;
-  };
-
-  assert.equal((await call(LIVE_SESSION)).statusCode, 503, "not configured");
-
-  configureStripe();
-  const calls = stubStripe();
-  const ok = await call(LIVE_SESSION);
-  assert.equal(ok.statusCode, 200);
-  assert.deepEqual(parseLicenseKey(ok.body.licenseKey, SECRET), {
-    sessionId: LIVE_SESSION,
-  });
-  assert.ok(
-    calls.every((url) =>
-      url.startsWith("https://api.stripe.com/v1/checkout/sessions/"),
-    ),
-  );
-
-  stubStripe({
-    session: paidSession({
-      payment_intent: { latest_charge: { refunded: true } },
-    }),
-  });
-  assert.equal((await call(LIVE_SESSION)).statusCode, 410);
-  stubStripe({ status: 404 });
-  assert.equal((await call(LIVE_SESSION)).statusCode, 404);
-  stubStripe({ status: 500 });
-  assert.equal((await call(LIVE_SESSION)).statusCode, 502);
-  assert.equal((await call("cs_test_a1B2c3D4e5F6g7H8")).statusCode, 404);
-  assert.equal((await call("not-a-session")).statusCode, 404);
-});
-
-const postVerify = async (verify, licenseKey, clientId) => {
-  const res = fakeRes();
-  await verify(
-    {
-      method: "POST",
-      body: { licenseKey },
-      headers: { "x-forwarded-for": clientId },
-    },
-    res,
-  );
-  return res;
-};
-
-test("verify checks Stripe keys and keeps outages non-revoking", async () => {
-  const verify = fresh("../api/pro/verify");
-  const { issueLicenseKey } = require("../api/_lib/license");
-  configureStripe();
-  const key = issueLicenseKey(LIVE_SESSION, SECRET);
-
-  stubStripe({ status: 500 });
-  let res = await postVerify(verify, key, "verify-1");
-  assert.equal(res.statusCode, 502, "an outage is an error, not a revocation");
-
-  stubStripe();
-  res = await postVerify(verify, key, "verify-2");
-  assert.deepEqual([res.statusCode, res.body.active], [200, true]);
-
-  res = await postVerify(verify, key.slice(0, -2) + "00", "verify-3");
-  assert.deepEqual([res.statusCode, res.body.active], [200, false]);
-});
-
-test("retired Polar keys answer 410 without any network call", async () => {
-  const verify = fresh("../api/pro/verify");
-  configureStripe();
-  failOnNetwork();
-  for (const [index, key] of [
-    "lk_legacyKey12345",
-    "polar_cl_abcdef123",
-  ].entries()) {
-    const res = await postVerify(verify, key, `polar-${index}`);
-    // 410 is an error to installed apps, so an already-activated Polar
-    // customer keeps Pro instead of being switched off by the retirement.
-    assert.deepEqual([res.statusCode, res.body.error], [410, "polar_retired"]);
-  }
-  const unknown = await postVerify(verify, "somethingElse123", "polar-x");
-  assert.deepEqual([unknown.statusCode, unknown.body.active], [200, false]);
-});
-
-test("a refunded Stripe purchase deactivates on the next verification", async () => {
-  const verify = fresh("../api/pro/verify");
-  const { issueLicenseKey } = require("../api/_lib/license");
-  configureStripe();
-  stubStripe({
-    session: paidSession({
-      payment_intent: { latest_charge: { refunded: true } },
-    }),
-  });
-  const res = await postVerify(
-    verify,
-    issueLicenseKey(LIVE_SESSION, SECRET),
-    "verify-5",
-  );
-  assert.deepEqual(
-    [res.statusCode, res.body.active, res.body.reason],
-    [200, false, "refunded"],
-  );
 });

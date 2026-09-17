@@ -15,8 +15,7 @@
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "debug": "Gỡ lỗi",
-    "about": "Giới thiệu",
-    "getPro": "Mua Dictx Pro"
+    "about": "Giới thiệu"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -123,7 +122,7 @@
       "restartHint": "Nếu bị treo, hãy thử tắt/bật quyền trong Cài đặt Hệ thống, rồi nhấn Thử lại.",
       "skipForNow": "Tiếp tục không cần quyền — tôi sẽ sửa sau"
     },
-    "supportCta": "Mua Dictx Pro — bản nhị phân đã ký với cập nhật tự động ($29)",
+    "supportCta": "Mua bản ứng dụng đã ký để ủng hộ phát triển ($29 một lần)",
     "downloadEta": "Còn ~{{time}}",
     "downloadSize": "{{downloaded}} / {{total}} MB"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "Kiểm tra cập nhật",
-        "description": "Tự động kiểm tra phiên bản mới của Dictx",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "Tự động kiểm tra phiên bản mới của Dictx"
       },
       "soundTheme": {
         "label": "Chủ đề âm thanh",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "Hỗ trợ phát triển",
-        "description": "Giúp chúng tôi tiếp tục xây dựng Dictx",
-        "button": "Quyên góp"
+        "description": "Bạn đã build Dictx từ mã nguồn? Hãy mua bản ứng dụng đã ký để ủng hộ phát triển.",
+        "button": "Mua bản ứng dụng đã ký"
       },
       "acknowledgments": {
         "title": "Lời cảm ơn",
@@ -525,17 +522,6 @@
           "description": "Suy luận hiệu suất cao của mô hình nhận dạng giọng nói tự động Whisper của OpenAI",
           "details": "Dictx sử dụng Whisper.cpp để xử lý chuyển đổi giọng nói thành văn bản nhanh, cục bộ. Cảm ơn công việc tuyệt vời của Georgi Gerganov và các cộng tác viên."
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {
