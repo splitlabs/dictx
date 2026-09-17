@@ -660,10 +660,6 @@ pub fn change_autostart_setting(app: AppHandle, enabled: bool) -> Result<(), Str
 #[tauri::command]
 #[specta::specta]
 pub fn change_update_checks_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
-    if enabled && !settings::is_pro_active(&app) {
-        return Err("Dictx Pro activation is required for auto-updates".to_string());
-    }
-
     let mut settings = settings::get_settings(&app);
     settings.update_checks_enabled = enabled;
     settings::write_settings(&app, settings);

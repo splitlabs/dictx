@@ -2,10 +2,9 @@
  * GET /buy (rewritten here by vercel.json)
  *
  * Sends buyers to the Stripe Managed Payments checkout. It fails closed: if
- * the restricted key, the Dictx Pro price, the license signing secret, or a
- * canonical live Payment Link is missing or malformed, buyers see a short
- * "checkout unavailable" page instead of a checkout that could take money it
- * cannot turn into a license.
+ * the restricted key, the Dictx Pro price, or a canonical live Payment Link
+ * is missing or malformed, buyers see a short "checkout unavailable" page
+ * instead of a checkout that could take money it cannot turn into a download.
  */
 const { stripeConfig } = require("./_lib/stripe-purchase");
 

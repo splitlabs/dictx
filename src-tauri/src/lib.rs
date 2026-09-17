@@ -192,7 +192,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             }
             "check_updates" => {
                 let settings = settings::get_settings(app);
-                if settings.update_checks_enabled && settings.pro_entitlement.active {
+                if settings.update_checks_enabled {
                     show_main_window(app);
                     let _ = app.emit("check-for-updates", ());
                 }
@@ -275,7 +275,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 #[specta::specta]
 fn trigger_update_check(app: AppHandle) -> Result<(), String> {
     let settings = settings::get_settings(&app);
-    if !settings.update_checks_enabled || !settings.pro_entitlement.active {
+    if !settings.update_checks_enabled {
         return Ok(());
     }
     app.emit("check-for-updates", ())
@@ -387,10 +387,6 @@ pub fn run(cli_args: CliArgs) {
         commands::history::delete_history_entry,
         commands::history::update_history_limit,
         commands::history::update_recording_retention_period,
-        commands::pro::get_pro_entitlement,
-        commands::pro::activate_pro_entitlement,
-        commands::pro::refresh_pro_entitlement,
-        commands::pro::clear_pro_entitlement,
         helpers::clamshell::is_laptop,
     ]);
 

@@ -15,8 +15,7 @@
     "postProcessing": "Post Process",
     "history": "History",
     "debug": "Debug",
-    "about": "About",
-    "getPro": "Upgrade to Dictx Pro"
+    "about": "About"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -96,7 +95,7 @@
         "useCase": "Russian language dictation"
       }
     },
-    "supportCta": "Upgrade to Dictx Pro — signed builds + auto-updates ($29 one-time)",
+    "supportCta": "Buy the signed app to support development ($29 one-time)",
     "downloadEta": "~{{time}} remaining",
     "downloadSize": "{{downloaded}} / {{total}} MB",
     "errors": {
@@ -461,9 +460,7 @@
       },
       "updateChecks": {
         "label": "Check for Updates",
-        "description": "Automatically check for new versions of Dictx",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "Automatically check for new versions of Dictx"
       },
       "soundTheme": {
         "label": "Sound Theme",
@@ -539,20 +536,9 @@
         "button": "View on GitHub"
       },
       "supportDevelopment": {
-        "title": "Upgrade to Dictx Pro",
-        "description": "One-time purchase for signed builds, in-app auto-updates, and priority support.",
-        "button": "Upgrade Now"
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
+        "title": "Support Development",
+        "description": "Built Dictx from source? Buy the signed app to support development.",
+        "button": "Buy the Signed App"
       },
       "acknowledgments": {
         "title": "Acknowledgments",

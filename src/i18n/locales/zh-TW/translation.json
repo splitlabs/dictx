@@ -15,8 +15,7 @@
     "postProcessing": "後處理",
     "history": "歷史紀錄",
     "debug": "偵錯",
-    "about": "關於",
-    "getPro": "取得 Dictx Pro"
+    "about": "關於"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -123,7 +122,7 @@
       "restartHint": "如果卡住，請在系統設定中關閉再開啟權限，然後點擊重試。",
       "skipForNow": "跳過權限繼續 — 稍後再設定"
     },
-    "supportCta": "取得 Dictx Pro — 附自動更新的簽署二進位檔（$29）",
+    "supportCta": "購買簽署版應用程式以支持開發（一次性 $29）",
     "downloadEta": "剩餘約 {{time}}",
     "downloadSize": "{{downloaded}} / {{total}} MB"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "檢查更新",
-        "description": "自動檢查 Dictx 的新版本",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "自動檢查 Dictx 的新版本"
       },
       "soundTheme": {
         "label": "聲音主題",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "支持開發",
-        "description": "幫助我們繼續開發 Dictx",
-        "button": "捐贈"
+        "description": "從原始碼建置了 Dictx？購買簽署版應用程式以支持開發。",
+        "button": "購買簽署版應用程式"
       },
       "acknowledgments": {
         "title": "致謝",
@@ -525,17 +522,6 @@
           "description": "針對 OpenAI Whisper 自動語音識別模型的高效能推理引擎",
           "details": "Dictx 使用 Whisper.cpp 進行快速的本機語音轉文字處理。感謝 Georgi Gerganov 和貢獻者們的傑出工作"
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {

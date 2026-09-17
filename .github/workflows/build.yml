@@ -32,6 +32,10 @@ on:
         required: false
         type: boolean
         default: false
+      publish-r2:
+        required: false
+        type: boolean
+        default: false
       repository:
         required: false
         type: string
@@ -47,7 +51,7 @@ on:
 jobs:
   build:
     permissions:
-      contents: write
+      contents: read
     runs-on: ${{ inputs.platform }}
     steps:
       - name: Checkout repository
@@ -297,6 +301,91 @@ jobs:
             src-tauri/target/${{ inputs.target }}/${{ steps.build-profile.outputs.profile }}/bundle/dmg/*.dmg
             src-tauri/target/${{ inputs.target }}/${{ steps.build-profile.outputs.profile }}/bundle/macos/*.app
           retention-days: 30
+
+      - name: Determine R2 arch label
+        id: r2-arch
+        if: inputs.publish-r2 && contains(inputs.platform, 'macos')
+        shell: bash
+        run: |
+          case "${{ inputs.target }}" in
+            aarch64-apple-darwin) echo "arch=aarch64" >> "$GITHUB_OUTPUT" ;;
+            x86_64-apple-darwin) echo "arch=x64" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "Unsupported target for R2 publish: ${{ inputs.target }}" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Ensure AWS CLI is available
+        if: inputs.publish-r2 && contains(inputs.platform, 'macos')
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v aws >/dev/null 2>&1; then
+            aws --version
+            exit 0
+          fi
+          # GitHub-hosted runner images ship the AWS CLI. Fail loudly instead of
+          # installing an unpinned copy at release time.
+          echo "::error::aws CLI not found on this runner image"
+          exit 1
+
+      - name: Locate macOS bundle outputs
+        id: bundle-paths
+        if: inputs.publish-r2 && contains(inputs.platform, 'macos')
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUNDLE_ROOT="src-tauri/target/${{ inputs.target }}/${{ steps.build-profile.outputs.profile }}/bundle"
+          DMG_PATH=$(find "$BUNDLE_ROOT/dmg" -maxdepth 1 -name '*.dmg' | head -1)
+          APP_TARBALL=$(find "$BUNDLE_ROOT/macos" -maxdepth 1 -name '*.app.tar.gz' | head -1)
+          APP_SIG=$(find "$BUNDLE_ROOT/macos" -maxdepth 1 -name '*.app.tar.gz.sig' | head -1)
+
+          if [[ -z "$DMG_PATH" || -z "$APP_TARBALL" || -z "$APP_SIG" ]]; then
+            echo "Missing expected macOS bundle output(s) under $BUNDLE_ROOT" >&2
+            echo "dmg='$DMG_PATH' app_tarball='$APP_TARBALL' app_sig='$APP_SIG'" >&2
+            exit 1
+          fi
+
+          echo "dmg=$DMG_PATH" >> "$GITHUB_OUTPUT"
+          echo "app_tarball=$APP_TARBALL" >> "$GITHUB_OUTPUT"
+          echo "app_sig=$APP_SIG" >> "$GITHUB_OUTPUT"
+
+      - name: Publish macOS artifacts to R2
+        if: inputs.publish-r2 && contains(inputs.platform, 'macos')
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+          R2_PRIVATE_BUCKET: ${{ secrets.R2_PRIVATE_BUCKET }}
+          R2_PUBLIC_BUCKET: ${{ secrets.R2_PUBLIC_BUCKET }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.get-version.outputs.version }}"
+          ARCH="${{ steps.r2-arch.outputs.arch }}"
+
+          # Private bucket: versioned DMG only. `macos/latest/...` is refreshed
+          # by the release workflow's publish-feed job after both arches land,
+          # not here.
+          aws s3 cp "${{ steps.bundle-paths.outputs.dmg }}" \
+            "s3://${R2_PRIVATE_BUCKET}/macos/v${VERSION}/Dictx_${VERSION}_${ARCH}.dmg" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --content-type application/x-apple-diskimage \
+            --cache-control "public, max-age=31536000, immutable"
+
+          # Public bucket: updater bundle + signature for this version.
+          aws s3 cp "${{ steps.bundle-paths.outputs.app_tarball }}" \
+            "s3://${R2_PUBLIC_BUCKET}/macos/v${VERSION}/Dictx_${ARCH}.app.tar.gz" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --content-type application/gzip \
+            --cache-control "public, max-age=31536000, immutable"
+
+          aws s3 cp "${{ steps.bundle-paths.outputs.app_sig }}" \
+            "s3://${R2_PUBLIC_BUCKET}/macos/v${VERSION}/Dictx_${ARCH}.app.tar.gz.sig" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --content-type text/plain \
+            --cache-control "public, max-age=31536000, immutable"
 
       - name: Install FUSE for AppImage processing
         if: contains(inputs.platform, 'ubuntu')

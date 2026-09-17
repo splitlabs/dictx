@@ -267,37 +267,6 @@ pub enum TypingTool {
     Xdotool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Type, Default)]
-pub struct ProEntitlement {
-    #[serde(default)]
-    pub active: bool,
-    #[serde(default)]
-    pub source: Option<ProEntitlementSource>,
-    #[serde(default)]
-    pub license_key: Option<String>,
-    #[serde(default)]
-    // Legacy field kept for backward compatibility with older local settings.
-    pub email: Option<String>,
-    #[serde(default)]
-    // Legacy field kept for backward compatibility with older local settings.
-    pub checkout_id: Option<String>,
-    #[serde(default)]
-    pub activated_at: Option<i64>,
-    #[serde(default)]
-    pub last_verified_at: Option<i64>,
-    #[serde(default)]
-    pub verification_error: Option<String>,
-    #[serde(default)]
-    pub install_id: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
-#[serde(rename_all = "snake_case")]
-pub enum ProEntitlementSource {
-    LicenseKey,
-    EarlyAdopter,
-}
-
 /* still handy for composing the initial JSON in the store ------------- */
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct AppSettings {
@@ -399,8 +368,6 @@ pub struct AppSettings {
     pub obsidian_export_subfolder: Option<String>,
     #[serde(default)]
     pub obsidian_append_to_daily: bool,
-    #[serde(default)]
-    pub pro_entitlement: ProEntitlement,
 }
 
 fn default_model() -> String {
@@ -781,7 +748,6 @@ pub fn get_default_settings() -> AppSettings {
         obsidian_vault_path: None,
         obsidian_export_subfolder: default_obsidian_export_subfolder(),
         obsidian_append_to_daily: false,
-        pro_entitlement: ProEntitlement::default(),
     }
 }
 
@@ -911,11 +877,6 @@ pub fn get_stored_binding(app: &AppHandle, id: &str) -> ShortcutBinding {
 pub fn get_history_limit(app: &AppHandle) -> usize {
     let settings = get_settings(app);
     settings.history_limit
-}
-
-pub fn is_pro_active(app: &AppHandle) -> bool {
-    let settings = get_settings(app);
-    settings.pro_entitlement.active
 }
 
 pub fn get_recording_retention_period(app: &AppHandle) -> RecordingRetentionPeriod {

@@ -52,21 +52,6 @@ jobs:
           - platform: "macos-latest" # for Intel based macs.
             args: "--target x86_64-apple-darwin"
             target: "x86_64-apple-darwin"
-          - platform: "ubuntu-22.04" # Build .deb on 22.04
-            args: "--bundles deb"
-            target: "x86_64-unknown-linux-gnu"
-          - platform: "ubuntu-24.04" # Build AppImage and RPM on 24.04
-            args: "--bundles appimage,rpm"
-            target: "x86_64-unknown-linux-gnu"
-          - platform: "ubuntu-24.04-arm" # Build for ARM64 Linux
-            args: "--bundles appimage,deb,rpm"
-            target: "aarch64-unknown-linux-gnu"
-          - platform: "windows-latest"
-            args: ""
-            target: "x86_64-pc-windows-msvc"
-          - platform: "windows-11-arm" # for ARM64 Windows runner
-            args: "--target aarch64-pc-windows-msvc"
-            target: "aarch64-pc-windows-msvc"
 
     uses: ./.github/workflows/build.yml
     with:
@@ -76,5 +61,120 @@ jobs:
       sign-binaries: true
       asset-prefix: "Dictx"
       upload-artifacts: false
-      release-id: ${{ needs.create-release.outputs.release-id }}
+      publish-r2: true
     secrets: inherit
+
+  publish-feed:
+    permissions:
+      contents: read
+    needs: publish-tauri
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      R2_ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+      R2_PRIVATE_BUCKET: ${{ secrets.R2_PRIVATE_BUCKET }}
+      R2_PUBLIC_BUCKET: ${{ secrets.R2_PUBLIC_BUCKET }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version from tauri.conf.json
+        id: get-version
+        shell: bash
+        run: |
+          VERSION=$(grep -o '"version": "[^"]*"' src-tauri/tauri.conf.json | cut -d'"' -f4)
+          echo "Application version from tauri.conf.json: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure AWS CLI is available
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v aws >/dev/null 2>&1; then
+            aws --version
+            exit 0
+          fi
+          # GitHub-hosted runner images ship the AWS CLI. Fail loudly instead of
+          # installing an unpinned copy at release time.
+          echo "::error::aws CLI not found on this runner image"
+          exit 1
+
+      - name: Verify both macOS DMGs published
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.get-version.outputs.version }}"
+          for ARCH in aarch64 x64; do
+            aws s3api head-object \
+              --bucket "$R2_PRIVATE_BUCKET" \
+              --key "macos/v${VERSION}/Dictx_${VERSION}_${ARCH}.dmg" \
+              --endpoint-url "$R2_ENDPOINT" >/dev/null
+          done
+
+      - name: Fetch updater signatures and build latest.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.get-version.outputs.version }}"
+          PUB_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          WORKDIR="$(mktemp -d)"
+          echo "WORKDIR=$WORKDIR" >> "$GITHUB_ENV"
+
+          fetch_sig() {
+            local arch="$1"
+            local out="$2"
+            aws s3 cp \
+              "s3://${R2_PUBLIC_BUCKET}/macos/v${VERSION}/Dictx_${arch}.app.tar.gz.sig" \
+              "$out" \
+              --endpoint-url "$R2_ENDPOINT"
+          }
+
+          fetch_sig aarch64 "$WORKDIR/aarch64.sig"
+          fetch_sig x64 "$WORKDIR/x64.sig"
+
+          SIG_AARCH64="$(cat "$WORKDIR/aarch64.sig")"
+          SIG_X64="$(cat "$WORKDIR/x64.sig")"
+
+          cat > "$WORKDIR/latest.json" <<JSON
+          {
+            "version": "${VERSION}",
+            "notes": "See the release notes: https://github.com/splitlabs/dictx/releases",
+            "pub_date": "${PUB_DATE}",
+            "platforms": {
+              "darwin-aarch64": {
+                "signature": "${SIG_AARCH64}",
+                "url": "https://updates.dictx.splitlabs.io/macos/v${VERSION}/Dictx_aarch64.app.tar.gz"
+              },
+              "darwin-x86_64": {
+                "signature": "${SIG_X64}",
+                "url": "https://updates.dictx.splitlabs.io/macos/v${VERSION}/Dictx_x64.app.tar.gz"
+              }
+            }
+          }
+          JSON
+
+      - name: Upload latest.json to the public update feed
+        shell: bash
+        run: |
+          set -euo pipefail
+          aws s3 cp "$WORKDIR/latest.json" \
+            "s3://${R2_PUBLIC_BUCKET}/latest.json" \
+            --endpoint-url "$R2_ENDPOINT" \
+            --content-type application/json \
+            --cache-control "no-cache"
+
+      - name: Promote versioned DMGs to macos/latest
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.get-version.outputs.version }}"
+          for ARCH in aarch64 x64; do
+            aws s3 cp \
+              "s3://${R2_PRIVATE_BUCKET}/macos/v${VERSION}/Dictx_${VERSION}_${ARCH}.dmg" \
+              "s3://${R2_PRIVATE_BUCKET}/macos/latest/Dictx_${ARCH}.dmg" \
+              --endpoint-url "$R2_ENDPOINT" \
+              --content-type application/x-apple-diskimage \
+              --cache-control "no-cache"
+          done

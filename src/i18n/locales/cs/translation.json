@@ -15,8 +15,7 @@
     "postProcessing": "Následné zpracování",
     "history": "Historie",
     "debug": "Ladění",
-    "about": "O aplikaci",
-    "getPro": "Získat Dictx Pro"
+    "about": "O aplikaci"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -123,7 +122,7 @@
       "restartHint": "Pokud jste zaseknutí, zkuste přepnout oprávnění v Nastavení systému a klikněte Zkusit znovu.",
       "skipForNow": "Pokračovat bez oprávnění — opravím to později"
     },
-    "supportCta": "Získejte Dictx Pro — podepsaný binární soubor s automatickými aktualizacemi ($29)",
+    "supportCta": "Kupte si podepsanou aplikaci a podpořte vývoj (jednorázově $29)",
     "downloadEta": "~{{time}} zbývá",
     "downloadSize": "{{downloaded}} / {{total}} MB"
   },
@@ -436,9 +435,7 @@
       },
       "updateChecks": {
         "label": "Kontrolovat aktualizace",
-        "description": "Automaticky kontrolovat nové verze Dictx",
-        "proRequired": "Auto-updates are available for active Dictx Pro installations.",
-        "upgrade": "Activate or Upgrade Pro"
+        "description": "Automaticky kontrolovat nové verze Dictx"
       },
       "soundTheme": {
         "label": "Zvukový motiv",
@@ -515,8 +512,8 @@
       },
       "supportDevelopment": {
         "title": "Podpořte vývoj",
-        "description": "Pomozte nám pokračovat ve vývoji Dictx",
-        "button": "Přispět"
+        "description": "Sestavili jste Dictx ze zdrojového kódu? Kupte si podepsanou aplikaci a podpořte vývoj.",
+        "button": "Koupit podepsanou aplikaci"
       },
       "acknowledgments": {
         "title": "Poděkování",
@@ -525,17 +522,6 @@
           "description": "Vysoce výkonné inferenční zpracování modelu automatického rozpoznávání řeči Whisper od OpenAI",
           "details": "Dictx používá Whisper.cpp pro rychlé lokální zpracování řeči na text. Díky skvělé práci Georgiho Gerganova a přispěvatelů."
         }
-      },
-      "proActivation": {
-        "active": "Dictx Pro is active on this device.",
-        "inactive": "Dictx Pro is not active. Enter your license key to activate updater entitlement.",
-        "activate": "Activate Dictx Pro",
-        "refresh": "Re-check Entitlement",
-        "clear": "Remove Activation",
-        "licenseKey": "License Key",
-        "licenseKeyPlaceholder": "dxp-...",
-        "pasteFromClipboard": "Paste From Clipboard",
-        "clipboardFailed": "Clipboard access failed. Paste manually."
       }
     },
     "obsidian": {
