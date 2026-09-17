@@ -537,6 +537,36 @@ async initializeShortcuts() : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+/**
+ * Open the Accessibility pane of System Settings (macOS only).
+ * The system trust prompt only appears once per app, so the frontend opens
+ * the pane directly whenever the user asks to grant access.
+ */
+async openAccessibilitySettings() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("open_accessibility_settings") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Remove this app's Accessibility entry from the macOS privacy database.
+ *
+ * Builds that are not signed with a stable identity get a designated
+ * requirement tied to the binary hash. After an update or rebuild, System
+ * Settings still shows Dictx as enabled, but the grant belongs to the old
+ * binary and the new one is not trusted. Toggling the switch does not fix
+ * that; removing the stale entry and granting again does.
+ */
+async resetAccessibilityPermission() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("reset_accessibility_permission") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getAvailableModels() : Promise<Result<ModelInfo[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_available_models") };

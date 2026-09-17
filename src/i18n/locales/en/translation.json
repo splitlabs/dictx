@@ -112,7 +112,11 @@
       },
       "accessibility": {
         "title": "Accessibility Access",
-        "description": "Required to type transcribed text into your applications."
+        "description": "Required to type transcribed text into your applications.",
+        "staleTitle": "Still not detected?",
+        "staleDescription": "If Dictx is already on in System Settings, that entry belongs to an older build of the app. Reset it, then turn Dictx on again.",
+        "reset": "Reset and grant again",
+        "resetFailed": "Could not reset the permission. In System Settings, select Dictx, remove it with the minus button, then add it again."
       },
       "grant": "Grant Permission",
       "granted": "Granted",
@@ -604,7 +608,9 @@
     "permissionsRequired": "Accessibility Permissions Required",
     "permissionsDescription": "Dictx needs accessibility permissions to type transcribed text.",
     "openSettings": "Open System Settings",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "staleHint": "Already on in System Settings? That entry may be from an older build.",
+    "reset": "Reset permission"
   },
   "errors": {
     "loadDirectory": "Error loading directory: {{error}}"
