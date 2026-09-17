@@ -216,6 +216,54 @@ pub fn initialize_enigo(app: AppHandle) -> Result<(), String> {
     }
 }
 
+/// Open the Accessibility pane of System Settings (macOS only).
+/// The system trust prompt only appears once per app, so the frontend opens
+/// the pane directly whenever the user asks to grant access.
+#[specta::specta]
+#[tauri::command]
+pub fn open_accessibility_settings() -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        std::process::Command::new("open")
+            .arg("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+            .status()
+            .map_err(|e| format!("Failed to open System Settings: {}", e))?;
+    }
+    Ok(())
+}
+
+/// Remove this app's Accessibility entry from the macOS privacy database.
+///
+/// Builds that are not signed with a stable identity get a designated
+/// requirement tied to the binary hash. After an update or rebuild, System
+/// Settings still shows Dictx as enabled, but the grant belongs to the old
+/// binary and the new one is not trusted. Toggling the switch does not fix
+/// that; removing the stale entry and granting again does.
+#[specta::specta]
+#[tauri::command]
+pub fn reset_accessibility_permission(app: AppHandle) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        let identifier = app.config().identifier.clone();
+        let output = std::process::Command::new("/usr/bin/tccutil")
+            .args(["reset", "Accessibility", &identifier])
+            .output()
+            .map_err(|e| format!("Failed to run tccutil: {}", e))?;
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            log::warn!("tccutil reset Accessibility failed: {}", stderr.trim());
+            return Err(format!(
+                "Failed to reset accessibility permission: {}",
+                stderr.trim()
+            ));
+        }
+        log::info!("Reset accessibility permission for {}", identifier);
+    }
+    #[cfg(not(target_os = "macos"))]
+    let _ = app;
+    Ok(())
+}
+
 /// Marker state to track if shortcuts have been initialized.
 pub struct ShortcutsInitialized;
 

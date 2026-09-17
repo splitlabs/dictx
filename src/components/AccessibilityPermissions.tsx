@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { type } from "@tauri-apps/plugin-os";
-import {
-  checkAccessibilityPermission,
-  requestAccessibilityPermission,
-} from "tauri-plugin-macos-permissions-api";
+import { checkAccessibilityPermission } from "tauri-plugin-macos-permissions-api";
+import { toast } from "sonner";
 import { commands } from "@/bindings";
+import {
+  STALE_GRANT_HINT_DELAY_MS,
+  openAccessibilityGrant,
+  resetAndRegrantAccessibility,
+} from "@/utils/accessibilityPermission";
 
 // Define permission state type
 type PermissionState = "request" | "verify" | "granted";
@@ -21,6 +24,10 @@ const AccessibilityPermissions: React.FC = () => {
   const [hasAccessibility, setHasAccessibility] = useState<boolean>(false);
   const [permissionState, setPermissionState] =
     useState<PermissionState>("request");
+  const [showStaleHint, setShowStaleHint] = useState(false);
+  const staleHintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   // Accessibility permissions are only required on macOS
   const isMacOS = type() === "macos";
@@ -59,20 +66,48 @@ const AccessibilityPermissions: React.FC = () => {
   }, []);
 
   // Handle the unified button action based on current state
-  const handleButtonClick = async (): Promise<void> => {
-    if (permissionState === "request") {
-      try {
-        await requestAccessibilityPermission();
-        // After system prompt, transition to verification state
-        setPermissionState("verify");
-      } catch (error) {
-        console.error("Error requesting permissions:", error);
-        setPermissionState("verify");
-      }
-    } else if (permissionState === "verify") {
-      // State is "verify" - check if permission was granted
-      await checkPermissions();
+  // Offer a reset only if a grant attempt has not registered after a while
+  const scheduleStaleHint = () => {
+    setShowStaleHint(false);
+    if (staleHintTimeoutRef.current) {
+      clearTimeout(staleHintTimeoutRef.current);
     }
+    staleHintTimeoutRef.current = setTimeout(
+      () => setShowStaleHint(true),
+      STALE_GRANT_HINT_DELAY_MS,
+    );
+  };
+
+  useEffect(() => {
+    return () => {
+      if (staleHintTimeoutRef.current) {
+        clearTimeout(staleHintTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleButtonClick = async (): Promise<void> => {
+    scheduleStaleHint();
+    try {
+      // The system prompt only appears once, so always open System Settings
+      await openAccessibilityGrant();
+    } catch (error) {
+      console.error("Error requesting permissions:", error);
+    }
+    setPermissionState("verify");
+    await checkPermissions();
+  };
+
+  // Clear a stale entry left by an older build, then grant again
+  const handleResetClick = async (): Promise<void> => {
+    scheduleStaleHint();
+    try {
+      await resetAndRegrantAccessibility();
+    } catch (error) {
+      console.error("Error resetting accessibility permission:", error);
+      toast.error(t("onboarding.permissions.accessibility.resetFailed"));
+    }
+    await checkPermissions();
   };
 
   // On app boot - check permissions (only on macOS)
@@ -130,7 +165,9 @@ const AccessibilityPermissions: React.FC = () => {
   const statusClassName = hasAccessibility
     ? "bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
     : "bg-amber-400/20 text-amber-200 border-amber-400/30";
-  const statusText = hasAccessibility ? t("common.enabled") : t("common.disabled");
+  const statusText = hasAccessibility
+    ? t("common.enabled")
+    : t("common.disabled");
 
   return (
     <div className="p-4 w-full rounded-lg border border-mid-gray">
@@ -139,6 +176,18 @@ const AccessibilityPermissions: React.FC = () => {
           <p className="text-sm font-medium">
             {t("accessibility.permissionsDescription")}
           </p>
+          {!hasAccessibility && showStaleHint && (
+            <p className="mt-1 text-xs text-text/60">
+              {t("accessibility.staleHint")}{" "}
+              <button
+                type="button"
+                onClick={handleResetClick}
+                className="underline hover:text-text cursor-pointer"
+              >
+                {t("accessibility.reset")}
+              </button>
+            </p>
+          )}
           <div className="mt-2">
             <span
               className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${statusClassName}`}
