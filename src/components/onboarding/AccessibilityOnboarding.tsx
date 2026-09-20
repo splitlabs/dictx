@@ -3,13 +3,17 @@ import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
 import {
   checkAccessibilityPermission,
-  requestAccessibilityPermission,
   checkMicrophonePermission,
   requestMicrophonePermission,
 } from "tauri-plugin-macos-permissions-api";
 import { toast } from "sonner";
 import { commands } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
+import {
+  STALE_GRANT_HINT_DELAY_MS,
+  openAccessibilityGrant,
+  resetAndRegrantAccessibility,
+} from "@/utils/accessibilityPermission";
 import DictxTextLogo from "../icons/DictxTextLogo";
 import { Keyboard, Mic, Check, Loader2, RefreshCw } from "lucide-react";
 
@@ -45,6 +49,9 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const errorCountRef = useRef<number>(0);
   const MAX_POLLING_ERRORS = 3;
+  const [showStaleHint, setShowStaleHint] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const [grantAttempt, setGrantAttempt] = useState(0);
 
   const allGranted =
     permissions.accessibility === "granted" &&
@@ -173,6 +180,21 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
     }, 1000);
   }, [onComplete, refreshAudioDevices, refreshOutputDevices, t]);
 
+  // An entry left by an older build keeps System Settings showing Dictx as
+  // enabled while macOS reports it as untrusted. If a grant attempt does not
+  // register within a few seconds, offer to reset that entry.
+  useEffect(() => {
+    if (permissions.accessibility !== "waiting") {
+      setShowStaleHint(false);
+      return;
+    }
+    const hintTimeout = setTimeout(
+      () => setShowStaleHint(true),
+      STALE_GRANT_HINT_DELAY_MS,
+    );
+    return () => clearTimeout(hintTimeout);
+  }, [permissions.accessibility, grantAttempt]);
+
   // Cleanup polling and timeouts on unmount
   useEffect(() => {
     return () => {
@@ -187,12 +209,29 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
   const handleGrantAccessibility = async () => {
     try {
-      await requestAccessibilityPermission();
+      await openAccessibilityGrant();
       setPermissions((prev) => ({ ...prev, accessibility: "waiting" }));
       startPolling();
     } catch (error) {
       console.error("Failed to request accessibility permission:", error);
       toast.error(t("onboarding.permissions.errors.requestFailed"));
+    }
+  };
+
+  const handleResetAccessibility = async () => {
+    setIsResetting(true);
+    try {
+      await resetAndRegrantAccessibility();
+      // Restart the waiting period so the hint does not reappear immediately
+      setShowStaleHint(false);
+      setGrantAttempt((attempt) => attempt + 1);
+      setPermissions((prev) => ({ ...prev, accessibility: "waiting" }));
+      startPolling();
+    } catch (error) {
+      console.error("Failed to reset accessibility permission:", error);
+      toast.error(t("onboarding.permissions.accessibility.resetFailed"));
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -372,9 +411,33 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           </div>
         </div>
 
+        {/* Stale accessibility entry recovery */}
+        {showStaleHint && permissions.accessibility === "waiting" && (
+          <div className="w-full p-4 rounded-lg bg-amber-400/10 border border-amber-400/30 flex flex-col gap-2">
+            <h3 className="text-sm font-medium text-text">
+              {t("onboarding.permissions.accessibility.staleTitle")}
+            </h3>
+            <p className="text-xs text-text/70">
+              {t("onboarding.permissions.accessibility.staleDescription")}
+            </p>
+            <button
+              type="button"
+              onClick={handleResetAccessibility}
+              disabled={isResetting}
+              className="self-start flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 disabled:opacity-50 text-text text-xs font-medium transition-colors"
+            >
+              {isResetting ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <RefreshCw className="w-3 h-3" />
+              )}
+              {t("onboarding.permissions.accessibility.reset")}
+            </button>
+          </div>
+        )}
+
         {/* Restart hint */}
-        {(permissions.accessibility === "waiting" ||
-          permissions.microphone === "waiting") && (
+        {permissions.microphone === "waiting" && (
           <p className="text-text/40 text-xs text-center">
             {t("onboarding.permissions.restartHint")}
           </p>
